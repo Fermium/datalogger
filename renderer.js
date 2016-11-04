@@ -1,16 +1,44 @@
+
+
+var app = require('electron').remote;
+var dialog = app.dialog;
 var dateFormat = require('dateformat'); //for date
 var low = require('lowdb'); //real time .json writing
 var _ = require('lodash');
 var fs = require('fs');
 var remote = require('electron').remote;
-var filename = 'test.json' //development thing
-var file = remote.getGlobal('config')._file = './data/'+dateFormat(Date.now(), "yyyy_mm_dd_")+filename;//development thing
+
 var reading = {'series': null,'timestamp': 0, 'value': 0};
+var config = remote.getGlobal('config');
+
+var i=0;
+var starting;
+// Initialize plugin
+var filename = 'test.json' //development thing
+
+$(function() {
+	$("[name='start-stop']").bootstrapSwitch({
+    onText : '<i class="icon-play4"></i>',
+    offText : '<i class="icon-stop2"></i>',
+    onSwitchChange: (event,state) => {
+      if(state){
+        saveFile().then(starting=setInterval(read,500));
+
+      }
+      else{
+        clearInterval(starting)
+      }
+    }
+	});
+});
+
+
+
 
 ////////////////////////////////////////////////////////////////////////
 /***************************** INIT **********************************/
 //////////////////////////////////////////////////////////////////////
-const db = low(file);
+const db = low(config._file);
 db.defaults({ _data : [] , _experiment : '', _date : ''}).value();
 db.set('_experiment','test').value();
 db.set('_date',dateFormat(Date.now(), "yyyy mm dd")).value();
@@ -22,25 +50,6 @@ $('#records').find('thead')
       .text('value'))
   );
 /////////////////////////////////////////////////////////////////////
-
-var i=0;
-var starting;
-// Initialize plugin
-$(function() {
-	$("[name='start-stop']").bootstrapSwitch({
-    onText : '<i class="icon-play4"></i>',
-    offText : '<i class="icon-stop2"></i>',
-    onSwitchChange: (event,state) => {
-      if(state){
-        starting=setInterval(read,500);
-      }
-      else{
-        clearInterval(starting)
-      }
-    }
-	});
-});
-
 
 function read(){
 
@@ -65,3 +74,25 @@ $('#plot').click(function(){
     //ipcRenderer.send('plot',file);
     window.open('./plot.html')
 })
+
+
+function saveFile(){
+  if(!config._source){
+  dialog.showSaveDialog(function (fileName) {
+         if (fileName === undefined){
+              console.log("You didn't save the file");
+              return;
+         }
+         // fileName is a string that contains the path and filename created in the save file dialog.
+         fs.writeFile(fileName, content, function (err) {
+             if(err){
+                 alert("An error ocurred creating the file "+ err.message)
+             }
+
+             alert("The file has been succesfully saved");
+             config._file=fileName;
+         });
+  });
+  config._source=true;
+  }
+}
