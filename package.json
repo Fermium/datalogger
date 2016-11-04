@@ -20,6 +20,7 @@
     "electron": "^1.4.1"
   },
   "dependencies": {
+    "chart.js": "^2.3.0",
     "dateformat": "^1.0.12",
     "jsonfile": "^2.4.0",
     "lodash": "^4.16.6",
