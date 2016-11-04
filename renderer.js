@@ -7,6 +7,9 @@ var filename = 'test.json' //development thing
 var file = remote.getGlobal('config')._file = './data/'+dateFormat(Date.now(), "yyyy_mm_dd_")+filename;//development thing
 var reading = {'series': null,'timestamp': 0, 'value': 0};
 
+////////////////////////////////////////////////////////////////////////
+/***************************** INIT **********************************/
+//////////////////////////////////////////////////////////////////////
 const db = low(file);
 db.defaults({ _data : [] , _experiment : '', _date : ''}).value();
 db.set('_experiment','test').value();
@@ -18,8 +21,28 @@ $('#records').find('thead')
     .append($('<th>')
       .text('value'))
   );
+/////////////////////////////////////////////////////////////////////
+
 var i=0;
-setInterval(function(){
+var starting;
+// Initialize plugin
+$(function() {
+	$("[name='start-stop']").bootstrapSwitch({
+    onText : '<i class="icon-play4"></i>',
+    offText : '<i class="icon-stop2"></i>',
+    onSwitchChange: (event,state) => {
+      if(state){
+        starting=setInterval(read,500);
+      }
+      else{
+        clearInterval(starting)
+      }
+    }
+	});
+});
+
+
+function read(){
 
 /*fake reading*/
 reading.series = 'test';
@@ -36,7 +59,7 @@ $('#records').find('tbody')
       .text(reading.value))
   );
 
-},500);
+}
 
 $('#plot').click(function(){
     //ipcRenderer.send('plot',file);
