@@ -6,15 +6,29 @@ var fs = require('fs');
 
 $('#tocsv').click(function(){
   var data = JSON.parse(fs.readFileSync(config._file, 'utf8'));
-    var name = config._file.split('.')[0]+'.csv';
-  	json2csv({ data: data['_data'] , fields: ['series','timestamp','value']}, (err,csv) => {
-  		if (err) throw err;
-      fs.writeFile(name, csv, function(err) {
-          if(err) throw err;
-          console.log("data.csv file has been saved.");
-      });
-  	});
-  });
+  var name = config._file.split('.')[0]+'.csv';
+	json2csv({ data: data['_data'] , fields: Object.keys(data['_data'][0])}, (err,csv) => {
+		if (err) throw err;
+    fs.writeFile(name, csv, function(err) {
+        if(err) throw err;
+        console.log("data.csv file has been saved.");
+    });
+	});
+});
+
+
+
+$('#totsv').click(function(){
+  var data = JSON.parse(fs.readFileSync(config._file, 'utf8'));
+  var name = config._file.split('.')[0]+'.tsv';
+	json2csv({ data: data['_data'] , fields: Object.keys(data['_data'][0]), del: '\t'}, (err,csv) => {
+		if (err) throw err;
+    fs.writeFile(name, csv, function(err) {
+        if(err) throw err;
+        console.log("data.csv file has been saved.");
+    });
+	});
+});
 
 $('#toxls').click(function(){
   var data = JSON.parse(fs.readFileSync(config._file, 'utf8'));

@@ -8,7 +8,7 @@ const {ipcMain} = require('electron')
 // be closed automatically when the JavaScript object is garbage collected.
 let mainWindow
 let plotWindow
-global.config = {'_file': '','_config':'false'}
+global.config = {'_file': '','_config':'false','_experiment':'','_date':''}
 function createWindow () {
   // Create the browser window.
   mainWindow = new BrowserWindow({width: 800, height: 600})

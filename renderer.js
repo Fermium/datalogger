@@ -11,6 +11,8 @@ var reading = {'series': null,'timestamp': 0, 'value': 0};
 var config = remote.getGlobal('config');
 var i=0;
 var starting;
+config._experiment = 'experiment 1';
+config._date = dateFormat(Date.now(), "yyyy mm dd");
 // Initialize plugin
 
 $(function() {
@@ -20,6 +22,8 @@ $(function() {
     onSwitchChange: (event,state) => {
       if(state){
         saveFile();
+				$('#experiment').text(config._experiment);
+				$('#date').text(' - '+config._date);
       }
       else{
         clearInterval(starting);
@@ -65,8 +69,7 @@ $('#records').find('tbody')
 }
 
 $('#plot').click(function(){
-    //ipcRenderer.send('plot',file);
-    window.open('./plot.html')
+    window.open('./plot/index.html')
 })
 
 
@@ -81,8 +84,8 @@ function saveFile(){
 				 config._file=fileName;
 				 db = low(fileName);
 				 db.defaults({ _data : [] , _experiment : '', _date : ''}).value();
-				 db.set('_experiment','test').value();
-				 db.set('_date',dateFormat(Date.now(), "yyyy mm dd")).value();
+				 db.set('_experiment',config._experiment).value();
+				 db.set('_date',config._date).value();
 				 config._source = true;
 				 starting=setInterval(read,500);
   });
