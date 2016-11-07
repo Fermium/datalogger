@@ -84,7 +84,10 @@ function saveFile(){
 				 db.set('_experiment','test').value();
 				 db.set('_date',dateFormat(Date.now(), "yyyy mm dd")).value();
 				 config._source = true;
+				 starting=setInterval(read,500);
   });
   }
-	starting=setInterval(read,500);
+	else{
+		starting=setInterval(read,500);
+	}
 }
