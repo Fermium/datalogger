@@ -5,16 +5,13 @@ var dialog = app.dialog;
 var dateFormat = require('dateformat'); //for date
 var low = require('lowdb'); //real time .json writing
 var _ = require('lodash');
-var fs = require('fs');
 var remote = require('electron').remote;
-
+var db;
 var reading = {'series': null,'timestamp': 0, 'value': 0};
 var config = remote.getGlobal('config');
-
 var i=0;
 var starting;
 // Initialize plugin
-var filename = 'test.json' //development thing
 
 $(function() {
 	$("[name='start-stop']").bootstrapSwitch({
@@ -22,11 +19,10 @@ $(function() {
     offText : '<i class="icon-stop2"></i>',
     onSwitchChange: (event,state) => {
       if(state){
-        saveFile().then(starting=setInterval(read,500));
-
+        saveFile();
       }
       else{
-        clearInterval(starting)
+        clearInterval(starting);
       }
     }
 	});
@@ -38,10 +34,8 @@ $(function() {
 ////////////////////////////////////////////////////////////////////////
 /***************************** INIT **********************************/
 //////////////////////////////////////////////////////////////////////
-const db = low(config._file);
-db.defaults({ _data : [] , _experiment : '', _date : ''}).value();
-db.set('_experiment','test').value();
-db.set('_date',dateFormat(Date.now(), "yyyy mm dd")).value();
+/*const db = low(config._file);*/
+
 $('#records').find('thead')
   .append($('<tr>')
     .append($('<th>')
@@ -78,21 +72,19 @@ $('#plot').click(function(){
 
 function saveFile(){
   if(!config._source){
-  dialog.showSaveDialog(function (fileName) {
+  dialog.showSaveDialog({ defaultPath : './data'},function (fileName) {
          if (fileName === undefined){
               console.log("You didn't save the file");
               return;
          }
-         // fileName is a string that contains the path and filename created in the save file dialog.
-         fs.writeFile(fileName, content, function (err) {
-             if(err){
-                 alert("An error ocurred creating the file "+ err.message)
-             }
-
-             alert("The file has been succesfully saved");
-             config._file=fileName;
-         });
+		 		 fileName = (fileName.endsWith('.json')) ? fileName : fileName+'.json' ;
+				 config._file=fileName;
+				 db = low(fileName);
+				 db.defaults({ _data : [] , _experiment : '', _date : ''}).value();
+				 db.set('_experiment','test').value();
+				 db.set('_date',dateFormat(Date.now(), "yyyy mm dd")).value();
+				 config._source = true;
   });
-  config._source=true;
   }
+	starting=setInterval(read,500);
 }

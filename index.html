@@ -60,12 +60,16 @@
 						<span class="visible-xs-inline-block position-right">Icon link</span>
 					</a>
 				</li>
-				<li>
-					<a class="sidebar-control sidebar-main-toggle hidden-xs">
+				<li  id='exportdd' class='dropdown'>
+					<a data-toggle='dropdown' class="sidebar-control sidebar-main-toggle hidden-xs">
 						<i class="icon-table2" data-toggle="tooltip" data-placement="bottom" title="Export"></i>
+						<i class="caret"></i>
             <span class="visible-xs-inline-block position-right">Icon link</span>
-
 					</a>
+					<ul class="dropdown-menu dropdown-menu-left">
+						<li id='tocsv'><a href='#'>Export to CSV</a></li>
+						<li id='toxls'><a href='#'>Export to XLS</a></li>
+					<ul>
 				</li>
 
 			</ul>
@@ -326,6 +330,7 @@
   <script>
     // You can also require other files to run in this process
     require('./renderer.js');
+		require('./exports.js');
   </script>
 </body>
 </html>
