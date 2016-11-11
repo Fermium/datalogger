@@ -1,39 +1,38 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang='en'>
 <head>
-	<meta charset="utf-8">
-	<meta http-equiv="X-UA-Compatible" content="IE=edge">
-	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<meta charset='utf-8'>
+	<meta http-equiv='X-UA-Compatible' content='IE=edge'>
+	<meta name='viewport' content='width=device-width, initial-scale=1'>
 	<title>Limitless - Responsive Web Application Kit by Eugene Kopyov</title>
 
 	<!-- Global stylesheets -->
-	<link href="https://fonts.googleapis.com/css?family=Roboto:400,300,100,500,700,900" rel="stylesheet" type="text/css">
-	<link href="assets/css/icons/icomoon/styles.css" rel="stylesheet" type="text/css">
-	<link href="assets/css/bootstrap.css" rel="stylesheet" type="text/css">
-	<link href="assets/css/core.css" rel="stylesheet" type="text/css">
-	<link href="assets/css/components.css" rel="stylesheet" type="text/css">
-	<link href="assets/css/colors.css" rel="stylesheet" type="text/css">
-	<link href="assets/css/bootstrap-slider.min.css" rel="stylesheet" type="text/css">
-	<link href="assets/css/bootstrap-switch.min.css" rel="stylesheet" type="text/css">
-	<link href="assets/css/custom.css" rel="stylesheet" type="text/css">
+	<link href='https://fonts.googleapis.com/css?family=Roboto:400,300,100,500,700,900' rel='stylesheet' type='text/css'>
+	<link href='assets/css/icons/icomoon/styles.css' rel='stylesheet' type='text/css'>
+	<link href='assets/css/bootstrap.css' rel='stylesheet' type='text/css'>
+	<link href='assets/css/core.css' rel='stylesheet' type='text/css'>
+	<link href='assets/css/components.css' rel='stylesheet' type='text/css'>
+	<link href='assets/css/colors.css' rel='stylesheet' type='text/css'>
+	<link href='assets/css/bootstrap-slider.min.css' rel='stylesheet' type='text/css'>
+	<link href='assets/css/bootstrap-switch.min.css' rel='stylesheet' type='text/css'>
+	<link href='assets/css/custom.css' rel='stylesheet' type='text/css'>
 	<!-- /global stylesheets -->
 
 	<!-- Core JS files -->
-  <script type="text/javascript" src="assets/js/core/libraries/jquery.min.js" onload="window.$ = window.jQuery = module.exports;"></script>
-	<script type="text/javascript" src="assets/js/core/libraries/bootstrap.min.js"></script>
-	<script type="text/javascript" src="assets/js/plugins/loaders/blockui.min.js"></script>
-  <script type="text/javascript" src="assets/js/plugins/ui/drilldown.js"></script>
-  <script type="text/javascript" src="assets/js/plugins/ui/nicescroll.min.js"></script>
+  <script type='text/javascript' src='assets/js/core/libraries/jquery.min.js' onload='window.$ = window.jQuery = module.exports;'></script>
+	<script type='text/javascript' src='assets/js/core/libraries/bootstrap.min.js'></script>
+	<script type='text/javascript' src='assets/js/plugins/loaders/blockui.min.js'></script>
+  <script type='text/javascript' src='assets/js/plugins/ui/drilldown.js'></script>
+  <script type='text/javascript' src='assets/js/plugins/ui/nicescroll.min.js'></script>
 	<!-- /core JS files -->
 	<!-- Path to mockjax -->
-	<script type="text/javascript" src="assets/js/plugins/extensions/mockjax.min.js"></script>
+	<script type='text/javascript' src='assets/js/plugins/extensions/mockjax.min.js'></script>
 	<!-- Theme JS files -->
-	<script type="text/javascript" src="assets/js/plugins/forms/inputs/bootstrap-slider.min.js"></script>
-	<script type="text/javascript" src="assets/js/plugins/forms/styling/switch.min.js"></script>
-	<script type="text/javascript" src="assets/js/core/libraries/jquery_ui/interactions.min.js"></script>
-	<script type="text/javascript" src="assets/js/core/libraries/jquery_ui/touch.min.js"></script>
-	<script type="text/javascript" src="assets/js/pages/appearance_draggable_panels.js"></script>
-	<script type="text/javascript" src="assets/js/core/app.js"></script>
+	<script type='text/javascript' src='assets/js/plugins/forms/styling/switch.min.js'></script>
+	<script type='text/javascript' src='assets/js/core/libraries/jquery_ui/interactions.min.js'></script>
+	<script type='text/javascript' src='assets/js/core/libraries/jquery_ui/touch.min.js'></script>
+	<script type='text/javascript' src='assets/js/pages/appearance_draggable_panels.js'></script>
+	<script type='text/javascript' src='assets/js/core/app.js'></script>
 
 	<!-- /theme JS files -->
 
@@ -42,31 +41,29 @@
 <body>
 
 	<!-- Main navbar -->
-	<div class="navbar navbar-inverse">
-		<div class="navbar-header">
-			<div class="navbar-brand"><img src="assets/images/logo_light.png" alt=""></div>
+	<div class='navbar navbar-inverse'>
+		<div class='navbar-header'>
+			<div class='navbar-brand'><img src='assets/images/logo_light.png' alt=''></div>
 
-			<ul class="nav navbar-nav pull-right visible-xs-block">
-				<li><a data-toggle="collapse" data-target="#navbar-mobile"><i class="icon-tree5"></i></a></li>
-				<li><a class="sidebar-mobile-main-toggle"><i class="icon-paragraph-justify3"></i></a></li>
+			<ul class='nav navbar-nav pull-right visible-xs-block'>
+				<li><a data-toggle='collapse' data-target='#navbar-mobile'><i class='icon-tree5'></i></a></li>
+				<li><a class='sidebar-mobile-main-toggle'><i class='icon-paragraph-justify3'></i></a></li>
 			</ul>
 		</div>
 
-		<div class="navbar-collapse collapse" id="navbar-mobile">
-			<ul class="nav navbar-nav">
+		<div class='navbar-collapse collapse' id='navbar-mobile'>
+			<ul class='nav navbar-nav'>
 				<li>
-					<a href="#" id="plot">
-						<i class="icon-graph" data-toggle="tooltip" data-placement="bottom" title="View Graphs" ></i>
-						<span class="visible-xs-inline-block position-right">Icon link</span>
+					<a href='#' id='plot'>
+						<i class='icon-graph' data-toggle='tooltip' data-placement='bottom' title='View Graphs' ></i>
 					</a>
 				</li>
 				<li  id='exportdd' class='dropdown'>
-					<a data-toggle='dropdown' class="sidebar-control sidebar-main-toggle hidden-xs">
-						<i class="icon-table2" data-toggle="tooltip" data-placement="bottom" title="Export"></i>
-						<i class="caret"></i>
-            <span class="visible-xs-inline-block position-right">Icon link</span>
+					<a data-toggle='dropdown' class='sidebar-control sidebar-main-toggle hidden-xs'>
+						<i class='icon-table2' data-toggle='tooltip' data-placement='bottom' title='Export'></i>
+						<i class='caret'></i>
 					</a>
-					<ul class="dropdown-menu dropdown-menu-left">
+					<ul class='dropdown-menu dropdown-menu-left'>
 						<li id='tocsv'><a href='#'>Export to CSV</a></li>
 						<li id='totsv'><a href='#'>Export to TSV (SciDAVis standard)</a></li>
 						<li id='toxls'><a href='#'>Export to XLS</a></li>
@@ -78,54 +75,77 @@
 	</div>
 	<!-- /main navbar -->
 
-  <div class="page-header">
-  		<div class="page-header-content">
-  			<div class="page-title">
-  				<h4><span class="text-semibold" id="experiment"></span><span id="date"></span></h4>
+  <div class='page-header'>
+  		<div class='page-header-content'>
+  			<div class='page-title'>
+  				<h4><span class='text-semibold' id='experiment'></span><span id='date'></span></h4>
   			</div>
 
-				<div class="heading-elements">
-					<input type="checkbox" name="start-stop">
+				<div class='heading-elements'>
+					<input type='checkbox' name='on-off'>
+					<input type='checkbox' name='start-stop' id='start-stop' disabled>
 				</div>
   	</div>
 
 	<!-- Page container -->
-	<div class="page-container">
+	<div class='page-container'>
 
 		<!-- Page content -->
-		<div class="page-content">
+		<div class='page-content'>
 
 
 
 
 			<!-- Main content -->
-			<div class="content-wrapper">
+			<div class='content-wrapper'>
 
 				<!-- row row-sortable 1 -->
-				<div class="row row-sortable">
-					<div class="col-md-6 col-sm-6 col-xs-6">
+				<div class='row row-sortable'>
+					<div class='col-md-6 col-sm-6 col-xs-6'>
 
 						<!-- Current-->
-						<div class="panel panel-flat">
-							<div class="panel-heading">
-								<h5 class="panel-title">Vh</h5>
-								<div class="heading-elements">
-									<ul class="icons-list">
-				                		<li><a data-action="collapse"></a></li>
-														<li><a data-action="move"></a></li>
-				                	</ul>
-			                	</div>
-		                	</div>
+						<div class='panel panel-flat'>
+							<div class='panel-heading'>
 
-							<div class="panel-body">
-								<div class="col-md-6 text-center">Resistance: <span id="vh"></div>
-								<div class="col-md-6 text-center">
-									<label>Gain: </label>
-									<select>
-										<option>x0.5</option>
-										<option>x1</option>
-										<option>x2</option>
-									</select>
+								<h5 class='panel-title'>Vh</h5><i class='info'></i>
+								<div class='heading-elements'>
+
+									<ul class='icons-list'>
+										<li class='dropdown gain-wrap'>
+											<a data-toggle='dropdown' class='dropdown-toggle' >
+												Gain
+												<i class='caret'></i>
+											</a>
+											<ul class='dropdown-menu dropdown-menu-left gain'>
+												<li ><a href='#'>x0.5</a></li>
+												<li ><a href='#'>x1</a></li>
+												<li ><a href='#'>x Seo</a></li>
+												<li ><a href='#'>x fetto</a></li>
+											</ul>
+										</li>
+                		<li><a data-action='collapse'></a></li>
+										<li><a data-action='move'></a></li>
+
+                	</ul>
+              	</div>
+            	</div>
+
+							<div class='panel-body'>
+								<div class='col-md-4 text-center measured'>
+									<div id='vh1' class='col-md-6 col-sm-6 col-xs-6 text-center'>
+										Vh1
+									</div>
+									<div id="vh2"class='col-md-6 col-sm-6 col-xs-6 text-center'>
+										Vh2
+									</div>
+								</div>
+								<div class='col-md-4 text-center'>Resistance: <span id='vh'></span></div>
+								<hr class='visible-xs visible-sm'/>
+								<div class='col-md-4 text-center'>
+									<form class="form-inline">
+										<label class='k' for='k'>K = </label>
+										<input class="form-control k" name='k'type="number" min="0" max="1" value="0.5" step="0.001" >
+									</form>
 								</div>
 							</div>
 						</div>
@@ -133,22 +153,35 @@
 
 					</div>
 
-					<div class="col-md-6 col-sm-6 col-xs-6">
+					<div class='col-md-6 col-sm-6 col-xs-6'>
 
 						<!-- Vertical form -->
-						<div class="panel panel-flat">
-							<div class="panel-heading">
-								<h5 class="panel-title">Current</h5>
-								<div class="heading-elements">
-									<ul class="icons-list">
-				                		<li><a data-action="collapse"></a></li> <li><a data-action="move"></a></li>
+						<div class='panel panel-flat'>
+							<div class='panel-heading'>
+								<h5 class='panel-title'>Current</h5>
+								<div class='heading-elements'>
+									<ul class='icons-list'>
+														<li class='dropdown gain-wrap'>
+															<a data-toggle='dropdown' class='dropdown-toggle' >
+																Gain
+																<i class='caret'></i>
+															</a>
+															<ul class='dropdown-menu dropdown-menu-left gain'>
+																<li ><a href='#'>x0.5</a></li>
+																<li ><a href='#'>x1</a></li>
+																<li ><a href='#'>x Seo</a></li>
+																<li ><a href='#'>x fetto</a></li>
+															</ul>
+														</li>
+				                		<li><a data-action='collapse'></a></li>
+														<li><a data-action='move'></a></li>
 				                	</ul>
 			                	</div>
 		                	</div>
 
-							<div class="panel-body">
-								<div class="text-center">
-								<!-- Select element -->
+							<div class='panel-body'>
+								<div class='text-center'>
+
 
 							</div>
 						</div>
@@ -160,96 +193,131 @@
 
 				<!-- /grid -->
 				<!-- Grid -->
-				<div class="row row-sortab							</tbody>le">
-					<div class="col-md-6 col-sm-6 col-xs-6">
+				<div class='row row-sortable'>
+					<div class='col-md-6 col-sm-6 col-xs-6'>
 
 						<!-- Horizontal form -->
-						<div class="panel panel-flat">
-							<div class="panel-heading">
-								<h5 class="panel-title">Vr</h5>
-								<div class="heading-elements">
-									<ul class="icons-list">
-														<li><a data-action="collapse"></a></li> <li><a data-action="move"></a></li>
-													</ul>
-												</div>
-											</div>
-
-							<div class="panel-body">
-								<div class="col-md-6 text-center">Measured</div>
-								<div class="col-md-6 text-center">Calculated</div>
-							</div>
-						</div>
-						<!-- /horizotal form -->
-
-					</div>
-
-					<div class="col-md-6 col-sm-6 col-xs-6">
-
-						<!-- Vertical form -->
-						<div class="panel panel-flat">
-							<div class="panel-heading">
-								<h5 class="panel-title">Gauss</h5>
-								<div class="heading-elements">
-									<ul class="icons-list">
-														<li><a data-action="collapse"></a></li> <li><a data-action="move"></a></li>
-													</ul>
-												</div>
-											</div>
-
-							<div class="panel-body">
-
-						</div>
-					</div>
-						<!-- /vertical form -->
-
-					</div>
-				</div>
-
-				<!-- /grid -->
-				<!-- Grid -->
-				<div class="row">
-					<div class="col-md-12 col-sm-12 col-xs-12">
-
-						<!-- Horizontal form -->
-						<div class="panel panel-flat">
-							<div class="panel-heading">
-								<h5 class="panel-title">Temperature</h5>
-								<div class="heading-elements">
-									<ul class="icons-list">
-										<li><a data-action="collapse"></a></li>
+						<div class='panel panel-flat'>
+							<div class='panel-heading'>
+								<h5 class='panel-title'>Vr</h5>
+								<div class='heading-elements'>
+									<ul class='icons-list'>
+										<li class='dropdown gain-wrap'>
+											<a data-toggle='dropdown' class='dropdown-toggle' >
+												Gain
+												<i class='caret'></i>
+											</a>
+											<ul class='dropdown-menu dropdown-menu-left gain'>
+												<li ><a href='#'>x0.5</a></li>
+												<li ><a href='#'>x1</a></li>
+												<li ><a href='#'>x Seo</a></li>
+												<li ><a href='#'>x fetto</a></li>
+											</ul>
+										</li>
+										<li><a data-action='collapse'></a></li>
+										<li><a data-action='move'></a></li>
 									</ul>
 								</div>
 							</div>
-							<div class="panel-body">
-								<div class="text-center">
-									<div class="col-md-6 col-sm-6 col-xs-6">
-										<div class="col-md-4 col-sm-4 col-xs-4">
-											Temperature
+
+							<div class='panel-body'>
+								<div class='col-md-6 text-center'>Measured</div>
+								<div class='col-md-6 text-center'>Calculated</div>
+							</div>
+						</div>
+						<!-- /horizotal form -->
+
+					</div>
+
+					<div class='col-md-6 col-sm-6 col-xs-6'>
+
+						<!-- Vertical form -->
+						<div class='panel panel-flat'>
+							<div class='panel-heading'>
+								<h5 class='panel-title'>Gauss</h5>
+								<div class='heading-elements'>
+									<ul class='icons-list'>
+										<li class='dropdown gain-wrap'>
+											<a data-toggle='dropdown' class='dropdown-toggle' >
+												Gain
+												<i class='caret'></i>
+											</a>
+											<ul class='dropdown-menu dropdown-menu-left gain'>
+												<li ><a href='#'>x0.5</a></li>
+												<li ><a href='#'>x1</a></li>
+												<li ><a href='#'>x Seo</a></li>
+												<li ><a href='#'>x fetto</a></li>
+											</ul>
+										</li>
+										<li><a data-action='collapse'></a></li>
+										<li><a data-action='move'></a></li>
+									</ul>
+								</div>
+							</div>
+
+							<div class='panel-body'>
+
+						</div>
+					</div>
+						<!-- /vertical form -->
+
+					</div>
+				</div>
+
+				<!-- /grid -->
+				<!-- Grid -->
+				<div class='row'>
+					<div class='col-md-12 col-sm-12 col-xs-12'>
+
+						<!-- Horizontal form -->
+						<div class='panel panel-flat'>
+							<div class='panel-heading'>
+								<h5 class='panel-title'>Temperature</h5>
+								<div class='heading-elements'>
+									<ul class='icons-list'>
+										<li class='dropdown gain-wrap'>
+											<a data-toggle='dropdown' class='dropdown-toggle' >
+												Gain
+												<i class='caret'></i>
+											</a>
+											<ul class='dropdown-menu dropdown-menu-left gain'>
+												<li ><a href='#'>x0.5</a></li>
+												<li ><a href='#'>x1</a></li>
+												<li ><a href='#'>x Seo</a></li>
+												<li ><a href='#'>x fetto</a></li>
+											</ul>
+										</li>
+										<li><a data-action='collapse'></a></li>
+									</ul>
+								</div>
+							</div>
+							<div class='panel-body'>
+								<div class='text-center'>
+									<div class='col-md-6 col-sm-6 col-xs-6'>
+										<div class='col-md-4 col-sm-4 col-xs-4'>
+											Temperature <span id='test'></span>
 										</div>
-										<div class="col-md-4 col-sm-4 col-xs-4">
-											<div class="switch-field">
-												<input type="radio" id="switch_3_left" name="switch_3" value="yes" checked/>
-												<label for="switch_3_left">°C</label>
-												<input type="radio" id="switch_3_center" name="switch_3" value="maybe" />
-												<label for="switch_3_center">°K</label>
-												<input type="radio" id="switch_3_right" name="switch_3" value="no" />
-												<label for="switch_3_right">°F</label>
+										<div class='col-md-4 col-sm-4 col-xs-4'>
+											<div class='switch-field'>
+												<input type='radio' id='switch_3_left' name='switch_3' value='C' checked/>
+												<label for='switch_3_left'>°C</label>
+												<input type='radio' id='switch_3_center' name='switch_3' value='K' />
+												<label for='switch_3_center'>°K</label>
+												<input type='radio' id='switch_3_right' name='switch_3' value='F' />
+												<label for='switch_3_right'>°F</label>
 											</div>
 										</div>
-										<div class="col-md-4 col-sm-4 col-xs-4">
-											<i class="icon-fire" data-toggle="tooltip" title="Safe to touch"></i>
+										<div class='col-md-4 col-sm-4 col-xs-4'>
+											<i class='icon-fire' data-toggle='tooltip' title='Safe to touch'></i>
 										</div>
 									</div>
-									<div class="col-md-6 col-sm-6 col-xs-6">
+									<div class='col-md-6 col-sm-6 col-xs-6'>
 										<label>Power:&nbsp;&nbsp;&nbsp;</label>
 										<input
-										    type="text"
-										    name="somename"
-										    data-provide="slider"
-										    data-slider-min="0"
-										    data-slider-max="100"
-										    data-slider-step="1"
-										    data-slider-value="0"
+										    type='text'
+										    id='power'
+												class = 'slider'
+										    data-provide='slider'
 										>
 									</div>
 								</div>
@@ -262,36 +330,6 @@
 				</div>
 
 
-				<!-- /grid -->
-				<!-- Table -->
-				<div class="panel panel-flat">
-					<div class="panel-heading">
-						<h5 class="panel-title">Basic table</h5>
-						<div class="heading-elements">
-							<ul class="icons-list">
-		                		<li><a data-action="collapse"></a></li> <li><a data-action="move"></a></li>
-		                		<li><a data-action="close"></a></li>
-		                	</ul>
-	                	</div>
-                	</div>
-
-                	<div class="panel-body">
-                		Starter pages include the most basic components that may help you start your development process - basic grid example, panel, table and form layouts with standard components. Nothing extra.
-                	</div>
-
-					<div class="table-responsive">
-						<table class="table" id="records">
-              <thead>
-              </thead>
-              <tbody>
-              </tbody>
-						</table>
-					</div>
-				</div>
-				<!-- /table -->
-
-
-
 
 			</div>
 			<!-- /main content -->
@@ -301,9 +339,9 @@
 
 
 		<!-- Footer -->
-		<div class="footer text-muted">
-			&copy; 2015. <a href="#">Limitless Web App Kit</a> by <a href="http://themeforest.net/user/Kopyov" target="_blank">Eugene Kopyov</a>
-		</div>
+		<!--<div class='footer text-muted'>
+			&copy; 2015. <a href='#'>Limitless Web App Kit</a> by <a href='http://themeforest.net/user/Kopyov' target='_blank'>Eugene Kopyov</a>
+		</div>-->
 		<!-- /footer -->
 
 	</div>

@@ -1,4 +1,6 @@
 const electron = require('electron')
+const dateFormat = require('dateformat'); //for date
+
 // Module to control application life.
 const app = electron.app
 // Module to create native browser window.
@@ -8,7 +10,7 @@ const {ipcMain} = require('electron')
 // be closed automatically when the JavaScript object is garbage collected.
 let mainWindow
 let plotWindow
-global.config = {'_file': '','_config':'false','_experiment':'','_date':''}
+global.config = {'_file': '','_experiment':'','_date':dateFormat(Date.now(), "yyyy_mm_dd"),'_gain':{'vh': 1 ,'vr': 1 , 'a' : 1, 'g' : 1}}
 function createWindow () {
   // Create the browser window.
   mainWindow = new BrowserWindow({width: 800, height: 600})

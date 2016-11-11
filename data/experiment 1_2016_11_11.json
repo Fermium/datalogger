@@ -1,0 +1,476 @@
+{
+  "_data": [
+    {
+      "series": "test",
+      "timestamp": 0,
+      "value": 0.22210232697589416
+    },
+    {
+      "series": "test",
+      "timestamp": 1,
+      "value": 0.3504688287448483
+    },
+    {
+      "series": "test",
+      "timestamp": 2,
+      "value": 0.8713547884988355
+    },
+    {
+      "series": "test",
+      "timestamp": 3,
+      "value": 0.6358034784544244
+    },
+    {
+      "series": "test",
+      "timestamp": 4,
+      "value": 0.9584182143455313
+    },
+    {
+      "series": "test",
+      "timestamp": 5,
+      "value": 0.5012249738881263
+    },
+    {
+      "series": "test",
+      "timestamp": 6,
+      "value": 0.9972482360998094
+    },
+    {
+      "series": "test",
+      "timestamp": 7,
+      "value": 0.014549669389827047
+    },
+    {
+      "series": "test",
+      "timestamp": 8,
+      "value": 0.9765993351777571
+    },
+    {
+      "series": "test",
+      "timestamp": 9,
+      "value": 0.9517393117870359
+    },
+    {
+      "series": "test",
+      "timestamp": 10,
+      "value": 0.7174844446023112
+    },
+    {
+      "series": "test",
+      "timestamp": 11,
+      "value": 0.846781862302296
+    },
+    {
+      "series": "test",
+      "timestamp": 12,
+      "value": 0.13076317205968313
+    },
+    {
+      "series": "test",
+      "timestamp": 13,
+      "value": 0.3046162088350255
+    },
+    {
+      "series": "test",
+      "timestamp": 14,
+      "value": 0.5377914159969854
+    },
+    {
+      "series": "test",
+      "timestamp": 15,
+      "value": 0.5945710410154188
+    },
+    {
+      "series": "test",
+      "timestamp": 16,
+      "value": 0.954938519847466
+    },
+    {
+      "series": "test",
+      "timestamp": 17,
+      "value": 0.6563351547992275
+    },
+    {
+      "series": "test",
+      "timestamp": 18,
+      "value": 0.93311050078367
+    },
+    {
+      "series": "test",
+      "timestamp": 19,
+      "value": 0.871731820846041
+    },
+    {
+      "series": "test",
+      "timestamp": 20,
+      "value": 0.7960077382202699
+    },
+    {
+      "series": "test",
+      "timestamp": 21,
+      "value": 0.7461506803822318
+    },
+    {
+      "series": "test",
+      "timestamp": 22,
+      "value": 0.7235918929076455
+    },
+    {
+      "series": "test",
+      "timestamp": 23,
+      "value": 0.34590037488329206
+    },
+    {
+      "series": "test",
+      "timestamp": 24,
+      "value": 0.4606497697711489
+    },
+    {
+      "series": "test",
+      "timestamp": 25,
+      "value": 0.8682695902327164
+    },
+    {
+      "series": "test",
+      "timestamp": 26,
+      "value": 0.9183575507571973
+    },
+    {
+      "series": "test",
+      "timestamp": 27,
+      "value": 0.47932463341710685
+    },
+    {
+      "series": "test",
+      "timestamp": 28,
+      "value": 0.4474499371633296
+    },
+    {
+      "series": "test",
+      "timestamp": 29,
+      "value": 0.9847021093291357
+    },
+    {
+      "series": "test",
+      "timestamp": 30,
+      "value": 0.2179733762271141
+    },
+    {
+      "series": "test",
+      "timestamp": 31,
+      "value": 0.8526008574371968
+    },
+    {
+      "series": "test",
+      "timestamp": 32,
+      "value": 0.2226130571365481
+    },
+    {
+      "series": "test",
+      "timestamp": 33,
+      "value": 0.06109390809620341
+    },
+    {
+      "series": "test",
+      "timestamp": 34,
+      "value": 0.4228940791363822
+    },
+    {
+      "series": "test",
+      "timestamp": 35,
+      "value": 0.720874626416868
+    },
+    {
+      "series": "test",
+      "timestamp": 36,
+      "value": 0.2578101285697598
+    },
+    {
+      "series": "test",
+      "timestamp": 37,
+      "value": 0.02647262838466191
+    },
+    {
+      "series": "test",
+      "timestamp": 38,
+      "value": 0.19477386086003556
+    },
+    {
+      "series": "test",
+      "timestamp": 39,
+      "value": 0.013360721983378676
+    },
+    {
+      "series": "test",
+      "timestamp": 40,
+      "value": 0.8192834857216191
+    },
+    {
+      "series": "test",
+      "timestamp": 41,
+      "value": 0.5382386131316625
+    },
+    {
+      "series": "test",
+      "timestamp": 42,
+      "value": 0.9090525709421249
+    },
+    {
+      "series": "test",
+      "timestamp": 43,
+      "value": 0.9542081715984008
+    },
+    {
+      "series": "test",
+      "timestamp": 44,
+      "value": 0.5590864833133136
+    },
+    {
+      "series": "test",
+      "timestamp": 45,
+      "value": 0.956702280261372
+    },
+    {
+      "series": "test",
+      "timestamp": 46,
+      "value": 0.423489333272246
+    },
+    {
+      "series": "test",
+      "timestamp": 47,
+      "value": 0.7792004122197946
+    },
+    {
+      "series": "test",
+      "timestamp": 48,
+      "value": 0.9460877006387955
+    },
+    {
+      "series": "test",
+      "timestamp": 49,
+      "value": 0.5333654429764028
+    },
+    {
+      "series": "test",
+      "timestamp": 50,
+      "value": 0.439437131485644
+    },
+    {
+      "series": "test",
+      "timestamp": 51,
+      "value": 0.8658894343215173
+    },
+    {
+      "series": "test",
+      "timestamp": 52,
+      "value": 0.2660204061981195
+    },
+    {
+      "series": "test",
+      "timestamp": 53,
+      "value": 0.3137306761234562
+    },
+    {
+      "series": "test",
+      "timestamp": 54,
+      "value": 0.6840041271112007
+    },
+    {
+      "series": "test",
+      "timestamp": 55,
+      "value": 0.8517737985619664
+    },
+    {
+      "series": "test",
+      "timestamp": 56,
+      "value": 0.4614752772186821
+    },
+    {
+      "series": "test",
+      "timestamp": 57,
+      "value": 0.46411420237843903
+    },
+    {
+      "series": "test",
+      "timestamp": 58,
+      "value": 0.8608992081470732
+    },
+    {
+      "series": "test",
+      "timestamp": 59,
+      "value": 0.5243432646984372
+    },
+    {
+      "series": "test",
+      "timestamp": 60,
+      "value": 0.44929781673003033
+    },
+    {
+      "series": "test",
+      "timestamp": 61,
+      "value": 0.06881018792425331
+    },
+    {
+      "series": "test",
+      "timestamp": 62,
+      "value": 0.90910999026934
+    },
+    {
+      "series": "test",
+      "timestamp": 0,
+      "value": 0.5450027908445823
+    },
+    {
+      "series": "test",
+      "timestamp": 1,
+      "value": 0.22826704197319536
+    },
+    {
+      "series": "test",
+      "timestamp": 2,
+      "value": 0.5142818827252749
+    },
+    {
+      "series": "test",
+      "timestamp": 3,
+      "value": 0.40722750231961014
+    },
+    {
+      "series": "test",
+      "timestamp": 4,
+      "value": 0.49628002354600964
+    },
+    {
+      "series": "test",
+      "timestamp": 5,
+      "value": 0.7221912576634768
+    },
+    {
+      "series": "test",
+      "timestamp": 6,
+      "value": 0.23761212888800176
+    },
+    {
+      "series": "test",
+      "timestamp": 7,
+      "value": 0.7625049656726723
+    },
+    {
+      "series": "test",
+      "timestamp": 8,
+      "value": 0.2998312389212814
+    },
+    {
+      "series": "test",
+      "timestamp": 9,
+      "value": 0.20308689560453264
+    },
+    {
+      "series": "test",
+      "timestamp": 10,
+      "value": 0.6808966724193306
+    },
+    {
+      "series": "test",
+      "timestamp": 11,
+      "value": 0.8049998003418719
+    },
+    {
+      "series": "test",
+      "timestamp": 12,
+      "value": 0.12178838103299894
+    },
+    {
+      "series": "test",
+      "timestamp": 13,
+      "value": 0.1083018411474832
+    },
+    {
+      "series": "test",
+      "timestamp": 14,
+      "value": 0.05821513385264021
+    },
+    {
+      "series": "test",
+      "timestamp": 15,
+      "value": 0.897967092641482
+    },
+    {
+      "series": "test",
+      "timestamp": 16,
+      "value": 0.23412505947455364
+    },
+    {
+      "series": "test",
+      "timestamp": 17,
+      "value": 0.8214102352507573
+    },
+    {
+      "series": "test",
+      "timestamp": 18,
+      "value": 0.9658632128762035
+    },
+    {
+      "series": "test",
+      "timestamp": 19,
+      "value": 0.2035879991744689
+    },
+    {
+      "series": "test",
+      "timestamp": 20,
+      "value": 0.48478713510636506
+    },
+    {
+      "series": "test",
+      "timestamp": 21,
+      "value": 0.5015436155370392
+    },
+    {
+      "series": "test",
+      "timestamp": 22,
+      "value": 0.043922301348512605
+    },
+    {
+      "series": "test",
+      "timestamp": 23,
+      "value": 0.1640583996077456
+    },
+    {
+      "series": "test",
+      "timestamp": 24,
+      "value": 0.769614084971856
+    },
+    {
+      "series": "test",
+      "timestamp": 25,
+      "value": 0.6927578946985806
+    },
+    {
+      "series": "test",
+      "timestamp": 26,
+      "value": 0.5308130562085309
+    },
+    {
+      "series": "test",
+      "timestamp": 27,
+      "value": 0.8252871275306686
+    },
+    {
+      "series": "test",
+      "timestamp": 28,
+      "value": 0.19550719321139676
+    },
+    {
+      "series": "test",
+      "timestamp": 29,
+      "value": 0.11559912556925211
+    },
+    {
+      "series": "test",
+      "timestamp": 30,
+      "value": 0.6382673415497968
+    }
+  ],
+  "_experiment": "experiment 1",
+  "_date": "2016_11_11"
+}

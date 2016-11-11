@@ -51,3 +51,14 @@
 .switch-field label:last-of-type {
   border-radius: 0 4px 4px 0;
 }
+
+
+.measured {
+  color : #d0d0d0;
+}
+
+.experiment{
+  background-color: transparent;
+  border: none;
+  
+}

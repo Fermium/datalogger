@@ -17,9 +17,11 @@
   "author": "GitHub",
   "license": "CC0-1.0",
   "devDependencies": {
-    "electron": "^1.4.1"
+    "electron": "^1.4.1",
+    "mathjax-node": "^0.5.1"
   },
   "dependencies": {
+    "bootstrap-slider": "^9.4.1",
     "chart.js": "^2.3.0",
     "dateformat": "^1.0.12",
     "json2csv": "^3.7.1",
