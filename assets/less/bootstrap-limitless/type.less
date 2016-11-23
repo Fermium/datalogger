@@ -219,24 +219,51 @@ svg {
 // Contextual backgrounds
 // -------------------------
 
+.bg-primary {
+    a&:hover,
+    a&:focus {
+        background-color: @brand-primary;
+    }
+}
+
 .bg-success {
     color: #fff;
     .bg-variant(@brand-success);
+
+    a&:hover,
+    a&:focus {
+        background-color: @brand-success;
+    }
 }
 
 .bg-info {
     color: #fff;
     .bg-variant(@brand-info);
+
+    a&:hover,
+    a&:focus {
+        background-color: @brand-info;
+    }
 }
 
 .bg-warning {
     color: #fff;
     .bg-variant(@brand-warning);
+
+    a&:hover,
+    a&:focus {
+        background-color: @brand-warning;
+    }
 }
 
 .bg-danger {
     color: #fff;
     .bg-variant(@brand-danger);
+
+    a&:hover,
+    a&:focus {
+        background-color: @brand-danger;
+    }
 }
 
 
@@ -250,11 +277,6 @@ svg {
     padding: 0;
     border-bottom-width: 0;
 
-    // Navbar
-    .navbar {
-        margin-bottom: @line-height-computed;
-    }
-
     // Setup desktop view
     @media (min-width: @grid-float-breakpoint) {
         .heading-elements.collapse {
@@ -264,26 +286,93 @@ svg {
     }
 }
 
-// Filled page header
-.page-header-filled {
-    background-color: #fafafa;
-    border-bottom-width: 1px;
+// Dark page header
+.page-header-inverse {
+    background-color: @page-header-inverse-bg;
+    color: #fff;
+    margin-bottom: @line-height-computed;
 
-    .navbar {
-        margin-bottom: 0;
-        border-bottom-width: 0;
+    // Change color of small element
+    .page-title small {
+        color: fade(#fff, 50%);
+    }
+
+    // Breadcrumbs
+    > .breadcrumb,
+    .page-header-content .breadcrumb {
+
+        // Links
+        > li > a,
+        > li + li:before {
+            color: fade(#fff, 90%);
+        }
+
+        // Hovered links
+        > li > a:hover,
+        > li > a:focus {
+            color: #fff;
+            .opacity(1);
+        }
+
+        // Active item
+        > .active {
+            color: fade(#fff, 50%);
+        }
+    }
+
+    // Icon addons color
+    .form-control-feedback,
+    .input-group-addon {
+        color: fade(#fff, 75%);
+    }
+
+    // Text links
+    .heading-text > a {
+        color: #fff;
+    }
+
+    // Input fields
+    .form-control {
+        border-bottom-color: fade(#fff, 30%);
+        color: #fff;
+        .placeholder(fade(@input-placeholder-light, 75%));
+
+        // Focused
+        &:focus {
+            border-bottom-color: #fff;
+            .box-shadow(0 1px 0 #fff);
+        }
+    }
+    
+    // Cover image
+    &.has-cover {
+        background: url(../images/login_cover.jpg); // feel free to change
+        background-size: cover;
+    }
+}
+
+// White page header
+.page-header-default {
+    background-color: @page-header-default-bg;
+    margin-bottom: @line-height-computed;
+    .box-shadow(0 1px 0 0 @navbar-default-border);
+    
+    // Cover image
+    &.has-cover {
+        background: url(../images/backgrounds/seamless.png); // feel free to change
     }
 }
 
 // Page title
 .page-title {
-    padding: (@line-height-computed + 10) (@grid-gutter-width + @icon-font-size) (@line-height-computed + 10) 0;
+    padding: 32px (@grid-gutter-width + @icon-font-size) 32px 0;
     display: block;
     position: relative;
 
     // Subtitle
     small {
         margin-left: (@grid-gutter-width / 2);
+        display: inline-block;
 
         &:before {
             content: '/';
@@ -292,6 +381,7 @@ svg {
 
         &.display-block {
             margin-left: 0;
+            display: block;
             
             &:before {
                 content: none;
@@ -311,20 +401,20 @@ svg {
 
     // Large
     .page-header-lg & {
-        padding-top: (@line-height-computed + 15);
-        padding-bottom: (@line-height-computed + 15);
+        padding-top: (32px) + 5;
+        padding-bottom: (32px) + 5;
     }
 
     // Small
     .page-header-sm & {
-        padding-top: (@line-height-computed + 5);
-        padding-bottom: (@line-height-computed + 5);
+        padding-top: (32px) - 5;
+        padding-bottom: (32px) - 5;
     }
 
     // Mini
     .page-header-xs & {
-        padding-top: @line-height-computed;
-        padding-bottom: @line-height-computed;
+        padding-top: (32px) - 10;
+        padding-bottom: (32px) - 10;
     }
 
 
@@ -608,12 +698,14 @@ dt {
 
 // Horizontal description lists
 .dl-horizontal dt {
-    + dd {
-        margin-top: @line-height-computed;
-    }
+    @media (min-width: @screen-sm-min) {
+        + dd {
+            margin-top: @line-height-computed;
+        }
 
-    &:first-child + dd {
-        margin-top: 0;
+        &:first-child + dd {
+            margin-top: 0;
+        }
     }
 }
 

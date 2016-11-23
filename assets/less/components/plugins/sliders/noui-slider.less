@@ -4,8 +4,8 @@
 *
 *  Styles for NoUI range slider plugin
 *
-*  Version: 1.0
-*  Latest update: May 25, 2015
+*  Version: 1.1
+*  Latest update: Mar 10, 2016
 *
 * ---------------------------------------------------------------------------- */
 
@@ -41,11 +41,6 @@
     left: 0;
     bottom: 0;
     border-radius: 100px;
-
-    .noUi-state-tap & {
-        .transition(left 0.3s);
-        .transition(top 0.3s);
-    }
 }
 
 // Inherit cursor
@@ -62,17 +57,17 @@
 // Connector
 .noUi-connect {
     background-color: @color-slate-500;
-    margin-right: 1px;
-    .transition(background 450ms);
 }
 
 // Disabled state
 [disabled] {
-    .noUi-connect,
-    &.noUi-connect {
-        background-color: #bbb;
+
+    // Background
+    .noUI-background {
+        .opacity(0.75);
     }
 
+    // Handle
     .noUi-handle {
         cursor: @cursor-disabled;
     }

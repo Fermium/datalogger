@@ -22,7 +22,6 @@ module.exports = {
   },
   stop : function() {
     clearInterval(thread);
-    config._db_exists = false;
   },
   send : function(id,value){
     /*console.log(id+" : "+value);*/
@@ -31,6 +30,7 @@ module.exports = {
     console.log('turned on');
   },
   off : function(){
+    config._db_exists = false;
     console.log("turned off");
   }
 }
@@ -69,6 +69,7 @@ function createdb(){
          config._file=fileName;
          initdb();
          thread=setInterval(read,500);
+
   });
   }
   else{

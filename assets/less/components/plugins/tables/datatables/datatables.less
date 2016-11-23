@@ -4,8 +4,8 @@
  *
  *  Add advanced interaction controls to any HTML table
  *
- *  Version: 1.1
- *  Latest update: Nov 10, 2015
+ *  Version: 1.2
+ *  Latest update: Mar 10, 2016
  *
  * ---------------------------------------------------------------------------- */
 
@@ -176,9 +176,10 @@
 // Header and footer
 // ------------------------------
 
+// Common
 .datatable-header,
 .datatable-footer {
-	padding-top: @line-height-computed;
+	padding: @line-height-computed @content-padding-large 0 @content-padding-large;
 
 	// Clearing floats
 	&:after {
@@ -192,10 +193,10 @@
 		margin-left: 0;
 	}
 
-	// Add horizontal spacing if inside panel
-	.panel > .dataTables_wrapper & {
-		padding-left: @content-padding-large;
-		padding-right: @content-padding-large;
+	// Remove horizontal spacing if inside panel body
+	.panel-body & {
+		padding-left: 0;
+		padding-right: 0;
 	}
 }
 
@@ -264,8 +265,9 @@
 			font-size: @font-size-small;
 			display: inline-block;
 			position: absolute;
-			top: @padding-base-horizontal;
+			top: 50%;
 			right: @padding-base-horizontal;
+			margin-top: -(@font-size-small / 2);
 			color: @text-muted;
 			line-height: 1;
 			-webkit-font-smoothing: antialiased;
@@ -286,7 +288,7 @@
 		width: 200px;
 		height: @input-height-base;
 		padding: @padding-base-vertical @padding-base-horizontal;
-		padding-right: @input-height-small;
+		padding-right: ((@padding-base-horizontal * 2) + @font-size-small);
 		font-size: @font-size-base;
 		line-height: @line-height-base;
 		color: @input-color;
@@ -321,7 +323,7 @@
 	// Button
 	.paginate_button {
 		display: inline-block;
-		padding: @padding-base-vertical @padding-base-horizontal;
+		padding: @padding-base-vertical;
 		min-width: @input-height-base;
 		margin-left: 2px;
 		text-align: center;
@@ -331,6 +333,7 @@
 		border: 1px solid transparent;
 		border-radius: @border-radius-base;
 
+		// First item
 		&:first-child {
 			margin-left: 0;
 		}
@@ -361,6 +364,12 @@
 				color: @pagination-disabled-color;
 			}
 		}
+	}
+
+	// Simple paginate
+	&.paging_simple .paginate_button {
+		padding-left: @padding-base-horizontal;
+		padding-right: @padding-base-horizontal;
 	}
 
 	// Left display option
@@ -438,12 +447,15 @@
 
 // Inside panel body
 .panel-body {
-	+ .dataTables_wrapper {
+	+ .dataTables_wrapper,
+	+ * > .dataTables_wrapper {
 		border-top: 1px solid @panel-default-border;
 	}
 
 	> .dataTables_wrapper {
 		.datatable-footer {
+			border-top: 0;
+			
 			.dataTables_length,
 			.dataTables_filter,
 			.dataTables_info,
@@ -456,7 +468,9 @@
 
 // Inside flat panel
 .panel-flat > .panel-heading + .dataTables_wrapper {
-	border-top: 1px solid @panel-default-border;
+	> .datatable-header {
+		padding-top: 0;
+	}
 }
 
 // Bordered table inside panel

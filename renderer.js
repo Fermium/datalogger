@@ -57,6 +57,10 @@ $(".gain li a").click(function(){
   var selText = $(this).text();
   $(this).parents('.gain-wrap').find('.dropdown-toggle').html(selText+' <i class="caret"></i>');
 });
+$('#power').ionRangeSlider({
+	min:0,
+	max:100
+});
 /*
 $('#experiment').keydown(function(e) {
      if(e.keyCode == 13) {

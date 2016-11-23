@@ -4,8 +4,8 @@
 *
 *  Overrides for panels bootstrap component
 *
-*  Version: 1.0
-*  Latest update: May 25, 2015
+*  Version: 1.1
+*  Latest update: Mar 10, 2016
 *
 * ---------------------------------------------------------------------------- */
 
@@ -110,6 +110,7 @@
 // Base class
 .panel-heading {
     position: relative;
+    .border-top-radius(@border-radius-base);
 
     // Bordered panel
     .panel-bordered > & {
@@ -121,6 +122,12 @@
         padding-top: @content-padding-large;
         padding-bottom: @content-padding-large;
         background-color: @panel-bg;
+
+        // Add extra vertical spacing for title
+        > .panel-title {
+            margin-top: 2px;
+            margin-bottom: 2px;
+        }
     }
 
     // Inherit bg color in solid color panel
@@ -251,6 +258,9 @@
 // Base styles
 .panel-footer {
     position: relative;
+    padding-left: 0;
+    padding-right: 0;
+    .border-bottom-radius(@border-radius-base);
 
     // Clearing floats
     &:after {
@@ -258,76 +268,28 @@
         display: table;
         clear: both;
     }
-
-    // List 
-    > ul {
-        margin: 0;
-        padding: 0;
-        font-size: 0;
-        list-style: none;
-        float: left;
-        margin-left: @content-padding-base;
-
-        &:first-child {
-            margin-left: 0;
-        }
-
-        > li {
-            display: inline-block;
-            font-size: @font-size-base;
-            padding-top: (@padding-base-vertical + 1);
-            padding-bottom: (@padding-base-vertical + 1);
-
-            & + li {
-                margin-left: @content-padding-base;
-            }
-
-            > a {
-                color: @text-color;
-            }
-
-            .dropdown-menu {
-                margin-top: 0;
-                margin-bottom: 0;
-            }
-        }
-    }
-
-    // Setup mobile view
-    @media (max-width: @screen-xs) {
-        text-align: center;
-
-        ul,
-        .pull-right {
-            margin-left: 0;
-            float: none!important;
-        }
-
-        > ul > li,
-        .dropdown,
-        .dropup,
-        .btn-group {
-            position: static;
-        }
-
-        .dropdown-menu {
-            left: 0;
-            right: 0;
-        }
-    }
 }
 
-// Detached panel footer
+// Transparent panel footer
 .panel-footer-transparent {
     background-color: transparent;
     border-top: 0;
+    padding-top: 0;
+    padding-bottom: @content-padding-large - ((@input-height-base - @line-height-computed) / 2);
+}
 
-    // List items
-    > ul > li {
-        padding-top: 0;
-        padding-bottom: 0;
-        margin-bottom: @panel-body-padding;
-    }
+// Condensed panel footer
+.panel-footer-condensed {
+    padding-top: 2px;
+    padding-bottom: 2px;
+}
+
+// Bordered panel footer
+.panel-footer-bordered {
+    background-color: @panel-bg;
+    padding-right: 0;
+    margin-left: @content-padding-large;
+    margin-right: @content-padding-large;
 }
 
 

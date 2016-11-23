@@ -14,23 +14,31 @@
 .page-container {
     position: relative;
     padding: @line-height-computed @grid-gutter-width;
-    padding-bottom: (@line-height-computed * 2);
+    padding-bottom: (@line-height-computed * 3);
 
-    .page-header:not(.page-header-filled) + & {
+    // Change bottom spacing if footer is navbar
+    .navbar-bottom &,
+    .navbar-bottom-lg &,
+    .navbar-bottom-sm &,
+    .navbar-bottom-xs & {
+        padding-bottom: @line-height-computed;
+    }
+
+    // Add top spacing to content area
+    .page-header + & {
         padding-top: 0;
     }
 
+    // Desktop view
     @media (min-width: @grid-float-breakpoint) {
         width: 100%;
         display: table;
         table-layout: fixed;
-    }
-}
 
-// Min-height doesn't work in FF, bug. So we set 1px height which is overriden with min-height
-@-moz-document url-prefix() {
-    .page-container {
-        height: 1px;
+        // Min-height doesn't work in FF, bug. So we set 1px height which is overriden with min-height
+        @-moz-document url-prefix() {
+            height: 1px;
+        }
     }
 }
 

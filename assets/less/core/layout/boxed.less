@@ -17,16 +17,45 @@
     .navbar .navbar-boxed,
     .page-header-content,
     .page-header .breadcrumb-boxed,
-    .page-container {
+    .page-container,
+    .footer-boxed {
         margin-left: auto;
         margin-right: auto;
+    }
+
+    // Boxed navbar
+    .navbar:not(.navbar-component) {
+        @media (min-width: @grid-float-breakpoint) {
+            padding-left: 0;
+            padding-right: 0;
+
+            .navbar-boxed {
+                position: relative;
+                padding-left: @navbar-padding-horizontal;
+                padding-right: @navbar-padding-horizontal;
+
+                .navbar-header {
+                    margin-left: 0;
+                }
+
+                .navbar-brand {
+                    padding-left: 0;
+                }
+
+                .mega-menu-wide .dropdown-content {
+                    left: @navbar-padding-horizontal;
+                    right: @navbar-padding-horizontal;
+                }
+            }
+        }
     }
 
     // Set widths on different screens
     .page-container,
     .navbar .navbar-boxed,
     .page-header .breadcrumb-boxed,
-    .page-header-content {
+    .page-header-content,
+    .footer-boxed {
         @media (min-width: @screen-sm-min) {
             width: @container-sm;
         }

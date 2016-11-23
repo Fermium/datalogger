@@ -4,8 +4,8 @@
  *
  *  A JavaScript event calendar. Customizable and open source
  *
- *  Version: 1.1
- *  Latest update: Oct 20, 2015
+ *  Version: 1.2
+ *  Latest update: Mar 10, 2016
  *
  * ---------------------------------------------------------------------------- */
 
@@ -21,9 +21,6 @@
 
 // Calendar view
 .fc-view {
-	max-width: 100%;
-	overflow: auto;
-
 	> table {
 		min-width: @screen-sm;
 	}
@@ -34,6 +31,7 @@
 	background-color: #fcfcfc;
 	border: 1px solid @panel-inner-border;
 	padding: 10px;
+	border-radius: @border-radius-base;
 
 	.fc-event {
 		margin: 0;
@@ -154,7 +152,7 @@
 // ------------------------------
 
 // Base, identical to .btn-default
-.fc button {
+.fc-button {
 	margin: 0;
 	border: 1px solid @btn-default-border;
 	padding: @padding-base-vertical @padding-base-horizontal;
@@ -176,15 +174,15 @@
 
 // Default
 .fc-state-default {
-	border: 1px solid;
+	border: 1px solid @btn-default-border;
 	background-color: @btn-default-bg;
 
 	&.fc-corner-left {
-		.border-left-radius(@border-radius-small);
+		.border-left-radius(@border-radius-base);
 	}
 
 	&.fc-corner-right {
-		.border-right-radius(@border-radius-small);
+		.border-right-radius(@border-radius-base);
 	}
 }
 
@@ -420,7 +418,6 @@
 .fc-scroller {
 	overflow-y: scroll;
 	overflow-x: hidden;
-	min-height: 500px;
 
 	// We expect an immediate inner element
 	> * {
@@ -531,7 +528,7 @@ a.fc-more {
 	display: block;
 	padding: 5px;
 	text-align: center;
-	border-radius: @border-radius-small;
+	border-radius: @border-radius-base;
 	color: @gray-light;
 	font-size: @font-size-small;
 
@@ -642,11 +639,37 @@ a.fc-more {
 // View structure
 // ------------------------------
 
-.fc-view-container * {
-	&,
-	&:before,
-	&:after {
-		.box-sizing(content-box);
+.fc-view-container {
+	border-left: 1px solid @panel-default-border;
+	border-right: 1px solid @panel-default-border;
+	overflow: auto;
+	max-width: 100%;
+
+	// Remove borders from table cells
+	.fc-view > table {
+
+		// Right border
+		th,
+		td {
+			border-right-width: 0;
+		}
+
+		// Left border from first cell
+		tr:first-child {
+			th:first-child,
+			td:first-child {
+				border-left-width: 0;
+			}
+		}
+	}
+
+	// Change box sizing
+	* {
+		&,
+		&:before,
+		&:after {
+			.box-sizing(content-box);
+		}
 	}
 }
 
@@ -966,22 +989,6 @@ a.fc-more {
 		.fc-right {
 			display: block;
 			margin-bottom: 10px;
-		}
-	}
-
-	.fc-view-container {
-		border-left: 1px solid #ddd;
-		border-right: 1px solid #ddd;
-
-		> .fc-view > table {
-			margin-left: -1px;
-		}
-	}
-
-	.fc {
-		th,
-		td {
-			border-right-width: 0;
 		}
 	}
 }

@@ -4,8 +4,8 @@
  *
  *  Styles for sidebar components, main navigation and sidebar itself
  *
- *  Version: 1.1
- *  Latest update: Oct 20, 2015
+ *  Version: 1.2
+ *  Latest update: Mar 10, 2016
  *
  * ---------------------------------------------------------------------------- */
 
@@ -109,7 +109,7 @@
 .category-title {
 	position: relative;
 	margin: 0;
-	padding: @content-padding-small @content-padding-large;
+	padding: @navigation-padding-base-vertical @content-padding-large;
 	padding-right: (@content-padding-large + @content-padding-small + @icon-font-size);
 	border-bottom: 1px solid fade(#fff, 10%);
 
@@ -207,16 +207,15 @@
 
 		// All level links
 		a {
-			color: fade(#fff, 75%);
+			color: @navigation-dark-color;
 			display: block;
-			@transition: background 0.15s linear, color 0.15s linear;
-			.transition(@transition); // Add minor animation to all level links
+			.transition(~"background 0.15s linear, color 0.15s linear"); // Add minor animation to all level links
 
 			// Hover state
 			&:hover,
 			&:focus {
-				background-color: fade(#000, 10%);
-				color: #fff;
+				background-color: @navigation-dark-hover-bg;
+				color: @navigation-dark-hover-color;
 			}
 
 			// Left icons
@@ -276,7 +275,7 @@
 
 		// Divider
 		&.navigation-divider {
-			margin: (@list-spacing * 2) 0;
+			margin: (@line-height-computed / 2) 0;
 			height: 1px;
 			background-color: fade(#fff, 10%);
 
@@ -284,12 +283,6 @@
 			.sidebar-default & {
 				background-color: @gray-lighter;
 			}
-		}
-
-		// Transparent labels
-		&:not(.active) .label-transparent {
-			color: fade(#fff, 50%);
-			font-weight: 400;
 		}
 	}
 
@@ -312,12 +305,12 @@
 				&:hover,
 				&:focus {
 					background-color: @navigation-dark-active-bg;
-					color: #fff;
+					color: @navigation-dark-active-color;
 				}
 
 				// Make all texts white
 				> [class*=text-] {
-					color: #fff;
+					color: @navigation-dark-active-color;
 				}
 
 				// No color dependency - make all labela and badges white
@@ -325,7 +318,7 @@
 				.badge {
 					background-color: transparent;
 					border-color: transparent;
-					color: #fff;
+					color: @navigation-dark-active-color;
 					.transition(background-color ease-in-out 0.2s);
 				}
 			}
@@ -342,9 +335,9 @@
 			// Nav items
 			li {
 				a {
-					padding: 10px @content-padding-large;
+					padding: @content-padding-small @content-padding-large;
 					padding-left: (@content-padding-large + @content-padding-base + @icon-font-size);
-					min-height: (@line-height-computed + 20);				
+					min-height: (@line-height-computed + @content-padding-large);				
 				}
 			}
 
@@ -478,7 +471,6 @@
 	.label,
 	.badge {
 		float: right;
-		margin-top: 1px;
 	}
 }
 
@@ -490,11 +482,11 @@
 		// All levels
 		li {
 			> a {
-				color: @text-color;
+				color: @navigation-light-color;
 
 				&:hover,
 				&:focus {
-					background-color: @dropdown-link-hover-bg;
+					background-color: @navigation-light-hover-bg;
 				}
 			}
 
@@ -504,8 +496,13 @@
 					&,
 					&:hover,
 					&:focus {
-						background-color: @dropdown-link-hover-bg;
-						color: @text-color;
+						background-color: @navigation-light-active-bg;
+						color: @navigation-light-active-color;
+					}
+
+					// Make all texts dark
+					> [class*=text-] {
+						color: @navigation-light-active-color;
 					}
 				}
 			}
@@ -523,8 +520,7 @@
 
 			// Transparent labels
 			.label-transparent {
-				color: @text-muted;
-				font-weight: 400;
+				color: @text-color;
 			}
 		}
 
@@ -541,12 +537,12 @@
 					&:hover,
 					&:focus {
 						background-color: @navigation-light-active-bg;
-						color: #fff;
+						color: @navigation-light-active-color;
 					}
 
 					// Make transparent labels white
 					.label-transparent {
-						color: #fff;
+						color: @navigation-light-active-color;
 					}
 				}
 			}
@@ -598,9 +594,6 @@
 		// Headers
 		&.navigation-header {
 			background-color: fade(#000, 10%);
-			padding-top: @navigation-padding-base-vertical;
-			padding-bottom: @navigation-padding-base-vertical;
-			line-height: 1;
 		}
 
 		// Remove 1px spacing
@@ -727,6 +720,7 @@
 		width: @sidebar-base-width;
 		top: @line-height-computed;
 		bottom: @line-height-computed;
+		.transition(bottom ease-in-out 0.15s);
 
 		// Content
 		.sidebar-content {
@@ -737,6 +731,34 @@
 		// Avoid footer overlap
 		&.fixed-sidebar-space {
 			bottom: (@line-height-computed * 3);
+
+			// If footer is navbar
+			.navbar-bottom & {
+				bottom: ((@line-height-computed * 2) + @navbar-height);
+			}
+			.navbar-bottom-lg & {
+				bottom: ((@line-height-computed * 2) + @navbar-height-large);
+			}
+			.navbar-bottom-sm & {
+				bottom: ((@line-height-computed * 2) + @navbar-height-small);
+			}
+			.navbar-bottom-xs & {
+				bottom: ((@line-height-computed * 2) + @navbar-height-mini);
+			}
+		}
+
+		// Add top spacing if navbar is fixed
+		.navbar-fixed & {
+			top: (@navbar-height + (@line-height-computed * 2));
+		}
+		.navbar-fixed-lg & {
+			top: (@navbar-height-large + (@line-height-computed * 2));
+		}
+		.navbar-fixed-sm & {
+			top: (@navbar-height-small + (@line-height-computed * 2));
+		}
+		.navbar-fixed-xs & {
+			top: (@navbar-height-mini + (@line-height-computed * 2));
 		}
 	}
 
@@ -849,10 +871,10 @@
 				.icons-list {
 					position: static;
 				    text-align: center;
-				    padding-top: @content-padding-small;
-				    padding-bottom: @content-padding-small;
-					margin-top: (((@line-height-computed - @icon-font-size) / 2) + 1);
-					margin-bottom: (((@line-height-computed - @icon-font-size) / 2) + 1);
+					margin-top: 0;
+					padding-top: @content-padding-small + ((@line-height-computed - @icon-font-size) / 2) + (@font-size-base - @font-size-mini);
+					padding-bottom: @content-padding-small + ((@line-height-computed - @icon-font-size) / 2) + (@font-size-base - @font-size-mini);
+
 
 				    // Stack items
 				    > li {
@@ -866,18 +888,25 @@
 				    }
 				}
 
-				// Section header icons spacing
-				&.h5,
+				// H6 heading
 				&.h6 {
 					.icons-list {
-					    padding-top: @content-padding-large;
-					    padding-bottom: @content-padding-large;
+					    padding-top: @content-padding-large + (((@headings-line-height * @font-size-h6) - @icon-font-size) / 2);
+					    padding-bottom: @content-padding-large + (((@headings-line-height * @font-size-h6) - @icon-font-size) / 2);
+					}
+				}
+
+				// H5 heading
+				&.h5 {
+					.icons-list {
+					    padding-top: @content-padding-large + (((@headings-line-height * @font-size-h5) - @icon-font-size) / 2);
+					    padding-bottom: @content-padding-large + (((@headings-line-height * @font-size-h5) - @icon-font-size) / 2);
 					}
 				}
 			}
 
 			// Main navigation
-			.navigation-main {
+			.navigation {
 
 				// Navigation items
 				> li {
@@ -893,37 +922,21 @@
 							position: absolute;
 							top: 0;
 							right: -(@sidebar-base-width);
-							background-color: @navigation-dark-active-bg;
-							border-color: @navigation-dark-active-bg;
-							padding: inherit;
-							padding-left: @content-padding-large;
-							padding-right: @content-padding-large;
+							background-color: @navigation-dark-active-label-bg;
+							border: 1px solid @navigation-dark-active-border;
+							padding: (@navigation-padding-base-vertical - 1) @navigation-padding-base-horizontal;
 							width: @sidebar-base-width;
 							text-align: left;
-							color: #fff;
+							color: @navigation-dark-active-label-color;
+							cursor: pointer;
 							.border-right-radius(@border-radius-base);
-
-							// Arrow
-							&:after {
-								@arrow-size: 5px; // Use inline variable
-								content: "";
-								width: 0;
-								height: 0;
-								border-right: @arrow-size solid;
-								border-top: @arrow-size solid transparent;
-								border-bottom: @arrow-size solid transparent;
-								border-right-color: inherit;
-								position: absolute;
-								left: -(@arrow-size);
-								top: 50%;
-								margin-top: -(@arrow-size);
-							}
 
 							// Label/badge
 							.label,
 							.badge {
 								background-color: transparent;
 								border-color: transparent;
+								color: @navigation-dark-active-label-color;
 								padding-left: 0;
 								padding-right: 0;
 							}
@@ -947,6 +960,7 @@
 					.has-ul {
 						> span {
 							border-radius: 0 @border-radius-base 0 0;
+							cursor: default;
 						}
 					}
 
@@ -979,7 +993,6 @@
 						> a {
 							> span {
 								display: block;
-								cursor: default;
 							}
 						}
 
@@ -1018,7 +1031,6 @@
 									}
 								}
 							}
-
 						}
 					}
 				}
@@ -1097,12 +1109,19 @@
 		}
 
 		// Inside light sidebar
-		.sidebar-default {
-			.navigation-main {
+		.sidebar-main.sidebar-default {
+			.navigation {
 				> li {
 					> a > span {
 						background-color: @navigation-light-active-bg;
-						border-color: @navigation-light-active-bg;
+						border-color: @navigation-light-active-border;
+						color: @navigation-light-active-label-color;
+						
+						// Label/badge
+						.label,
+						.badge {
+							color: @navigation-light-active-label-color;
+						}
 					}
 					
 					> ul {

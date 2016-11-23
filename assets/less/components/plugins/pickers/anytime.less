@@ -4,8 +4,8 @@
 *
 *  jQuery datepicker/timepicker and a Date/String parse/format utility
 *
-*  Version: 1.1
-*  Latest update: Oct 20, 2015
+*  Version: 1.2
+*  Latest update: Mar 10, 2016
 *
 * ---------------------------------------------------------------------------- */
 
@@ -35,12 +35,13 @@
 
 // Dropdown container
 .AnyTime-win {
-    padding: @list-spacing;
+    padding: (@list-spacing * 2);
     background-color: @dropdown-bg;
     border: 1px solid @dropdown-border;
     display: inline-block;
     border-radius: @border-radius-base;
     z-index: 10;
+    .box-shadow(0 1px 3px fade(#000, 10%));
 }
 
 // Clock
@@ -52,7 +53,7 @@
 // Title
 .AnyTime-hdr {
     font-size: @font-size-h6;
-    margin: 20px 10px;
+    margin: @content-padding-base @content-padding-small;
     line-height: 1;
 }
 
@@ -88,7 +89,7 @@
     margin-top: 25px;
 
     &:first-child {
-        margin-top: 5px;
+        margin-top: @list-spacing;
     }
 }
 
