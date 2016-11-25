@@ -6,11 +6,12 @@ var slider = require('bootstrap-slider');
 
 var mathjaxHelper = require('mathjax-electron')
 
+/*
+mathjax example
 var container = document.getElementById('vh');
 container.innerHTML = '$$\\sum\\limits_{i=0}^{\\infty} \\frac{1}{n^2}$$';
-
 mathjaxHelper.loadAndTypeset(document, container);
-
+*/
 
 
 
@@ -22,7 +23,9 @@ $(function() {
     offText : '<i class="icon-pause2"></i>',
     onSwitchChange: (event,state) => {
       if(state){
-        handler.start();
+        if(!handler.start()){
+					$("[name='start-stop']").bootstrapSwitch('state',false);
+				}
       }
       else{
         handler.stop();
@@ -41,7 +44,7 @@ $(function() {
       }
       else{
 				handler.off();
-				$("[name='start-stop']").bootstrapSwitch('toggleState');
+				$("[name='start-stop']").bootstrapSwitch('state',false);
 				$("[name='start-stop']").bootstrapSwitch('toggleDisabled');
       }
     }
@@ -59,7 +62,9 @@ $(".gain li a").click(function(){
 });
 $('#power').ionRangeSlider({
 	min:0,
-	max:100
+	max:100,
+	prefix : 'Power: ',
+	postfix : '%'
 });
 /*
 $('#experiment').keydown(function(e) {

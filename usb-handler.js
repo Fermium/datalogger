@@ -18,7 +18,11 @@ config._experiment = 'experiment 1'; // letto da usb (?)
 
 module.exports = {
   start : function () {
+    $.blockUI();
     createdb();
+    $.unblockUI();
+    console.log(config._db_exists);
+    return config._db_exists;
   },
   stop : function() {
     clearInterval(thread);
@@ -60,7 +64,7 @@ function initdb(){
 
 function createdb(){
   if(!config._db_exists){
-  dialog.showSaveDialog({ defaultPath : './data/'+config._experiment+"_"+config._date},function (fileName) {
+  /*diag=dialog.showSaveDialog({ defaultPath : './data/'+config._experiment+"_"+config._date},function (fileName) {
          if (fileName === undefined){
               console.log("You didn't save the file");
               return;
@@ -70,7 +74,14 @@ function createdb(){
          initdb();
          thread=setInterval(read,500);
 
-  });
+  });*/
+  diag=dialog.showSaveDialog({ defaultPath : './data/'+config._experiment+"_"+config._date});
+  if(diag!=undefined){
+    diag = (diag.endsWith('.json')) ? diag : diag+'.json' ;
+    config._file=diag;
+    initdb();
+    thread=setInterval(read,500);
+  }
   }
   else{
     thread=setInterval(read,500);
