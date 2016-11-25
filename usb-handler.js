@@ -35,6 +35,7 @@ module.exports = {
   },
   off : function(){
     config._db_exists = false;
+    config._file = '';
     console.log("turned off");
   }
 }
@@ -64,18 +65,7 @@ function initdb(){
 
 function createdb(){
   if(!config._db_exists){
-  /*diag=dialog.showSaveDialog({ defaultPath : './data/'+config._experiment+"_"+config._date},function (fileName) {
-         if (fileName === undefined){
-              console.log("You didn't save the file");
-              return;
-         }
-         fileName = (fileName.endsWith('.json')) ? fileName : fileName+'.json' ;
-         config._file=fileName;
-         initdb();
-         thread=setInterval(read,500);
-
-  });*/
-  diag=dialog.showSaveDialog({ defaultPath : './data/'+config._experiment+"_"+config._date});
+  diag=dialog.showSaveDialog({ defaultPath : './data/'+config._experiment+"_"+config._date,title: 'Experiment file save location'});
   if(diag!=undefined){
     diag = (diag.endsWith('.json')) ? diag : diag+'.json' ;
     config._file=diag;
