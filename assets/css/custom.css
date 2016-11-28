@@ -57,8 +57,7 @@
   color : #d0d0d0;
 }
 
-.experiment{
-  background-color: transparent;
-  border: none;
-  
+
+.ui-pnotify-fade-in.translucent{
+  opacity: .8;
 }

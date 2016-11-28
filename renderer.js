@@ -18,18 +18,6 @@ var formulas = [
 	}
 ]
 
-
-/*
-mathjax example
-var container = document.getElementById('vh');
-container.innerHTML = '$$\\sum\\limits_{i=0}^{\\infty} \\frac{1}{n^2}$$';
-mathjaxHelper.loadAndTypeset(document, container);
-*/
-
-
-
-
-
 $(function() {
 	$("[name='start-stop']").bootstrapSwitch({
     onText : 'REC',
@@ -39,9 +27,29 @@ $(function() {
         if(!handler.start()){
 					$("[name='start-stop']").bootstrapSwitch('state',false);
 				}
+				else{
+					new PNotify({
+						title: 'Recording Started',
+						text : '',
+						icon : false,
+						type : 'info',
+						styling : 'bootstrap3',
+					  addclass: 'translucent',
+						animate_speed	: 'fast'
+					});
+				}
       }
       else{
         handler.stop();
+				new PNotify({
+					title: 'Recording Stopped',
+					text : '',
+					icon : false,
+					type : 'info',
+					styling : 'bootstrap3',
+					addclass: 'translucent',
+					animate_speed	: 'fast'
+				});
       }
     }
 	});
@@ -58,6 +66,7 @@ $(function() {
 				    callback: function(result){
 							console.log(result);
 							text = (result==null || result.trim()=='') ? config._experiment : result;
+							config._experiment = text
 							$('#experiment').text(text);
 							$('#date').text(' - '+config._date);
 						}
@@ -68,6 +77,8 @@ $(function() {
 				handler.off();
 				$("[name='start-stop']").bootstrapSwitch('state',false);
 				$("[name='start-stop']").bootstrapSwitch('toggleDisabled');
+				$('#experiment').text('');
+				$('#date').text('');
       }
     }
 	});
@@ -82,12 +93,14 @@ $('.gain li a').click(function(){
   var selText = $(this).text();
   $(this).parents('.gain-wrap').find('.dropdown-toggle').html(selText+' <i class="caret"></i>');
 });
+
 $('#power').ionRangeSlider({
 	min:0,
 	max:100,
 	prefix : 'Power: ',
 	postfix : '%'
 });
+
 $('#k-slider').ionRangeSlider({
 	min:0,
 	max:1,
@@ -101,7 +114,8 @@ $('#k-slider').ionRangeSlider({
 		$('#k-value').val(data.from);
 	}
 });
-$('#k-value').change(function(){
+
+$('#k-value').keyup(function(){
 	val = $('#k-value').val();
 	if(val>1){
 		val=1;
