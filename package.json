@@ -30,6 +30,7 @@
     "lodash": "^4.16.6",
     "lowdb": "^0.14.0",
     "mathjax-electron": "^1.2.0",
+    "mathjs": "^3.8.0",
     "node-json-db": "^0.7.3"
   }
 }

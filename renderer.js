@@ -3,10 +3,13 @@ var dialog = app.dialog;
 var config = app.getGlobal('config');
 var handler = require('./usb-handler');
 var slider = require('bootstrap-slider');
-
+var math = require('mathjs')
 var mathjaxHelper = require('mathjax-electron');
-
-
+var equations = {
+	//'name' : 'value',
+	'temp' : 'ch1+ch2+ch3'
+}
+var nodes = {}
 var formulas = [
 	{
 		'id':'res',
@@ -15,6 +18,10 @@ var formulas = [
 	{
 		'id':'vr-cal',
 		'formula': '\\sum\\limits_{i=0}^{\\infty} \\frac{2}{n^3}=\\hat{\\beta_{1}}'
+	},
+	{
+		'id':'temp',
+		'formula': ''
 	}
 ]
 
@@ -139,32 +146,23 @@ formulas.forEach(function(item){
 	}).on('shown.bs.popover',function(){
 		mathjaxHelper.loadAndTypeset(document, document.getElementById(item.id+'_formula'));
 	});
+})
+
+function evaluate(){
+
+}
+
+$('[data-action="editequation"]').click(function(){
+	id = $(this).attr('data-content');
+	bootbox.prompt({
+			size: 'medium',
+			inputType: 'text',
+			value : equations[id],
+			title: 'Insert the new equation for the cell',
+			callback: function(result){
+				equations[id]=result;
+				nodes[id] = math.parse(equations[id]);
+			  $('#'+id).data('bs.popover').options.content = '$$'+nodes[id].toTex()+'$$';
+		  }
+	});
 });
-/*$('#res').popover({
-	 trigger: 'hover',
-	 title : 'Formula',
-	 html : true,
-	 content: '<div id="res_formula">$$\\sum\\limits_{i=0}^{\\infty} \\frac{1}{n^2}$$</div>'
-}).on('shown.bs.popover',function(){
-	mathjaxHelper.loadAndTypeset(document, document.getElementById('res_formula'));
-});*/
-
-
-
-/*
-$('#experiment').keydown(function(e) {
-     if(e.keyCode == 13) {
-       e.preventDefault(); // Makes no difference
-			 $(this).blur(function() {
-         $(this).attr('contentEditable', false);
-			 });
-   }
-});
-
-$('#experiment').bind('dblclick', function() {
-        $(this).attr('contentEditable', true);
-    }).blur(
-        function() {
-            $(this).attr('contentEditable', false);
-});
-*/
