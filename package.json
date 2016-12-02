@@ -30,13 +30,14 @@
   "dependencies": {
     "bootstrap-slider": "^9.4.1",
     "chart.js": "^2.3.0",
-    "dateformat": "^1.0.12",
+    "dateformat": "^2.0.0",
     "json2csv": "^3.7.1",
     "json2xls": "^0.1.2",
     "jsonfile": "^2.4.0",
     "lodash": "^4.16.6",
     "lowdb": "^0.14.0",
     "mathjax-electron": "^1.2.0",
+    "mathjs": "^3.8.0",
     "node-json-db": "^0.7.3"
   }
 }

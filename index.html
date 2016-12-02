@@ -4,7 +4,7 @@
 	<meta charset='utf-8'>
 	<meta http-equiv='X-UA-Compatible' content='IE=edge'>
 	<meta name='viewport' content='width=device-width, initial-scale=1'>
-	<title>Limitless - Responsive Web Application Kit by Eugene Kopyov</title>
+	<title>Datalogger</title>
 
 	<!-- Global stylesheets -->
 	<link href='https://fonts.googleapis.com/css?family=Roboto:400,300,100,500,700,900' rel='stylesheet' type='text/css'>
@@ -29,10 +29,14 @@
 	<!-- Theme JS files -->
 	<!-- Load plugin -->
 	<script type="text/javascript" src="assets/js/plugins/sliders/ion_rangeslider.min.js"></script>
+	<script type="text/javascript" src="assets/js/plugins/loaders/blockui.min.js"></script>
 	<script type='text/javascript' src='assets/js/plugins/forms/styling/switch.min.js'></script>
 	<script type='text/javascript' src='assets/js/core/libraries/jquery_ui/interactions.min.js'></script>
 	<script type='text/javascript' src='assets/js/core/libraries/jquery_ui/touch.min.js'></script>
 	<script type='text/javascript' src='assets/js/pages/appearance_draggable_panels.js'></script>
+	<script type="text/javascript" src="assets/js/plugins/forms/selects/bootstrap_select.min.js"></script>
+	<script type="text/javascript" src="assets/js/plugins/notifications/bootbox.min.js"></script>
+	<script type="text/javascript" src="assets/js/plugins/notifications/pnotify.min.js"></script>
 	<script type='text/javascript' src='assets/js/core/app.js'></script>
 
 	<!-- /theme JS files -->
@@ -108,7 +112,7 @@
 						<div class='panel panel-flat'>
 							<div class='panel-heading'>
 
-								<h5 class='panel-title'>Vh</h5><i class='info'></i>
+								<h5 class='panel-title'>Hall Voltage</h5><i class='info'></i>
 								<div class='heading-elements'>
 
 									<ul class='icons-list'>
@@ -133,19 +137,20 @@
 
 							<div class='panel-body'>
 								<div class='col-md-4 text-center measured'>
-									<div id='vh1' class='col-md-6 col-sm-6 col-xs-6 text-center'>
-										Vh1
+									<div id='vh1-wrap' class='col-md-6 col-sm-6 col-xs-6 text-center'>
+										Vh1 : <span id='vh1'></span>
 									</div>
-									<div id="vh2"class='col-md-6 col-sm-6 col-xs-6 text-center'>
-										Vh2
+									<div id="vh2-wrap"class='col-md-6 col-sm-6 col-xs-6 text-center'>
+										Vh2 : <span id='vh2'></span>
 									</div>
 								</div>
-								<div class='col-md-4 text-center'>Resistance: <span id='vh'></span></div>
+								<div class='col-md-4 text-center' id="vh-wrap">Vh : <span id='vh'></span></div>
 								<hr class='visible-xs visible-sm'/>
 								<div class='col-md-4 text-center'>
 									<form class="form-inline">
+										<div id="k-slider"></div>
 										<label class='k' for='k'>K = </label>
-										<input class="form-control k" name='k'type="number" min="0" max="1" value="0.5" step="0.001" >
+										<input class="form-control k" type='number' name='k' id='k-value' type='text' from='0' to='1' step="0.001">
 									</form>
 								</div>
 							</div>
@@ -182,8 +187,7 @@
 
 							<div class='panel-body'>
 								<div class='text-center'>
-
-
+									<div id="I-wrap">Current : <span id='I'></span></div>
 							</div>
 						</div>
 					</div>
@@ -200,7 +204,7 @@
 						<!-- Horizontal form -->
 						<div class='panel panel-flat'>
 							<div class='panel-heading'>
-								<h5 class='panel-title'>Vr</h5>
+								<h5 class='panel-title'>Resistance</h5>
 								<div class='heading-elements'>
 									<ul class='icons-list'>
 										<li class='dropdown gain-wrap'>
@@ -222,8 +226,8 @@
 							</div>
 
 							<div class='panel-body'>
-								<div class='col-md-6 text-center'>Measured</div>
-								<div class='col-md-6 text-center'>Calculated</div>
+								<div class='col-md-6 text-center' id='r-mes-wrap'>Vr : <span id='r-mes'></span></div>
+								<div class='col-md-6 text-center' id='r-cal-wrap'>R : <span id='r-cal'></span></div>
 							</div>
 						</div>
 						<!-- /horizotal form -->
@@ -257,7 +261,9 @@
 							</div>
 
 							<div class='panel-body'>
-
+								<div class='text-center'>
+									<div id="B-wrap">Gauss : <span id='B'></span></div>
+								</div>
 						</div>
 					</div>
 						<!-- /vertical form -->
@@ -288,7 +294,10 @@
 												<li ><a href='#'>x fetto</a></li>
 											</ul>
 										</li>
+										<li><a data-action='editequation' data-content='temp'></a></li>
 										<li><a data-action='collapse'></a></li>
+
+
 									</ul>
 								</div>
 							</div>
@@ -296,24 +305,20 @@
 								<div class='text-center'>
 									<div class='col-md-6 col-sm-6 col-xs-6'>
 										<div class='col-md-4 col-sm-4 col-xs-4'>
-											Temperature <span id='test'></span>
+											Temperature <span id='temp'></span>
 										</div>
 										<div class='col-md-4 col-sm-4 col-xs-4'>
-											<div class='switch-field'>
-												<input type='radio' id='switch_3_left' name='switch_3' value='C' checked/>
-												<label for='switch_3_left'>°C</label>
-												<input type='radio' id='switch_3_center' name='switch_3' value='K' />
-												<label for='switch_3_center'>°K</label>
-												<input type='radio' id='switch_3_right' name='switch_3' value='F' />
-												<label for='switch_3_right'>°F</label>
-											</div>
+											<select class='selectpicker' id='tempselect' data-width='auto'>
+												<option value='kelvin' >°K</option>
+											  <option value='celsius'>°C</option>											  
+											  <option value='fahrenheit'>°F</option>
+											</select>
 										</div>
 										<div class='col-md-4 col-sm-4 col-xs-4'>
 											<i class='icon-fire' data-toggle='tooltip' title='Safe to touch'></i>
 										</div>
 									</div>
 									<div class='col-md-6 col-sm-6 col-xs-6'>
-										<label>Power:&nbsp;&nbsp;&nbsp;</label>
 										<div id="power"></div>
 									</div>
 								</div>
@@ -341,9 +346,7 @@
 		<!-- /footer -->
 
 	</div>
-	<!-- /page container -->
   <script>
-    // You can also require other files to run in this process
     require('./renderer.js');
 		require('./exports.js');
   </script>
