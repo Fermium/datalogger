@@ -1,6 +1,6 @@
 const electron = require('electron')
 const dateFormat = require('dateformat'); //for date
-
+const math = require('mathjs');
 // Module to control application life.
 const app = electron.app
 // Module to create native browser window.
@@ -11,7 +11,7 @@ const {ipcMain} = require('electron')
 let mainWindow
 let plotWindow
 global.config = {'_file': '','_experiment':'','_date':dateFormat(Date.now(), "yyyy_mm_dd"),'_gain':{'vh': 1 ,'vr': 1 , 'a' : 1, 'g' : 1},'_db_exists':false}
-global.scope =  {'timestamp': 0, 'ch1': 0,'ch2':0,'ch3':0,'ch4':0,'ch5':0,'ch6':0,'ch7':0,'ch8':0};
+global.scope =  {'timestamp': 0,'k':0};
 function createWindow () {
   // Create the browser window.
   mainWindow = new BrowserWindow({width: 800, height: 600})

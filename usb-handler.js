@@ -4,6 +4,8 @@ var low = require('lowdb'); //db .json
 var _ = require('lodash');
 var config = app.getGlobal('config');
 var scope = app.getGlobal('scope');
+var math = require('mathjs')
+
 
 var db;
 var thread;
@@ -13,7 +15,6 @@ var thread;
 var i=0;
 // ********************* //
 
-config._experiment = 'experiment 1'; // letto da usb (?)
 
 
 
@@ -32,12 +33,10 @@ module.exports = {
     /*console.log(id+" : "+value);*/
   },
   on : function(){
-    console.log('turned on');
   },
   off : function(){
     config._db_exists = false;
     config._file = '';
-    console.log("turned off");
   }
 }
 
@@ -45,16 +44,21 @@ function read(){
   ///////////////////////////////
  /*********FAKE READING********/
 ///////////////////////////////
-scope.series = 'test';
 scope.timestamp = i++;
-scope.ch1 = Math.random()*5;
-scope.ch2 = Math.random()*5;
-scope.ch3 = Math.random()*5;
-scope.ch4 = Math.random()*5;
-scope.ch5 = Math.random()*5;
-scope.ch6 = Math.random()*5;
-scope.ch7 = Math.random()*5;
-scope.ch8 = Math.random()*5;
+var locscope = {
+  'ch1' : math.unit(math.round(math.random(0,5),2),'V'),
+  'ch2' : math.unit(math.round(math.random(0,5),2),'V'),
+  'ch3' : math.unit(math.round(math.random(0,5),2),'V'),
+  'ch4' : math.unit(math.round(math.random(0,5),2),'V'),
+  'ch5' : math.unit(math.round(math.random(0,5),2),'V'),
+  'ch6' : math.unit(math.round(math.random(0,5),2),'V'),
+  'ch7' : math.unit(math.round(math.random(0,5),2),'V'),
+  'ch8' : math.unit(math.round(math.random(0,5),2),'V')
+}
+
+_.merge(scope,locscope);
+
+console.log(math.typeof(scope.ch1));
 
 //////////////////////////////
 

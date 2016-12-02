@@ -112,7 +112,7 @@
 						<div class='panel panel-flat'>
 							<div class='panel-heading'>
 
-								<h5 class='panel-title'>Vh</h5><i class='info'></i>
+								<h5 class='panel-title'>Hall Voltage</h5><i class='info'></i>
 								<div class='heading-elements'>
 
 									<ul class='icons-list'>
@@ -137,14 +137,14 @@
 
 							<div class='panel-body'>
 								<div class='col-md-4 text-center measured'>
-									<div id='vh1' class='col-md-6 col-sm-6 col-xs-6 text-center'>
-										Vh1
+									<div id='vh1-wrap' class='col-md-6 col-sm-6 col-xs-6 text-center'>
+										Vh1 : <span id='vh1'></span>
 									</div>
-									<div id="vh2"class='col-md-6 col-sm-6 col-xs-6 text-center'>
-										Vh2
+									<div id="vh2-wrap"class='col-md-6 col-sm-6 col-xs-6 text-center'>
+										Vh2 : <span id='vh2'></span>
 									</div>
 								</div>
-								<div class='col-md-4 text-center' id="res">Resistance:</div>
+								<div class='col-md-4 text-center' id="vh-wrap">Vh : <span id='vh'></span></div>
 								<hr class='visible-xs visible-sm'/>
 								<div class='col-md-4 text-center'>
 									<form class="form-inline">
@@ -187,8 +187,7 @@
 
 							<div class='panel-body'>
 								<div class='text-center'>
-
-
+									<div id="I-wrap">Current : <span id='I'></span></div>
 							</div>
 						</div>
 					</div>
@@ -205,7 +204,7 @@
 						<!-- Horizontal form -->
 						<div class='panel panel-flat'>
 							<div class='panel-heading'>
-								<h5 class='panel-title'>Vr</h5>
+								<h5 class='panel-title'>Resistance</h5>
 								<div class='heading-elements'>
 									<ul class='icons-list'>
 										<li class='dropdown gain-wrap'>
@@ -227,8 +226,8 @@
 							</div>
 
 							<div class='panel-body'>
-								<div class='col-md-6 text-center'>Measured</div>
-								<div class='col-md-6 text-center' id='vr-cal'>Calculated</div>
+								<div class='col-md-6 text-center' id='r-mes-wrap'>Vr : <span id='r-mes'></span></div>
+								<div class='col-md-6 text-center' id='r-cal-wrap'>R : <span id='r-cal'></span></div>
 							</div>
 						</div>
 						<!-- /horizotal form -->
@@ -262,7 +261,9 @@
 							</div>
 
 							<div class='panel-body'>
-
+								<div class='text-center'>
+									<div id="B-wrap">Gauss : <span id='B'></span></div>
+								</div>
 						</div>
 					</div>
 						<!-- /vertical form -->
@@ -308,8 +309,8 @@
 										</div>
 										<div class='col-md-4 col-sm-4 col-xs-4'>
 											<select class='selectpicker' id='tempselect' data-width='auto'>
-											  <option value='celsius'>°C</option>
-											  <option value='kelvin' >°K</option>
+												<option value='kelvin' >°K</option>
+											  <option value='celsius'>°C</option>											  
 											  <option value='fahrenheit'>°F</option>
 											</select>
 										</div>
