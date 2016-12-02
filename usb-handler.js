@@ -3,12 +3,13 @@ var dialog = app.dialog;
 var low = require('lowdb'); //db .json
 var _ = require('lodash');
 var config = app.getGlobal('config');
+var scope = app.getGlobal('scope');
 
 var db;
 var thread;
 
 // Momentaneo per develop //
-var reading = {'series': null,'timestamp': 0, 'value': 0};
+//var reading = {'series': null,'timestamp': 0, 'ch1': 0,'ch2':0,'ch3':0,'a':0,'b':0};
 var i=0;
 // ********************* //
 
@@ -44,12 +45,17 @@ function read(){
   ///////////////////////////////
  /*********FAKE READING********/
 ///////////////////////////////
-reading.series = 'test';
-reading.timestamp = i++;
-reading.value = Math.random();
+scope.series = 'test';
+scope.timestamp = i++;
+scope.ch1 = Math.random();
+scope.ch2 = Math.random();
+scope.ch3 = Math.random();
+scope.a = Math.random();
+scope.b = Math.random();
+
 //////////////////////////////
 
-db.get('_data').push({'series': reading.series , 'timestamp': reading.timestamp, 'value': reading.value}).value();
+db.get('_data').push({'series': scope.series , 'timestamp': scope.timestamp,  'ch1': scope.ch1,'ch2':scope.ch2,'ch3':scope.ch3,'a':scope.a,'b':scope.b}).value();
 
 
 }

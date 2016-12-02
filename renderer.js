@@ -1,30 +1,24 @@
 var app = require('electron').remote;
 var dialog = app.dialog;
 var config = app.getGlobal('config');
+var scope = app.getGlobal('scope');
 var handler = require('./usb-handler');
 var slider = require('bootstrap-slider');
 var math = require('mathjs')
 var mathjaxHelper = require('mathjax-electron');
 var equations = {
-	//'name' : 'value',
-	'temp' : 'ch1+ch2+ch3'
+//'name'   : 'value',
+	'temp'   : 'ch1+ch2+ch3',
+	'res'    : 'a+b^2',
+	'vr-cal' : 'a+b'
+}
+var unit = {
+	'temp' : 'kelvin',
+}
+var base_unit = {
+	'temp' : 'kelvin'
 }
 var nodes = {}
-var formulas = [
-	{
-		'id':'res',
-		'formula': '\\sum\\limits_{i=0}^{\\infty} \\frac{1}{n^2}'
-	},
-	{
-		'id':'vr-cal',
-		'formula': '\\sum\\limits_{i=0}^{\\infty} \\frac{2}{n^3}=\\hat{\\beta_{1}}'
-	},
-	{
-		'id':'temp',
-		'formula': ''
-	}
-]
-
 $(function() {
 	$("[name='start-stop']").bootstrapSwitch({
     onText : 'REC',
@@ -57,6 +51,7 @@ $(function() {
 					addclass: 'translucent',
 					animate_speed	: 'fast'
 				});
+				clearInterval(eval);
       }
     }
 	});
@@ -71,7 +66,6 @@ $(function() {
 						inputType: 'text',
 				    title: 'Input the experiment name or skip for default value',
 				    callback: function(result){
-							console.log(result);
 							text = (result==null || result.trim()=='') ? config._experiment : result;
 							config._experiment = text
 							$('#experiment').text(text);
@@ -86,16 +80,20 @@ $(function() {
 				$("[name='start-stop']").bootstrapSwitch('toggleDisabled');
 				$('#experiment').text('');
 				$('#date').text('');
-      }
+
     }
+	}
 	});
 });
 
-
+$('#tempselect').change(function(){
+	unit['temp'] = $('#tempselect').val();
+	nodes['temp'] = math.parse('('+equations['temp']+')'+ base_unit['temp'] +' to '+unit['temp']);
+})
 
 $('#plot').click(function(){
     window.open('./plot/index.html')
-})
+});
 $('.gain li a').click(function(){
   var selText = $(this).text();
   $(this).parents('.gain-wrap').find('.dropdown-toggle').html(selText+' <i class="caret"></i>');
@@ -136,20 +134,21 @@ $('#k-value').keyup(function(){
 		from : val
 	});
 
-})
-formulas.forEach(function(item){
-	$('#'+item.id).popover({
+});
+for (var key in equations){
+
+	if (!equations.hasOwnProperty(key)) continue;
+	if(!nodes.hasOwnProperty(key)){
+		nodes[key]=math.parse(equations[key]);
+	}
+	$('#'+key).popover({
 		 trigger: 'hover',
 		 title : 'Formula',
 		 html : true,
-		 content: '<div id="'+item.id+'_formula">$$'+item.formula+'$$</div>'
-	}).on('shown.bs.popover',function(){
-		mathjaxHelper.loadAndTypeset(document, document.getElementById(item.id+'_formula'));
+		 content: '<div id="'+key+'_formula">$$'+nodes[key].toTex()+'$$</div>'
+	 	}).on('shown.bs.popover',function(){
+		mathjaxHelper.loadAndTypeset(document, document.getElementById(key+'_formula'));
 	});
-})
-
-function evaluate(){
-
 }
 
 $('[data-action="editequation"]').click(function(){
@@ -161,8 +160,18 @@ $('[data-action="editequation"]').click(function(){
 			title: 'Insert the new equation for the cell',
 			callback: function(result){
 				equations[id]=result;
-				nodes[id] = math.parse(equations[id]);
+				console.log(result);
+				console.log(equations[id]);
+				nodes[id] = math.parse('('+equations[id]+') '+((base_unit.hasOwnProperty(id))?base_unit[id]:'')+((unit.hasOwnProperty(id))?' to '+unit[id]:''));
 			  $('#'+id).data('bs.popover').options.content = '$$'+nodes[id].toTex()+'$$';
+				evaluate();
 		  }
 	});
 });
+
+function evaluate(){
+for (var key in nodes){
+	$('#'+key).text(((nodes[key].eval(scope)).toString()).split(' ')[0]);
+}
+}
+eval=setInterval(evaluate,500);
