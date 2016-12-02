@@ -8,9 +8,9 @@ var math = require('mathjs')
 var mathjaxHelper = require('mathjax-electron');
 var equations = {
 //'name'   : 'value',
-	'temp'   : 'ch1+ch2+ch3',
-	'res'    : 'a+b^2',
-	'vr-cal' : 'a+b'
+	'temp'   : 'ch5',
+	'res'    : 'ch2',
+	'vr-cal' : 'ch8'
 }
 var unit = {
 	'temp' : 'kelvin',
@@ -88,7 +88,9 @@ $(function() {
 
 $('#tempselect').change(function(){
 	unit['temp'] = $('#tempselect').val();
-	nodes['temp'] = math.parse('('+equations['temp']+')'+ base_unit['temp'] +' to '+unit['temp']);
+	nodes['temp'] = math.parse('('+equations['temp']+')'+ base_unit['temp'] +((unit['temp']!=base_unit['temp'])?' to '+unit['temp']:''));
+	$('#temp').data('bs.popover').options.content = '$$'+nodes['temp'].toTex()+'$$';
+
 })
 
 $('#plot').click(function(){
@@ -159,10 +161,10 @@ $('[data-action="editequation"]').click(function(){
 			value : equations[id],
 			title: 'Insert the new equation for the cell',
 			callback: function(result){
-				equations[id]=result;
+				equations[id]=(result!=null)?result:equations[id];
 				console.log(result);
 				console.log(equations[id]);
-				nodes[id] = math.parse('('+equations[id]+') '+((base_unit.hasOwnProperty(id))?base_unit[id]:'')+((unit.hasOwnProperty(id))?' to '+unit[id]:''));
+				nodes[id] = math.parse('('+equations[id]+') '+((base_unit.hasOwnProperty(id))?base_unit[id]:'')+((unit.hasOwnProperty(id) && unit[id]!=base_unit['id'])?' to '+unit[id]:''));
 			  $('#'+id).data('bs.popover').options.content = '$$'+nodes[id].toTex()+'$$';
 				evaluate();
 		  }

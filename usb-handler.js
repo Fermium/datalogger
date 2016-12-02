@@ -47,15 +47,28 @@ function read(){
 ///////////////////////////////
 scope.series = 'test';
 scope.timestamp = i++;
-scope.ch1 = Math.random();
-scope.ch2 = Math.random();
-scope.ch3 = Math.random();
-scope.a = Math.random();
-scope.b = Math.random();
+scope.ch1 = Math.random()*5;
+scope.ch2 = Math.random()*5;
+scope.ch3 = Math.random()*5;
+scope.ch4 = Math.random()*5;
+scope.ch5 = Math.random()*5;
+scope.ch6 = Math.random()*5;
+scope.ch7 = Math.random()*5;
+scope.ch8 = Math.random()*5;
 
 //////////////////////////////
 
-db.get('_data').push({'series': scope.series , 'timestamp': scope.timestamp,  'ch1': scope.ch1,'ch2':scope.ch2,'ch3':scope.ch3,'a':scope.a,'b':scope.b}).value();
+db.get('_data').push({
+  'timestamp': scope.timestamp,
+  'ch1': scope.ch1,
+  'ch2': scope.ch2,
+  'ch3': scope.ch3,
+  'ch4': scope.ch4,
+  'ch5': scope.ch5,
+  'ch6': scope.ch6,
+  'ch7': scope.ch7,
+  'ch8': scope.ch8,
+}).value();
 
 
 }
