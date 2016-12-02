@@ -4,19 +4,13 @@ var config = app.getGlobal('config');
 var scope = app.getGlobal('scope');
 var handler = require('./usb-handler');
 var slider = require('bootstrap-slider');
-var math = require('mathjs');
+var math = require('mathjs')
 var mathjaxHelper = require('mathjax-electron');
 var equations = {
 //'name'   : 'value',
 	'temp'   : 'ch5',
-	'vh1'    : 'ch3',
-	'vh2'    : 'ch4',
-	'vh'     : '(ch3-ch3*k+ch4*k)',
-	'r-mes'  : 'ch2',
-	'r-cal'  : 'ch2/(ch1/100)',
-	'I'      : 'ch1',
-	'B'      : 'ch6',
-
+	'res'    : 'ch2',
+	'vr-cal' : 'ch8'
 }
 var unit = {
 	'temp' : 'kelvin',
@@ -121,11 +115,9 @@ $('#k-slider').ionRangeSlider({
 	prefix : 'K: ',
 	keyboard : true,
 	onChange: function(data){
-		scope.k = data.from;
 		$('#k-value').val(data.from);
 	},
 	onStart: function(data){
-		scope.k = data.from;
 		$('#k-value').val(data.from);
 	}
 });
@@ -140,7 +132,6 @@ $('#k-value').keyup(function(){
 		val=0;
 		$('#k-value').val(val);
 	}
-	scope.k = val;
 	$("#k-slider").data("ionRangeSlider").update({
 		from : val
 	});
@@ -171,6 +162,8 @@ $('[data-action="editequation"]').click(function(){
 			title: 'Insert the new equation for the cell',
 			callback: function(result){
 				equations[id]=(result!=null)?result:equations[id];
+				console.log(result);
+				console.log(equations[id]);
 				nodes[id] = math.parse('('+equations[id]+') '+((base_unit.hasOwnProperty(id))?base_unit[id]:'')+((unit.hasOwnProperty(id) && unit[id]!=base_unit['id'])?' to '+unit[id]:''));
 			  $('#'+id).data('bs.popover').options.content = '$$'+nodes[id].toTex()+'$$';
 				evaluate();
@@ -180,7 +173,7 @@ $('[data-action="editequation"]').click(function(){
 
 function evaluate(){
 for (var key in nodes){
-	$('#'+key).text((((nodes[key].eval(scope)),2).toString()).split(' ')[0]);
+	$('#'+key).text(((nodes[key].eval(scope)).toString()).split(' ')[0]);
 }
 }
 eval=setInterval(evaluate,500);
