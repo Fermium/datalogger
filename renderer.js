@@ -45,6 +45,7 @@ $(function() {
 						animate_speed	: 'fast'
 					});
 				}
+				eval=setInterval(evaluate,500);
       }
       else{
         handler.stop();
@@ -79,6 +80,7 @@ $(function() {
 						}
 				});
 				$("[name='start-stop']").bootstrapSwitch('toggleDisabled');
+
       }
       else{
 				handler.off();
@@ -86,6 +88,7 @@ $(function() {
 				$("[name='start-stop']").bootstrapSwitch('toggleDisabled');
 				$('#experiment').text('');
 				$('#date').text('');
+				clearInterval(eval);
 
     }
 	}
@@ -183,4 +186,3 @@ for (var key in nodes){
 	$('#'+key).text((((nodes[key].eval(scope)),2).toString()).split(' ')[0]);
 }
 }
-eval=setInterval(evaluate,500);

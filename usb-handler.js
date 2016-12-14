@@ -4,8 +4,9 @@ var low = require('lowdb'); //db .json
 var _ = require('lodash');
 var config = app.getGlobal('config');
 var scope = app.getGlobal('scope');
-var math = require('mathjs')
-
+var math = require('mathjs');
+var datachan = require('data-chan').lib;
+var dc_search_results = require('data-chan').search_enum;
 
 var db;
 var thread;
@@ -33,6 +34,8 @@ module.exports = {
     /*console.log(id+" : "+value);*/
   },
   on : function(){
+    datachan.datachan_init();
+    console.log(datachan.datachan_device_acquire());
   },
   off : function(){
     config._db_exists = false;
