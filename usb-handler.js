@@ -7,7 +7,20 @@ var scope = app.getGlobal('scope');
 var math = require('mathjs');
 var datachan = require('data-chan').lib;
 var dc_search_results = require('data-chan').search_enum;
+var ref = require('ref');
+var struct = require('ref-struct');
 
+var measure_t = struct({
+  'type' : ref.types.uint8,
+  'mu' : ref.types.uint8,
+  'channel' : ref.types.uint8,
+  'value' : ref.types.float,
+  'time' : ref.types.uint32,
+  'millis' : ref.types.uint16
+});
+
+
+var usb_thing;
 var db;
 var thread;
 
@@ -24,6 +37,7 @@ module.exports = {
     $.blockUI();
     createdb();
     $.unblockUI();
+    datachan.datachan_device_enable(usb_thing.device);
     console.log(config._db_exists);
     return config._db_exists;
   },
@@ -35,7 +49,7 @@ module.exports = {
   },
   on : function(){
     datachan.datachan_init();
-    console.log(datachan.datachan_device_acquire());
+    usb_thing=datachan.datachan_device_acquire();
   },
   off : function(){
     config._db_exists = false;
@@ -58,10 +72,9 @@ var locscope = {
   'ch7' : math.unit(math.round(math.random(0,5),2),'V'),
   'ch8' : math.unit(math.round(math.random(0,5),2),'V')
 }
-
+if(datachan.datachan_device_is_enabled(usb_thing.device))
+  console.log(ref.deref(datachan.datachan_device_dequeue_measure(usb_thing.device)));
 _.merge(scope,locscope);
-
-console.log(math.typeof(scope.ch1));
 
 //////////////////////////////
 
