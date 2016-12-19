@@ -13,10 +13,9 @@ var equations = {
 	'vh2'    : 'ch4',
 	'vh'     : '(ch3-ch3*k+ch4*k)',
 	'r-mes'  : 'ch2',
-	'r-cal'  : 'ch2/(ch1/100)',
+	'r-cal'  : 'ch2/(ch1^2/100)',
 	'I'      : 'ch1',
-	'B'      : 'ch6',
-
+	'B'      : 'ch6'
 }
 var unit = {
 	'temp' : 'kelvin',
@@ -183,6 +182,19 @@ $('[data-action="editequation"]').click(function(){
 
 function evaluate(){
 for (var key in nodes){
-	$('#'+key).text((((nodes[key].eval(scope)),2).toString()).split(' ')[0]);
+	try{
+		var str = nodes[key].eval(scope).toString();
+		var number = parseFloat(str);
+		number = math.round(number,2);
+		$('#'+key).text(number+' '+str.split(' ')[1]);
+	}
+	catch(err){
+		if(err.toString().indexOf('Undefined symbol')!=-1){
+			$('#'+key).text('Reading...');
+		}
+		else{
+			console.log(err.toString());
+		}
+	}
 }
 }

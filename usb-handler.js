@@ -4,6 +4,7 @@ var low = require('lowdb'); //db .json
 var _ = require('lodash');
 var config = app.getGlobal('config');
 var scope = app.getGlobal('scope');
+var units = app.getGlobal('measure');
 var math = require('mathjs');
 var datachan = require('data-chan').lib;
 var dc_search_results = require('data-chan').search_enum;
@@ -24,12 +25,6 @@ var usb_thing;
 var db;
 var thread;
 
-// Momentaneo per develop //
-//var reading = {'series': null,'timestamp': 0, 'ch1': 0,'ch2':0,'ch3':0,'a':0,'b':0};
-var i=0;
-// ********************* //
-
-
 
 
 module.exports = {
@@ -38,48 +33,37 @@ module.exports = {
     createdb();
     $.unblockUI();
     datachan.datachan_device_enable(usb_thing.device);
-    console.log(config._db_exists);
     return config._db_exists;
   },
   stop : function() {
+    datachan.datachan_device_disable(usb_thing.device);
     clearInterval(thread);
   },
   send : function(id,value){
-    /*console.log(id+" : "+value);*/
   },
   on : function(){
     datachan.datachan_init();
     usb_thing=datachan.datachan_device_acquire();
   },
   off : function(){
+    datachan.datachan_device_release(usb_thing.device);
+    datachan.datachan_shutdown();
     config._db_exists = false;
     config._file = '';
   }
 }
 
 function read(){
-  ///////////////////////////////
- /*********FAKE READING********/
-///////////////////////////////
-scope.timestamp = i++;
-var locscope = {
-  'ch1' : math.unit(math.round(math.random(0,5),2),'V'),
-  'ch2' : math.unit(math.round(math.random(0,5),2),'V'),
-  'ch3' : math.unit(math.round(math.random(0,5),2),'V'),
-  'ch4' : math.unit(math.round(math.random(0,5),2),'V'),
-  'ch5' : math.unit(math.round(math.random(0,5),2),'V'),
-  'ch6' : math.unit(math.round(math.random(0,5),2),'V'),
-  'ch7' : math.unit(math.round(math.random(0,5),2),'V'),
-  'ch8' : math.unit(math.round(math.random(0,5),2),'V')
-}
-if(datachan.datachan_device_is_enabled(usb_thing.device))
-  console.log(ref.deref(datachan.datachan_device_dequeue_measure(usb_thing.device)));
-_.merge(scope,locscope);
+var measure;
+if(datachan.datachan_device_is_enabled(usb_thing.device)){
+   measure =ref.deref(datachan.datachan_device_dequeue_measure(usb_thing.device));
 
+}
+scope['ch'.concat(measure.channel.toString())] = _.cloneDeep(math.unit(measure.value,(measure.mu in units)?units[measure.mu]:'V'));
 //////////////////////////////
 
 db.get('_data').push({
-  'timestamp': scope.timestamp,
+  /*'timestamp': scope.timestamp,
   'ch1': scope.ch1,
   'ch2': scope.ch2,
   'ch3': scope.ch3,
@@ -87,7 +71,12 @@ db.get('_data').push({
   'ch5': scope.ch5,
   'ch6': scope.ch6,
   'ch7': scope.ch7,
-  'ch8': scope.ch8,
+  'ch8': scope.ch8,*/
+  'time' : measure.time,
+  'millis' : measure.millis,
+  'value' : measure.value,
+  'mu' : (measure.mu in units)?units[measure.mu]:'V',
+  'channel' : measure.channel
 }).value();
 
 

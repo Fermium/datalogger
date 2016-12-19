@@ -10,8 +10,42 @@ const {ipcMain} = require('electron')
 // be closed automatically when the JavaScript object is garbage collected.
 let mainWindow
 let plotWindow
-global.config = {'_file': '','_experiment':'','_date':dateFormat(Date.now(), "yyyy_mm_dd"),'_gain':{'vh': 1 ,'vr': 1 , 'a' : 1, 'g' : 1},'_db_exists':false}
-global.scope =  {'timestamp': 0,'k':0};
+global.measure = {
+  0 : {
+    'name': 'meter',
+    'symbol' : 'm'
+  },
+  1 : 'ampere',
+  2 : 'volt',
+  3 : 'coulomb',
+  4 : 'watt',
+  5 : 'kilogram',
+  6 : 'kelvin',
+  7 : 'candela',
+  8 : 'mole',
+  9 : 'hertz',
+  10 : 'radian',
+  11 : 'steradian',
+  12 : 'newton',
+  13 : 'pascal',
+  14 : 'joule',
+  15 : 'farad',
+  16 : 'ohm',
+  17 : 'siemens',
+  18 : 'weber',
+  19 : 'tesla',
+  20 : 'henry',
+  21 : 'lumen',
+  22 : 'lux',
+  23 : 'becquerel',
+  24 : 'gray',
+  25 : 'sievert',
+  26 : 'katal'
+}
+global.config = {'_file': '','_experiment':'','_date':dateFormat(Date.now(), 'yyyy_mm_dd'),'_gain':{'vh': 1 ,'vr': 1 , 'a' : 1, 'g' : 1},'_db_exists':false}
+global.scope =  {
+  'k':0
+};
 function createWindow () {
   // Create the browser window.
   mainWindow = new BrowserWindow({width: 800, height: 600})
@@ -39,6 +73,7 @@ function createPlotWindow () {
     // Dereference the window object, usually you would store windows
     // in an array if your app supports multi windows, this is the time
     // when you should delete the corresponding element.
+
     plotWindow = null
   })
 }
