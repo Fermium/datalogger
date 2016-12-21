@@ -31,6 +31,7 @@
     "bootstrap-slider": "^9.4.1",
     "chart.js": "^2.3.0",
     "dateformat": "^2.0.0",
+    "easytimer": "^1.1.1",
     "json2csv": "^3.7.1",
     "json2xls": "^0.1.2",
     "jsonfile": "^2.4.0",

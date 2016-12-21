@@ -6,6 +6,8 @@ var handler = require('./usb-handler');
 var slider = require('bootstrap-slider');
 var math = require('mathjs');
 var mathjaxHelper = require('mathjax-electron');
+var easytimer = require('easytimer');
+var timer = new easytimer()
 var equations = {
 //'name'   : 'value',
 	'temp'   : 'ch5',
@@ -44,10 +46,15 @@ $(function() {
 						animate_speed	: 'fast'
 					});
 				}
+				timer.start();
+				timer.addEventListener('secondsUpdated', function (e) {
+				    $('#timer').html(timer.getTimeValues().toString());
+				});
 				eval=setInterval(evaluate,500);
       }
       else{
         handler.stop();
+				timer.pause();
 				new PNotify({
 					title: 'Recording Stopped',
 					text : '',
@@ -83,6 +90,8 @@ $(function() {
       }
       else{
 				handler.off();
+				timer.stop();
+				$('#timer').html('00:00:00');
 				$("[name='start-stop']").bootstrapSwitch('state',false);
 				$("[name='start-stop']").bootstrapSwitch('toggleDisabled');
 				$('#experiment').text('');
