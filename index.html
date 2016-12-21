@@ -109,7 +109,7 @@
 					<div class='col-md-6 col-sm-6 col-xs-6'>
 
 						<!-- Current-->
-						<div class='panel panel-flat'>
+						<div class='panel panel-flat' >
 							<div class='panel-heading'>
 
 								<h5 class='panel-title'>Hall Voltage</h5><i class='info'></i>
@@ -138,13 +138,13 @@
 							<div class='panel-body'>
 								<div class='col-md-4 text-center measured'>
 									<div id='vh1-wrap' class='col-md-6 col-sm-6 col-xs-6 text-center'>
-										Vh1 : <span id='vh1'></span>
+										Vh1 : <span id='vh1' data-baseunit='V' data-unit='V'></span>
 									</div>
 									<div id="vh2-wrap"class='col-md-6 col-sm-6 col-xs-6 text-center'>
-										Vh2 : <span id='vh2'></span>
+										Vh2 : <span id='vh2' data-baseunit='V' data-unit='V'></span>
 									</div>
 								</div>
-								<div class='col-md-4 text-center' id="vh-wrap">Vh : <span id='vh'></span></div>
+								<div class='col-md-4 text-center' id="vh-wrap">Vh : <span id='vh' data-baseunit='V' data-unit='V'></span></div>
 								<hr class='visible-xs visible-sm'/>
 								<div class='col-md-4 text-center'>
 									<form class="form-inline">
@@ -187,7 +187,7 @@
 
 							<div class='panel-body'>
 								<div class='text-center'>
-									<div id="I-wrap">Current : <span id='I'></span></div>
+									<div id="I-wrap">Current : <span id='I' data-baseunit='A' data-unit='A'></span></div>
 							</div>
 						</div>
 					</div>
@@ -226,8 +226,8 @@
 							</div>
 
 							<div class='panel-body'>
-								<div class='col-md-6 text-center' id='r-mes-wrap'>Vr : <span id='r-mes'></span></div>
-								<div class='col-md-6 text-center' id='r-cal-wrap'>R : <span id='r-cal'></span></div>
+								<div class='col-md-6 text-center' id='r-mes-wrap'>Vr : <span id='r-mes' data-baseunit='V' data-unit='V'></span></div>
+								<div class='col-md-6 text-center' id='r-cal-wrap'>R : <span id='r-cal' data-baseunit='ohm' data-unit='ohm'></span></div>
 							</div>
 						</div>
 						<!-- /horizotal form -->
@@ -262,7 +262,7 @@
 
 							<div class='panel-body'>
 								<div class='text-center'>
-									<div id="B-wrap">Gauss : <span id='B'></span></div>
+									<div id="B-wrap">Gauss : <span id='B' data-baseunit='T' data-unit='T'></span></div>
 								</div>
 						</div>
 					</div>
@@ -305,7 +305,7 @@
 								<div class='text-center'>
 									<div class='col-md-6 col-sm-6 col-xs-6'>
 										<div class='col-md-4 col-sm-4 col-xs-4'>
-											Temperature <span id='temp'></span>
+											Temperature <span id='temp' data-baseunit='K' data-unit='K'></span>
 										</div>
 										<div class='col-md-4 col-sm-4 col-xs-4'>
 											<select class='selectpicker' id='tempselect' data-width='auto'>

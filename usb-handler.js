@@ -59,7 +59,8 @@ if(datachan.datachan_device_is_enabled(usb_thing.device)){
    measure =ref.deref(datachan.datachan_device_dequeue_measure(usb_thing.device));
 
 }
-scope['ch'.concat(measure.channel.toString())] = _.cloneDeep(math.unit(measure.value,(measure.mu in units)?units[measure.mu]:'V'));
+scope['ch'.concat(measure.channel.toString())] = measure.value;
+scope['ch'.concat(measure.channel.toString())+'_unit'] = (measure.mu in units)?units[measure.mu]:'V';
 //////////////////////////////
 
 db.get('_data').push({
@@ -98,10 +99,10 @@ function createdb(){
     diag = (diag.endsWith('.json')) ? diag : diag+'.json' ;
     config._file=diag;
     initdb();
-    thread=setInterval(read,500);
+    thread=setInterval(read,100);
   }
   }
   else{
-    thread=setInterval(read,500);
+    thread=setInterval(read,100);
   }
 }
