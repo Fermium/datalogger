@@ -8,8 +8,7 @@
     "rebuild": "electron-rebuild"
   },
   "repository": "https://github.com/fermiumlabs/datalogger",
-  "keywords": [
-  ],
+  "keywords": [],
   "author": "GitHub",
   "license": "CC0-1.0",
   "devDependencies": {

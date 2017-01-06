@@ -34,6 +34,11 @@
         5.0
       ]
     }
-
+    if (his.has_gain){
+      $('.gain li a').click(function() {
+          var selText = $(this).text();
+          $(this).parents('.gain-wrap').find('.dropdown-toggle').html(selText + ' <i class="caret"></i>');
+      });
+    }
   </script>
 </block-header>

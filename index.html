@@ -39,6 +39,10 @@
 	<script type="text/javascript" src="assets/js/plugins/notifications/pnotify.min.js"></script>
 	<script type='text/javascript' src='assets/js/core/app.js'></script>
 
+	<script type='text/javascript' src='./libs/riot.min.js'></script>
+	<script type='riot/tag' src='./experiments/components/custom-block.tag'></script>
+	<script type='riot/tag' src='./experiments/components/block-header.tag'></script>
+	<script type='riot/tag' src='./experiments/components/block-body.tag'></script>
 	<!-- /theme JS files -->
 
 </head>
@@ -329,7 +333,9 @@
 					</div>
 
 				</div>
-
+				<div class='row'>
+					<custom-block/>
+				</div>
 
 
 			</div>
@@ -338,17 +344,12 @@
 		</div>
 		<!-- /page content -->
 
-
-		<!-- Footer -->
-		<!--<div class='footer text-muted'>
-			&copy; 2015. <a href='#'>Limitless Web App Kit</a> by <a href='http://themeforest.net/user/Kopyov' target='_blank'>Eugene Kopyov</a>
-		</div>-->
-		<!-- /footer -->
-
 	</div>
+
   <script>
     require('./renderer.js');
 		require('./exports.js');
+		riot.mount('*');
   </script>
 </body>
 </html>
