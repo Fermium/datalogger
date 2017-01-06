@@ -176,7 +176,6 @@ $('[data-action="editequation"]').click(function() {
             equations[id] = (result != null) ? result : equations[id];
 						$('#tempselect').val('kelvin').change();
 						$('#'+id).data('unit',$('#'+id).data('baseunit'));
-
             nodes[id] = math.parse('(' + equations[id] + ') ' );
             $('#' + id).data('bs.popover').options.content = '$$' + nodes[id].toTex() + '$$';
             evaluate();
@@ -187,9 +186,6 @@ $('[data-action="editequation"]').click(function() {
 function evaluate() {
     for (var key in nodes) {
         try {
-            /*var str = nodes[key].eval(scope).toString();
-            var number = parseFloat(str);
-            number = math.round(number,2);*/
             $('#' + key).text(math.eval('(' + math.round(parseFloat(nodes[key].eval(scope).toString()), 2) + ')' + (($('#' + key).data('baseunit')) + (($('#' + key).data('unit') != $('#' + key).data('baseunit')) ? ' to ' + $('#' + key).data('unit') : ''))).toString());
         } catch (err) {
             if (err.toString().indexOf('Undefined symbol') != -1) {

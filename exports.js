@@ -11,7 +11,6 @@ $('#tocsv').click(function(){
 		if (err) throw err;
     fs.writeFile(name, csv, function(err) {
         if(err) throw err;
-        console.log("data.csv file has been saved.");
     });
 	});
 });
@@ -25,7 +24,6 @@ $('#totsv').click(function(){
 		if (err) throw err;
     fs.writeFile(name, csv, function(err) {
         if(err) throw err;
-        console.log("data.csv file has been saved.");
     });
 	});
 });
