@@ -43,13 +43,13 @@ module.exports = {
   },
   on : function(){
     datachan.datachan_init();
+    config._file = '';
     usb_thing=datachan.datachan_device_acquire();
   },
   off : function(){
     datachan.datachan_device_release(usb_thing.device);
     datachan.datachan_shutdown();
     config._db_exists = false;
-    config._file = '';
   }
 }
 
@@ -94,7 +94,7 @@ function initdb(){
 
 function createdb(){
   if(!config._db_exists){
-  diag=dialog.showSaveDialog({ defaultPath : './data/'+config._experiment+"_"+config._date,title: 'Experiment file save location'});
+  diag=dialog.showSaveDialog({ defaultPath : './data/raw/'+config._experiment+"_"+config._date,title: 'Experiment file save location'});
   if(diag!=undefined){
     diag = (diag.endsWith('.json')) ? diag : diag+'.json' ;
     config._file=diag;

@@ -3,6 +3,8 @@ var config = remote.getGlobal('config');
 var json2csv = require('json2csv');
 var json2xls = require('json2xls');
 var fs = require('fs');
+var low = require('lowdb'); //db .json
+var _ = require('lodash');
 
 $('#tocsv').click(function(){
   var data = JSON.parse(fs.readFileSync(config._file, 'utf8'));
