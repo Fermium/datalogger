@@ -46,6 +46,16 @@ global.config = {'_file': '','_experiment':'','_date':dateFormat(Date.now(), 'yy
 global.scope =  {
   'k':0
 };
+global.source = [
+  {label:'ch1',values:[{time:0,y:0}]},
+  {label:'ch2',values:[{time:0,y:0}]},
+  {label:'ch3',values:[{time:0,y:0}]},
+  {label:'ch4',values:[{time:0,y:0}]},
+  {label:'ch5',values:[{time:0,y:0}]},
+  {label:'ch6',values:[{time:0,y:0}]},
+  {label:'ch7',values:[{time:0,y:0}]},
+  {label:'ch8',values:[{time:0,y:0}]}
+];
 function createWindow () {
   // Create the browser window.
   mainWindow = new BrowserWindow({width: 800, height: 600})

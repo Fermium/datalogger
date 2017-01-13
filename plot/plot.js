@@ -1,40 +1,98 @@
 var remote = require('electron').remote;
 var _ = require('lodash');
-var d3 = Plotly.d3;
 var config = remote.getGlobal('config');
 var file=config._file;
-var source=[{x:[],y:[]},{x:[],y:[]},{x:[],y:[]},{x:[],y:[]},{x:[],y:[]},{x:[],y:[]},{x:[],y:[]},{x:[],y:[]}];
-var gd3 = d3.select('#plot').style({
-  height : '100%',
-  width : '100%',
-  position: 'absolute'
-});
-gd = gd3.node();
-Plotly.plot(gd,source, {
-  title: config._experiment,
-  font: {
-    size : 16
-  }
-});
-window.onresize = function() {
-    Plotly.Plots.resize(gd);
-};
+var source = config.source;
+/*
 
 setInterval(function(){
   if(file!=''){
-  Plotly.d3.json(file,(error,data) => {
-  for(var i=0;i<8;i++){
-   source[i]={
-    x: _.takeRight(data._data, 100).map((d) => d.timestamp),
-    y: _.takeRight(data._data, 100).map((d) => d['ch'+(i+1)])
+  d3.json(file,(error,data) => {
+   var s;
+   s=_.takeRight(data._data, 100);
+   for( mes in s){
+     source[mes.channel-1].values.time.push(mes.timestamp);
+     source[mes.channel-1].values.y.push(mes.value);
    }
-
-   console.log(source[i]);
- }
-  Plotly.redraw('plot');
-})
+ })
 }
+
 else{
   file=config._file;
 }
 },500);
+
+$('#plot').epoch({
+  type : 'time.line',
+  data : source
+});
+*/
+
+var chart = c3.generate({
+    bindto: '#plot',
+    data: {
+        x: 'x',
+        columns: [
+            ['x', '2012-12-29', '2012-12-30', '2012-12-31'],
+            ['data1', 230, 300, 330],
+            ['data2', 190, 230, 200],
+            ['data3', 90, 130, 180],
+        ]
+    },
+    axis: {
+        x: {
+            type: 'timeseries',
+            tick: {
+                format: '%m/%d',
+            }
+        }
+    }
+});
+
+setTimeout(function () {
+    chart.flow({
+        columns: [
+            ['x', '2013-01-11', '2013-01-21'],
+            ['data1', 500, 200],
+            ['data2', 100, 300],
+            ['data3', 200, 120],
+        ],
+        duration: 1500,
+        done: function () {
+            chart.flow({
+                columns: [
+                    ['x', '2013-02-11', '2013-02-12', '2013-02-13', '2013-02-14'],
+                    ['data1', 200, 300, 100, 250],
+                    ['data2', 100, 90, 40, 120],
+                    ['data3', 100, 100, 300, 500]
+                ],
+                length: 0,
+                duration: 1500,
+                done: function () {
+                    chart.flow({
+                        columns: [
+                            ['x', '2013-03-01', '2013-03-02'],
+                            ['data1', 200, 300],
+                            ['data2', 150, 250],
+                            ['data3', 100, 100]
+                        ],
+                        length: 2,
+                        duration: 1500,
+                        done: function () {
+                            chart.flow({
+                                columns: [
+                                    ['x', '2013-03-21', '2013-04-01'],
+                                    ['data1', 500, 200],
+                                    ['data2', 100, 150],
+                                    ['data3', 200, 400]
+                                ],
+                                to: '2013-03-01',
+                                duration: 1500,
+                            });
+                        }
+                    });
+                }
+            });
+        },
+    });
+}, 100);

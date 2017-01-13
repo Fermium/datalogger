@@ -14,7 +14,7 @@
               </li>
             </ul>
             <li each={action in actions}>
-              <a data-action={action}></a>
+              <a data-action={action} data-content={action == 'editequation' ? actions[action] : ''}></a>
             </li>
          </li>
       </ul>
@@ -22,10 +22,10 @@
   </div>
   <script>
     'use strict';
-    this.title = '';
-    this.has_gain = false;
+    this.title = 'Ciao';
+    this.has_gain = true;
     this.gain = {
-      'classes':'a b c d',
+      'classes':'dropdown gain-wrap',
       'values' : [
         0.5,
         1.0,
@@ -34,11 +34,26 @@
         5.0
       ]
     }
-    if (his.has_gain){
+    this.actions={
+      'editequation' : 'temp',
+      'collapse':'collapse'
+    }
+    if (this.has_gain){
       $('.gain li a').click(function() {
           var selText = $(this).text();
           $(this).parents('.gain-wrap').find('.dropdown-toggle').html(selText + ' <i class="caret"></i>');
       });
     }
+    // Collapse on click
+    $('block-header [data-action=collapse]').click(function (e) {
+        e.preventDefault();
+        var $panelCollapse = $(this).parent().parent().parent().parent().parent().nextAll();
+        $(this).parents('.panel').toggleClass('panel-collapsed');
+        $(this).toggleClass('rotate-180');
+
+        containerHeight(); // recalculate page height
+
+        $panelCollapse.slideToggle(150);
+    });
   </script>
 </block-header>

@@ -64,17 +64,7 @@ scope['ch'.concat(measure.channel.toString())+'_unit'] = (measure.mu in units)?u
 //////////////////////////////
 
 db.get('_data').push({
-  /*'timestamp': scope.timestamp,
-  'ch1': scope.ch1,
-  'ch2': scope.ch2,
-  'ch3': scope.ch3,
-  'ch4': scope.ch4,
-  'ch5': scope.ch5,
-  'ch6': scope.ch6,
-  'ch7': scope.ch7,
-  'ch8': scope.ch8,*/
-  'time' : measure.time,
-  'millis' : measure.millis,
+  'time' : measure.time*1000+measure.millis,
   'value' : measure.value,
   'mu' : (measure.mu in units)?units[measure.mu]:'V',
   'channel' : measure.channel
@@ -94,7 +84,7 @@ function initdb(){
 
 function createdb(){
   if(!config._db_exists){
-  diag=dialog.showSaveDialog({ defaultPath : './data/'+config._experiment+"_"+config._date,title: 'Experiment file save location'});
+  diag=dialog.showSaveDialog({ defaultPath : './data/raw/'+config._experiment+"_"+config._date,title: 'Experiment file save location'});
   if(diag!=undefined){
     diag = (diag.endsWith('.json')) ? diag : diag+'.json' ;
     config._file=diag;

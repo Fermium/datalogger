@@ -166,6 +166,7 @@ for (var key in equations) {
 }
 
 $('[data-action="editequation"]').click(function() {
+  console.log($(this))
     id = $(this).attr('data-content');
     bootbox.prompt({
         size: 'medium',
