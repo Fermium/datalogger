@@ -1,3 +1,4 @@
+var _ = require('lodash');
 var app = require('electron').remote;
 var dialog = app.dialog;
 var config = app.getGlobal('config');
@@ -6,6 +7,7 @@ var handler = require('./usb-handler');
 var slider = require('bootstrap-slider');
 var math = require('mathjs');
 var mathjaxHelper = require('mathjax-electron');
+var formula = app.getGlobal('formula');
 var easytimer = require('easytimer');
 var timer = new easytimer()
 var equations = {
@@ -57,6 +59,7 @@ $(function() {
                     addclass: 'translucent',
                     animate_speed: 'fast'
                 });
+                _.merge(formula,equations);
                 clearInterval(eval);
             }
         }

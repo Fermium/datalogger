@@ -10,7 +10,7 @@ const {ipcMain} = require('electron')
 // be closed automatically when the JavaScript object is garbage collected.
 let mainWindow
 let plotWindow
-global.measure = {
+/*global.measure = {
   0 : {
     'name': 'meter',
     'symbol' : 'm'
@@ -41,11 +41,12 @@ global.measure = {
   24 : 'gray',
   25 : 'sievert',
   26 : 'katal'
-}
+}*/
 global.config = {'_file': '','_experiment':'','_date':dateFormat(Date.now(), 'yyyy_mm_dd'),'_gain':{'vh': 1 ,'vr': 1 , 'a' : 1, 'g' : 1},'_db_exists':false}
 global.scope =  {
   'k':0
 };
+global.formula = {};
 global.source = [
   {label:'ch1',values:[{time:0,y:0}]},
   {label:'ch2',values:[{time:0,y:0}]},

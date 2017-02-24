@@ -60,14 +60,18 @@ if(datachan.datachan_device_is_enabled(usb_thing.device)){
 
 }
 scope['ch'.concat(measure.channel.toString())] = measure.value;
-scope['ch'.concat(measure.channel.toString())+'_unit'] = (measure.mu in units)?units[measure.mu]:'V';
 //////////////////////////////
 
 db.get('_data').push({
   'time' : measure.time*1000+measure.millis,
-  'value' : measure.value,
-  'mu' : (measure.mu in units)?units[measure.mu]:'V',
-  'channel' : measure.channel
+  'ch1' : Math.floor(Math.random() * (-1 + 5 + 1)) + 1,
+  'ch2' : Math.floor(Math.random() * (-5 + 10 + 1)) + 5,
+  'ch3' : Math.floor(Math.random() * (-10 + 15 + 1)) + 10,
+  'ch4' : Math.floor(Math.random() * (-15 + 20 + 1)) + 15,
+  'ch5' : Math.floor(Math.random() * (-20 + 25 + 1)) + 20,
+  'ch6' : Math.floor(Math.random() * (-25 + 30 + 1)) + 25,
+  'ch7' : Math.floor(Math.random() * (-30 + 35 + 1)) + 30,
+  'ch8' : Math.floor(Math.random() * (-35 + 40 + 1)) + 35
 }).value();
 
 
