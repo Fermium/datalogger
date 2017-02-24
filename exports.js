@@ -6,49 +6,45 @@ var json2csv = require('json2csv');
 /*var json2xls = require('json2xls');*/
 var math = require('mathjs');
 var fs = require('fs');
+var fsPath = require('fs-path');
 var cols =[
     'time',
     {
       label: 'Hall Voltage',
-      formula : 'vh',
       value: function(row, field, data) {
         for(i=1;i<8;i++){
           scope['ch'.concat(i)]=row['ch'.concat(i)];
         }
-        return math.eval(formula[field.scope],scope);
+
+        return math.eval(formula['vh'],scope);
       }
     },
     {
       label: 'Current',
-      formula : 'I',
       value: function(row, field, data) {
       return math.eval(formula['I'],scope);
       }
     },
     {
       label: 'VR',
-      formula : 'r-mes',
       value: function(row, field, data) {
         return math.eval(formula['r-mes'],scope);
       }
     },
     {
       label: 'Resistance',
-      formula : 'r-cal',
       value: function(row, field, data) {
         return math.eval(formula['r-cal'],scope);
       }
     },
     {
       label: 'Gauss',
-      formula : 'B',
       value: function(row, field, data) {
         return math.eval(formula['B'],scope);
       }
     },
     {
       label: 'Temperature',
-      formula : 'temp',
       value: function(row, field, data) {
         return math.eval(formula['temp'],scope);
       }
@@ -58,21 +54,22 @@ var cols =[
 
 $('#tocsv').click(function(){
   var data = JSON.parse(fs.readFileSync(config._file, 'utf8'));
-  var name = '../'+config._file.split('.')[0]+'/experiment_data.csv';
+  var name = config._file.split('.')[0]+'/experiment_data.csv';
 
 	json2csv({ data: data['_data'] , fields:cols}, (err,csv) => {
 		if (err) throw err;
-    fs.writeFile(name, csv, function(err) {
+    fsPath.writeFile(name, csv, function(err) {
         if(err) throw err;
     });
 	});
 });
 $('#totsv').click(function(){
   var data = JSON.parse(fs.readFileSync(config._file, 'utf8'));
-  var name = '../'+config._file.split('.')[0]+'/experiment_data.tsv'
+  var name = config._file.split('.')[0]+'/experiment_data.tsv'
+  console.log((config._file.split('.')[0]).split('/')[-1]);
 	json2csv({ data: data['_data'] , fields: cols, del: '\t'}, (err,csv) => {
 		if (err) throw err;
-    fs.writeFile(name, csv, function(err) {
+    fsPath.writeFile(name, csv, function(err) {
         if(err) throw err;
     });
 	});

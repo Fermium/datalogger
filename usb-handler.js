@@ -88,7 +88,7 @@ function initdb(){
 
 function createdb(){
   if(!config._db_exists){
-  diag=dialog.showSaveDialog({ defaultPath : './data/raw/'+config._experiment+"_"+config._date,title: 'Experiment file save location'});
+  diag=dialog.showSaveDialog({ defaultPath : './data/'+config._experiment+"_"+config._date,title: 'Experiment file save location'});
   if(diag!=undefined){
     diag = (diag.endsWith('.json')) ? diag : diag+'.json' ;
     config._file=diag;
