@@ -1,6 +1,10 @@
 const electron = require('electron')
-const dateFormat = require('dateformat'); //for date
+var {dialog} = require('electron');
+var handler = require('./usb-handler');
 const math = require('mathjs');
+const dateFormat = require('dateformat'); //for date
+var fs = require('fs');
+
 // Module to control application life.
 const app = electron.app
 // Module to create native browser window.
@@ -10,53 +14,10 @@ const {ipcMain} = require('electron')
 // be closed automatically when the JavaScript object is garbage collected.
 let mainWindow
 let plotWindow
-/*global.measure = {
-  0 : {
-    'name': 'meter',
-    'symbol' : 'm'
-  },
-  1 : 'ampere',
-  2 : 'volt',
-  3 : 'coulomb',
-  4 : 'watt',
-  5 : 'kilogram',
-  6 : 'kelvin',
-  7 : 'candela',
-  8 : 'mole',
-  9 : 'hertz',
-  10 : 'radian',
-  11 : 'steradian',
-  12 : 'newton',
-  13 : 'pascal',
-  14 : 'joule',
-  15 : 'farad',
-  16 : 'ohm',
-  17 : 'siemens',
-  18 : 'weber',
-  19 : 'tesla',
-  20 : 'henry',
-  21 : 'lumen',
-  22 : 'lux',
-  23 : 'becquerel',
-  24 : 'gray',
-  25 : 'sievert',
-  26 : 'katal'
-}*/
-global.config = {'_file': '','_experiment':'','_date':dateFormat(Date.now(), 'yyyy_mm_dd'),'_gain':{'vh': 1 ,'vr': 1 , 'a' : 1, 'g' : 1},'_db_exists':false}
-global.scope =  {
-  'k':0
-};
+
+global.config = {'_experiment':'','_date':dateFormat(Date.now(), 'yyyy_mm_dd'),'_file':''}
+/*global.scope =  { 'k' : 0 };*/
 global.formula = {};
-global.source = [
-  {label:'ch1',values:[{time:0,y:0}]},
-  {label:'ch2',values:[{time:0,y:0}]},
-  {label:'ch3',values:[{time:0,y:0}]},
-  {label:'ch4',values:[{time:0,y:0}]},
-  {label:'ch5',values:[{time:0,y:0}]},
-  {label:'ch6',values:[{time:0,y:0}]},
-  {label:'ch7',values:[{time:0,y:0}]},
-  {label:'ch8',values:[{time:0,y:0}]}
-];
 function createWindow () {
   // Create the browser window.
   mainWindow = new BrowserWindow({width: 800, height: 600})
@@ -76,7 +37,7 @@ function createWindow () {
 
 function createPlotWindow () {
   plotWindow= new BrowserWindow({width:800, height:600})
-  plotWindow.loadURL(`file://${__dirname}/plot.html`)
+  plotWindow.loadURL(`file://${__dirname}/plot/index.html`)
 
 
   // Emitted when the window is closed.
@@ -95,6 +56,7 @@ function createPlotWindow () {
 app.on('ready', createWindow)
 
 // Quit when all windows are closed.
+
 app.on('window-all-closed', function () {
   // On OS X it is common for applications and their menu bar
   // to stay active until the user quits explicitly with Cmd + Q
@@ -115,4 +77,27 @@ app.on('activate', function () {
 // code. You can also put them in separate files and require them here.
 ipcMain.on('plot',(event,arg) => {
   createPlotWindow()
+})
+
+ipcMain.on('start',(event,arg) => {
+  if(!fs.existsSync(config._file)){
+    diag=dialog.showSaveDialog({ defaultPath : './data/'+config._experiment+"_"+config._date,title: 'Experiment file save location'});
+    config._file = diag;
+  }
+  mainWindow.webContents.send('started',{'return' : handler.start(mainWindow,config._file,config._experiment,config._date)});
+})
+ipcMain.on('stop',(event,arg) => {
+  handler.stop();
+})
+ipcMain.on('on',(event,arg) => {
+  handler.on();
+})
+ipcMain.on('off',(event,arg) => {
+  handler.off();
+})
+
+ipcMain.on('update',(event,arg)=>{
+  if(plotWindow){
+    plotWindow.webContents.send('update',{'scope':arg.scope})
+  }
 })

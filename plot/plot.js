@@ -3,96 +3,25 @@ var _ = require('lodash');
 var config = remote.getGlobal('config');
 var file=config._file;
 var source = config.source;
-/*
+var scope = remote.getGlobal('scope');
+const {ipcRenderer} = require('electron');
 
-setInterval(function(){
-  if(file!=''){
-  d3.json(file,(error,data) => {
-   var s;
-   s=_.takeRight(data._data, 100);
-   for( mes in s){
-     source[mes.channel-1].values.time.push(mes.timestamp);
-     source[mes.channel-1].values.y.push(mes.value);
-   }
- })
-}
-
-else{
-  file=config._file;
-}
-},500);
-
-$('#plot').epoch({
-  type : 'time.line',
-  data : source
-});
-*/
-
-var chart = c3.generate({
-    bindto: '#plot',
-    data: {
-        x: 'x',
-        columns: [
-            ['x', '2012-12-29', '2012-12-30', '2012-12-31'],
-            ['data1', 230, 300, 330],
-            ['data2', 190, 230, 200],
-            ['data3', 90, 130, 180],
-        ]
-    },
-    axis: {
-        x: {
-            type: 'timeseries',
-            tick: {
-                format: '%m/%d',
-            }
-        }
-    }
+var graph = new Rickshaw.Graph({
+  element : document.getElementById('plot'),
+	renderer : 'line',
+  series : new Rickshaw.Series([{ name: 'ch6' }])
 });
 
-setTimeout(function () {
-    chart.flow({
-        columns: [
-            ['x', '2013-01-11', '2013-01-21'],
-            ['data1', 500, 200],
-            ['data2', 100, 300],
-            ['data3', 200, 120],
-        ],
-        duration: 1500,
-        done: function () {
-            chart.flow({
-                columns: [
-                    ['x', '2013-02-11', '2013-02-12', '2013-02-13', '2013-02-14'],
-                    ['data1', 200, 300, 100, 250],
-                    ['data2', 100, 90, 40, 120],
-                    ['data3', 100, 100, 300, 500]
-                ],
-                length: 0,
-                duration: 1500,
-                done: function () {
-                    chart.flow({
-                        columns: [
-                            ['x', '2013-03-01', '2013-03-02'],
-                            ['data1', 200, 300],
-                            ['data2', 150, 250],
-                            ['data3', 100, 100]
-                        ],
-                        length: 2,
-                        duration: 1500,
-                        done: function () {
-                            chart.flow({
-                                columns: [
-                                    ['x', '2013-03-21', '2013-04-01'],
-                                    ['data1', 500, 200],
-                                    ['data2', 100, 150],
-                                    ['data3', 200, 400]
-                                ],
-                                to: '2013-03-01',
-                                duration: 1500,
-                            });
-                        }
-                    });
-                }
-            });
-        },
-    });
-}, 100);
+graph.render();
+var axes = new Rickshaw.Graph.Axis.Time( {
+	graph: graph
+} );
+
+
+axes.render();
+
+ipcRenderer.on('update',(event,data)=>{
+	console.log(data.scope);
+	graph.series.addData(data.scope);
+	graph.update();
+});
