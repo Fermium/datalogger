@@ -42,6 +42,7 @@ module.exports = {
     config._db_exists = false;
     config._file = '';
     datachan.datachan_init();
+    config._file = '';
     usb_thing=datachan.datachan_device_acquire();
   },
   off : function(){
