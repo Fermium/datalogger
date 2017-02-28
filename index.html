@@ -71,7 +71,7 @@
 					<ul class='dropdown-menu dropdown-menu-left'>
 						<li id='tocsv'><a href='#'>Export to CSV</a></li>
 						<li id='totsv'><a href='#'>Export to TSV (SciDAVis standard)</a></li>
-						<li id='toxls'><a href='#'>Export to XLS</a></li>
+						<!--<li id='toxls'><a href='#'>Export to XLS</a></li>-->
 					<ul>
 				</li>
 
@@ -91,7 +91,8 @@
 					<input type='checkbox' name='start-stop' id='start-stop' disabled>
 				</div>
   	</div>
-</div>
+	</div>
+
 	<!-- Page container -->
 	<div class='page-container'>
 
@@ -135,7 +136,7 @@
               	</div>
             	</div>
 
-							<div class='panel-body'>
+							<div class='panel-body big-text'>
 								<div class='col-md-4 text-center measured'>
 									<div id='vh1-wrap' class='col-md-6 col-sm-6 col-xs-6 text-center'>
 										Vh1 : <span id='vh1' data-baseunit='V' data-unit='V'></span>
@@ -185,7 +186,7 @@
 			                	</div>
 		                	</div>
 
-							<div class='panel-body'>
+							<div class='panel-body big-text'>
 								<div class='text-center'>
 									<div id="I-wrap">Current : <span id='I' data-baseunit='A' data-unit='A'></span></div>
 							</div>
@@ -194,11 +195,7 @@
 						<!-- /vertical form -->
 
 					</div>
-				</div>
 
-				<!-- /grid -->
-				<!-- Grid -->
-				<div class='row row-sortable'>
 					<div class='col-md-6 col-sm-6 col-xs-6'>
 
 						<!-- Horizontal form -->
@@ -225,7 +222,7 @@
 								</div>
 							</div>
 
-							<div class='panel-body'>
+							<div class='panel-body big-text'>
 								<div class='col-md-6 text-center' id='r-mes-wrap'>Vr : <span id='r-mes' data-baseunit='V' data-unit='V'></span></div>
 								<div class='col-md-6 text-center' id='r-cal-wrap'>R : <span id='r-cal' data-baseunit='ohm' data-unit='ohm'></span></div>
 							</div>
@@ -260,7 +257,7 @@
 								</div>
 							</div>
 
-							<div class='panel-body'>
+							<div class='panel-body big-text'>
 								<div class='text-center'>
 									<div id="B-wrap">Gauss : <span id='B' data-baseunit='T' data-unit='T'></span></div>
 								</div>
@@ -301,7 +298,7 @@
 									</ul>
 								</div>
 							</div>
-							<div class='panel-body'>
+							<div class='panel-body big-text'>
 								<div class='text-center'>
 									<div class='col-md-6 col-sm-6 col-xs-6'>
 										<div class='col-md-4 col-sm-4 col-xs-4'>
@@ -331,16 +328,21 @@
 				</div>
 
 
-
 			</div>
 			<!-- /main content -->
 
 		</div>
 
 	</div>
+
   <script>
+		const riot=require('riot');
     require('./renderer.js');
 		require('./exports.js');
+		require('./experiments/components/custom-block.tag');
+		require('./experiments/components/block-header.tag');
+		require('./experiments/components/block-body.tag');
+		riot.mount('*');
   </script>
 </body>
 </html>

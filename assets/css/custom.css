@@ -14,7 +14,9 @@
 .switch-field label {
   float: left;
 }
-
+.big-text {
+  font-size : 1.5em;
+}
 .switch-field label {
   display: inline-block;
   width: 60px;

@@ -15,6 +15,7 @@
 	<link href="../assets/css/colors.css" rel="stylesheet" type="text/css">
 	<link href="../assets/css/bootstrap-slider.min.css" rel="stylesheet" type="text/css">
 	<link href="../assets/css/custom.css" rel="stylesheet" type="text/css">
+
 	<!-- /global stylesheets -->
 
 	<!-- Core JS files -->
@@ -31,16 +32,17 @@
 	<script type="text/javascript" src="../assets/js/core/libraries/jquery_ui/interactions.min.js"></script>
 	<script type="text/javascript" src="../assets/js/core/libraries/jquery_ui/touch.min.js"></script>
 	<script type="text/javascript" src="../assets/js/pages/appearance_draggable_panels.js"></script>
-
+	<script type="text/javascript" src="../libs/d3.min.js"></script>
+	<script type="text/javascript" src="../node_modules/rickshaw/rickshaw.min.js"></script>
+	<link href="../libs/c3/c3.min.css" rel="stylesheet" type="text/css">
 	<!-- /theme JS files -->
 
 </head>
 <body>
 <div id="container">
-<div id="plot"></div>
+<div id="plot" style='width:800px;height:600px;padding: 10 px'></div>
 </div>
 
-<script src="../libs/plotly-latest.min.js"></script>
 <script>
   // You can also require other files to run in this process
   require('./plot.js');
