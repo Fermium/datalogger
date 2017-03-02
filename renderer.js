@@ -160,7 +160,9 @@ $('#k-value').keyup(function() {
     });
 
 });
-
+$('[data-action="handbook"]').click(function() {
+  ipcRenderer.send('handbook');
+})
 $('[data-action="editequation"]').click(function() {
     bootbox.prompt({
         size: 'medium',
@@ -208,7 +210,9 @@ function updateTex(){
           placement: 'bottom',
           content: '<div id="' + key + '_formula">$$' + tex[key] + '$$</div>'
       }).on('shown.bs.popover', function() {
+        console.log(tex[key]);
           mathjaxHelper.loadAndTypeset(document, document.getElementById(key + '_formula'));
       });
   }
+  console.log(tex)
 }
