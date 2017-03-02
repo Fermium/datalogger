@@ -15,6 +15,7 @@
 	<link href="../assets/css/colors.css" rel="stylesheet" type="text/css">
 	<link href="../assets/css/bootstrap-slider.min.css" rel="stylesheet" type="text/css">
 	<link href="../assets/css/custom.css" rel="stylesheet" type="text/css">
+	<link href="../node_modules/rickshaw/rickshaw.min.css" rel="stylesheet" type="text/css">
 
 	<!-- /global stylesheets -->
 
@@ -39,8 +40,11 @@
 
 </head>
 <body>
-<div id="container">
-<div id="plot" style='width:800px;height:600px;padding: 10 px'></div>
+
+<div id="container" style='padding: 10px'>
+<section  style="position:relative;z-index:9999"><div style='position:absolute;right:0' id="legend" ></div></section>
+<div id="plot"></div>
+<div style='clear:both'></div>
 </div>
 
 <script>

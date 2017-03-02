@@ -20,7 +20,8 @@ var mainWindow= {};
 var usb_thing;
 var db;
 var thread;
-
+var running=false;
+var on=false;
 
 
 
@@ -29,26 +30,35 @@ module.exports = {
     _.extend(mainWindow,win);
     createdb(diag,experiment,date);
     datachan.datachan_device_enable(usb_thing.device);
+    running = true;
     return config._db_exists;
   },
   stop : function() {
     datachan.datachan_device_disable(usb_thing.device);
+    running = false;
     clearInterval(thread);
-  },
-  send : function(id,value){
   },
   on : function(){
     console.log(electron);
     config._db_exists = false;
     config._file = '';
     datachan.datachan_init();
-    config._file = '';
+    on = true;
     usb_thing=datachan.datachan_device_acquire();
   },
   off : function(){
+    datachan.datachan_device_disable(usb_thing.device);
+    clearInterval(thread);
+    on = false;
     datachan.datachan_device_release(usb_thing.device);
     datachan.datachan_shutdown();
 
+  },
+  isrunning: function(){
+    return running;
+  },
+  ison: function(){
+    return on;
   }
 }
 
@@ -90,6 +100,7 @@ function createdb(diag,experiment,date){
   if(diag!=undefined){
     diag = (diag.endsWith('.json')) ? diag : diag+'.json' ;
     config._file=diag;
+    console.log(config._file);
     initdb(experiment,date);
     thread=setInterval(read,100);
   }

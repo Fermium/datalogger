@@ -6,7 +6,7 @@ var source = config.source;
 var scope = remote.getGlobal('scope');
 const {ipcRenderer} = require('electron');
 
-var graph = new Rickshaw.Graph({
+/*var graph = new Rickshaw.Graph({
   element : document.getElementById('plot'),
 	renderer : 'line',
   series : new Rickshaw.Series([{ name: 'ch6' }])
@@ -21,7 +21,86 @@ var axes = new Rickshaw.Graph.Axis.Time( {
 axes.render();
 
 ipcRenderer.on('update',(event,data)=>{
-	console.log(data.scope);
-	graph.series.addData(data.scope);
+	console.log(graph.series);
+	graph.series.addData({'ch6':{x:data.scope['time'], y:data.scope['ch6']}});
 	graph.update();
+});*/
+
+// instantiate our graph!
+var tv = 1000;
+
+var graph = new Rickshaw.Graph( {
+	element: document.getElementById("plot"),
+	width: window.innerWidth - 20,
+	height: window.innerHeight - 20,
+  renderer: 'line',
+	interpolation: 'step-after',
+	series: new Rickshaw.Series.FixedDuration(
+		[
+			{name : 'ch1'},
+			{name : 'ch2'},
+			{name : 'ch3'},
+			{name : 'ch4'},
+			{name : 'ch5'},
+			{name : 'ch6'},
+			{name : 'ch7'},
+			{name : 'ch8'}
+		],undefined,{
+		timeInterval : 100,
+		maxDataPoints : 1000,
+		timeBase: new Date().getTime() / 1000
+	})
+} );
+var hoverDetail = new Rickshaw.Graph.HoverDetail( {
+	graph: graph,
+	xFormatter: function(x) {
+		return new Date(x * 1000).toString();
+	}
+} );
+graph.render();
+var xAxes = new Rickshaw.Graph.Axis.X( {
+	graph: graph
+} );
+
+xAxes.render();
+var yAxis = new Rickshaw.Graph.Axis.Y({
+    graph: graph
+});
+
+yAxis.render();
+var legend = new Rickshaw.Graph.Legend( {
+	graph: graph,
+	element: document.getElementById('legend')
+} );
+var shelving = new Rickshaw.Graph.Behavior.Series.Toggle( {
+	graph: graph,
+	legend: legend
+} );
+var order = new Rickshaw.Graph.Behavior.Series.Order( {
+	graph: graph,
+	legend: legend
+} );
+var highlighter = new Rickshaw.Graph.Behavior.Series.Highlight( {
+	graph: graph,
+	legend: legend
+} );
+
+ipcRenderer.on('update',(event,data)=>{
+  console.log(data.scope['ch6']);
+  console.log(graph.series);
+  dataplot = {};
+  for(i=1;i<9;i++){
+    dataplot['ch'+i]=data.scope['ch'+i];
+  }
+	console.log(graph.series);
+	graph.series.addData(dataplot);
+	graph.update();
+});
+
+$(window).on('resize', function(){
+  graph.configure({
+    width: window.innerWidth - 20,
+    height: window.innerHeight - 20
+  });
+  graph.render();
 });
