@@ -113,3 +113,7 @@ ipcMain.on('update',(event,arg)=>{
     plotWindow.webContents.send('update',{'scope':arg.scope})
   }
 })
+
+ipcMain.on('isrunning',(event,arg)=>{
+  event.returnValue = handler.isrunning();
+})

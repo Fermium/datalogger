@@ -13,9 +13,11 @@ var scope =  {
   'k' : 0
 };
 var timer = new easytimer();
-var equations = 'temp=ch5\nvh1=ch3\nvh2=ch4\nvh=(vh1-vh1*k+vh2*k)\nvr=ch2\nI=ch1\nr=vr/(I^2/100)\nB=ch6'
-
 var tex = {}
+var equations = 'temp=ch5 K\nvh1=ch3 V\nvh2=ch4 V\nvh=(vh1-vh1*k+vh2*k)\nvr=ch2 V\nI=ch1 A\nr=vr/(I/100)\nB=ch6 T'
+var nodes = []
+updateTex();
+
 $(function() {
     $("[name='start-stop']").bootstrapSwitch({
         onText: 'REC',
@@ -25,7 +27,6 @@ $(function() {
               $.blockUI();
               ipcRenderer.send('start');
               ipcRenderer.on('started',function(event,args){
-                console.log(args.return);
                 if(!args.return){
                     $("[name='start-stop']").bootstrapSwitch('state', false);
                 } else {
@@ -43,8 +44,7 @@ $(function() {
                 timer.start();
                 timer.addEventListener('secondsUpdated', function(e) {
                     $('#timer').html(timer.getTimeValues().toString());
-                });
-                eval = setInterval(evaluate, 500);
+                  });
                 $.unblockUI();
             } else {
                 ipcRenderer.send('stop');
@@ -59,7 +59,6 @@ $(function() {
                     animate_speed: 'fast'
                 });
                 //_.merge(formula,equations);
-                clearInterval(eval);
             }
         }
     });
@@ -90,7 +89,6 @@ $(function() {
                 $("[name='start-stop']").bootstrapSwitch('toggleDisabled');
                 $('#experiment').text('');
                 $('#date').text('');
-                clearInterval(eval);
 
             }
         }
@@ -98,12 +96,20 @@ $(function() {
 });
 ipcRenderer.on('measure',function(event,args){
   _.extend(scope,args.scope);
+  math.format(math.eval(equations,scope),2);
+  evaluate();
   ipcRenderer.send('update',{'scope':scope});
 });
 $('#tempselect').change(function() {
     $('#temp').data('unit', $('#tempselect').val());
-    /*nodes['temp'] = math.parse(equations['temp'] );*/
-    /*$('#temp').data('bs.popover').options.content = '$$' + nodes['temp'].toTex() + '$$';*/
+    equations+='\ntemp=temp to '+$('#temp').data('unit');
+    math.format(math.eval(equations,scope),2);
+    nodes = equations.split('\n');
+    nodes.forEach(function(n){
+      var nn=n.split('=');
+      tex[nn[0].trim()]=math.parse(nn[1].trim()).toTex();
+    });
+    updateTex();
 
 });
 
@@ -154,21 +160,6 @@ $('#k-value').keyup(function() {
     });
 
 });
-/*for (var key in equations) {
-
-    if (!equations.hasOwnProperty(key)) continue;
-    if (!nodes.hasOwnProperty(key)) {
-        nodes[key] = math.parse(equations[key]);
-    }
-    $('#' + key).popover({
-        trigger: 'hover',
-        title: 'Formula',
-        html: true,
-        content: '<div id="' + key + '_formula">$$' + nodes[key].toTex() + '$$</div>'
-    }).on('shown.bs.popover', function() {
-        mathjaxHelper.loadAndTypeset(document, document.getElementById(key + '_formula'));
-    });
-}*/
 
 $('[data-action="editequation"]').click(function() {
     bootbox.prompt({
@@ -177,15 +168,14 @@ $('[data-action="editequation"]').click(function() {
         value: equations,
         title: 'Insert the new equation for the cell',
         callback: function(result) {
-          if(result != null) equations=result;
-          nodes = equations.split('\n');
-          for(i=0;i<nodes.length;i++){
-            nn=nodes[i].split('=');
-            tex[nn[0].trim()]=math.parse(nn[1].trim()).toTex();
+          var run = ipcRenderer.sendSync('isrunning');
+          console.log(run);
+          if(run){
+            if(result != null) equations=result;
+            updateTex();
+            math.eval(equations,scope);
+
           }
-          math.eval(equations,scope);
-          console.log(scope);
-          console.log(tex);
         }
     });
 });
@@ -193,7 +183,7 @@ $('[data-action="editequation"]').click(function() {
 function evaluate() {
     for (var key in tex) {
         try {
-            //$('#' + key).text(math.eval('(' + math.round(parseFloat(nodes[key].eval(scope).toString()), 2) + ')' + (($('#' + key).data('baseunit')) + (($('#' + key).data('unit') != $('#' + key).data('baseunit')) ? ' to ' + $('#' + key).data('unit') : ''))).toString());
+            $('#' + key).text(math.format(scope[key],{precision:5}));
         } catch (err) {
             if (err.toString().indexOf('Undefined symbol') != -1) {
                 $('#' + key).text('Reading...');
@@ -203,4 +193,22 @@ function evaluate() {
             }
         }
     }
+}
+function updateTex(){
+  nodes = equations.split('\n');
+  nodes.forEach(function(n){
+    var nn=n.split('=');
+    tex[nn[0].trim()]=math.parse(nn[1].trim()).toTex();
+  });
+  for (var key in tex) {
+      $('#' + key).popover({
+          trigger: 'hover',
+          title: 'Formula',
+          html: true,
+          placement: 'bottom',
+          content: '<div id="' + key + '_formula">$$' + tex[key] + '$$</div>'
+      }).on('shown.bs.popover', function() {
+          mathjaxHelper.loadAndTypeset(document, document.getElementById(key + '_formula'));
+      });
+  }
 }
