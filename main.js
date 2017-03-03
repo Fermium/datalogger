@@ -66,18 +66,17 @@ function createHandbookWindow(){
     res.on('end', function() {
             var obj = JSON.parse(output);
             assets = obj.assets;
-            console.log(assets);
             for(i in assets){
               if(assets[i].name=='Hall_Handbook.pdf'){
                 latest = assets[i].browser_download_url;
-                console.log(latest)
+                handbookWindow.loadURL(latest);
               }
             }
         });
   });
   req.end();
   // and load the index.html of the app.
-  handbookWindow.loadURL(latest);
+
 
 
   // Emitted when the window is closed.
