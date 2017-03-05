@@ -12,6 +12,7 @@ var cols =[
     {
       label: 'Hall Voltage',
       value: function(row, field, data) {
+        var i;
         for(i=1;i<8;i++){
           scope['ch'.concat(i)]=row['ch'.concat(i)];
         }
