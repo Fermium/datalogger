@@ -7,6 +7,7 @@ var json2csv = require('json2csv');
 var math = require('mathjs');
 var fs = require('fs');
 var fsPath = require('fs-path');
+import $ = require("jquery");
 var cols =[
     'time',
     {

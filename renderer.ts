@@ -10,6 +10,10 @@ var formula = app.getGlobal('formula');
 var easytimer = require('easytimer');
 const {ipcRenderer} = require('electron');
 const codemirror = require('codemirror');
+
+import $ = require("jquery");
+
+
 var scope =  {
   'k' : 0
 };
@@ -155,7 +159,7 @@ $('#k-slider').ionRangeSlider({
 });
 
 $('#k-value').keyup(function() {
-    val = $('#k-value').val();
+    var val = $('#k-value').val();
     if (val > 1) {
         val = 1;
         $('#k-value').val(val);
@@ -229,9 +233,10 @@ $('[data-action="editequation"]').click(function() {
     styleActiveLine: true,
     matchBrackets: true
   })*/
-      eq = $('#equations')
-      mm = equations.split('\n');
+      var eq = $('#equations')
+      var mm = equations.split('\n');
       $('#latex').html('');
+      var i;
       for(i in mm){
         $('#latex').append('$$'+math.parse(mm[i]).toTex()+'$$<br/>');
       }
@@ -240,9 +245,10 @@ $('[data-action="editequation"]').click(function() {
           mm = eq.val().split('\n');
           $('#latex').html('');
           $('#latex').css('maxHeight',eq.height());
-
+          var i;
           for(i in mm){
             try{
+              var a;
               a  = math.parse(mm[i]).toTex();
             }
             catch(err){
@@ -260,6 +266,7 @@ $('[data-action="editequation"]').click(function() {
 
     });
     modal.on('shown.bs.modal',function(){
+      var eq;
       eq = $('#equations');
       eq.css('maxWidth',eq.parent().width());
       eq.css('height',$('#latex').height());

@@ -38,3 +38,9 @@ jspm_packages
 
 # data folder
 data
+
+# all the js outputted from typescript
+main.js
+renderer.js
+usb-handler.js
+exports.js
