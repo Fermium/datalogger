@@ -33,6 +33,7 @@
     "echarts": "^3.4.0",
     "electron": "^1.6.2",
     "electron-pdf-window": "^1.0.9",
+    "fs-path": "0.0.23",
     "json2csv": "^3.7.1",
     "json2xls": "^0.1.2",
     "jsonfile": "^2.4.0",
