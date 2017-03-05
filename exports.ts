@@ -7,11 +7,13 @@ var json2csv = require('json2csv');
 var math = require('mathjs');
 var fs = require('fs');
 var fsPath = require('fs-path');
+import $ = require("jquery");
 var cols =[
     'time',
     {
       label: 'Hall Voltage',
       value: function(row, field, data) {
+        var i;
         for(i=1;i<8;i++){
           scope['ch'.concat(i)]=row['ch'.concat(i)];
         }
