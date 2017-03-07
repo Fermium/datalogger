@@ -190,8 +190,9 @@ $('[data-action="editequation"]').click(function() {
 
         }
     });*/
+    var editor;
     var modal=bootbox.dialog({
-      message : '<div class="col-md-6 col-sm-6 col-xs-6"><textarea class="form-control"  id="equations"></textarea></div><div id="latex" class="col-md-6 col-sm-6 col-xs-6"></div>',
+      message : '<div class="row d-flex flex-column" style="position:relative"><div class="col-md-6 col-sm-6 col-xs-6"><textarea class="form-control"  id="equations"></textarea></div><ul id="latex" class="col-md-6 col-sm-6 col-xs-6" style="overflow:hidden; overflow-y:scroll;"></ul></div>',
       title : 'Experiment equations',
       buttons : {
         danger : {
@@ -205,8 +206,7 @@ $('[data-action="editequation"]').click(function() {
           label:'Confirm',
           className: 'btn-primary',
           callback: function() {
-            console.log('ok')
-            result = $('#equations').val();
+            result = editor.getValue();
             var run = ipcRenderer.sendSync('isrunning');
             if(result != null) equations=result;
             if(run){
@@ -223,48 +223,97 @@ $('[data-action="editequation"]').click(function() {
       onEscape : true
 
     });
-    modal.on('show.bs.modal',function(){
-      /*var editor = codemirror.fromTextArea(document.getElementById('equations'),{
+    modal.on('shown.bs.modal',function(){
+      editor = codemirror.fromTextArea(document.getElementById('equations'),{
+        mode: 'javascript',
+        theme : 'default',
         lineNumbers: true,
-    styleActiveLine: true,
-    matchBrackets: true
-  })*/
+        matchBrackets: true,
+
+      });
       eq = $('#equations')
-      mm = equations.split('\n');
+      editor.setValue(equations);
+      mm = editor.getValue().split('\n');
       $('#latex').html('');
+      $('#latex').css('maxHeight',editor.getWrapperElement().offsetHeight);
+
       for(i in mm){
-        $('#latex').append('$$'+math.parse(mm[i]).toTex()+'$$<br/>');
+        try{
+          a  = math.parse(mm[i]).toTex();
+        }
+        catch(err){
+
+        }
+        if(!(a===undefined)){
+          $('#latex').append('<li class="list-group-item">$$'+a+'$$</li>');
+        }
       }
       mathjaxHelper.loadAndTypeset(document, document.getElementById('latex'));
-      eq.on('change paste', function() {
-          mm = eq.val().split('\n');
-          $('#latex').html('');
-          $('#latex').css('maxHeight',eq.height());
+      editor.on('change',function(cm,ev){
+        console.log(ev)
 
-          for(i in mm){
+        switch(ev.origin) {
+          case '+delete':
+          for(i=Math.min(ev.from.line,ev.to.line);i<=Math.max(ev.from.line,ev.to.line);i++){
+            $('#latex').find('li').eq(i).remove();
+          };
+          case 'paste':
+            for(i=ev.from.line;i<ev.from.line+ev.text.length;i++){
+              a = math.parse(ev.text[i-ev.from.line]).toTex();
+              a = a=='undefined' ? '' : '$$'+a+'$$';
+              if(!(a===undefined)){
+
+                  $('#latex').find('li').eq(i-1).after('<li>'+a+'</li>');
+
+                }
+                mathjaxHelper.loadAndTypeset(document, $('#latex').find('li').eq(i).get(0));
+                $('#latex').scrollTop(0);
+
+              }
+          ;
+          case '+input':
+          mm = editor.getValue().split('\n');
+          for(i=Math.min(ev.from.line,ev.to.line);i<=mm.length;i++){
             try{
               a  = math.parse(mm[i]).toTex();
-            }
-            catch(err){
+              a = a=='undefined' ? '' : '$$'+a+'$$';
+              console.log($('#latex').find('li').eq(i).text());
+              if($('#latex').find('li').eq(i).text()!=a){
+                if($('#latex').find('li').eq(i).length!=0){
+                  if($('#latex li').length > mm.length){
+                    $('#latex').find('li').eq(i-1).after('<li>'+a+'</li>')
+                  }
+                  else {
+                    $('#latex').find('li').eq(i).html(a)
+                  }
 
-            }
-            if(!(a===undefined)){
-              $('#latex').append('$$'+a+'$$<br/>');
-            }
-          }
+                }
+                else{
+                  $('#latex').append('<li class="list-group-item">'+a+'</li>');
+                }
+                  mathjaxHelper.loadAndTypeset(document, $('#latex').find('li').eq(i).get(0));
+                }
+                $('#latex').scrollTop(0);
 
-            mathjaxHelper.loadAndTypeset(document, document.getElementById('latex'));
+
+              }
+              catch(err){
+
+              }
+            }
+          ;
+        }
+
+
+    })
+    modal.on('show.bs.modal',function(){
+
+
+
+
 
 
       });
-
-    });
-    modal.on('shown.bs.modal',function(){
-      eq = $('#equations');
-      eq.css('maxWidth',eq.parent().width());
-      eq.css('height',$('#latex').height());
-
-      eq.val(equations);
     })
     modal.modal('show');
 });
