@@ -37,14 +37,7 @@ var graph = new Rickshaw.Graph( {
 	interpolation: 'step-after',
 	series: new Rickshaw.Series.FixedDuration(
 		[
-			{name : 'ch1'},
-			{name : 'ch2'},
-			{name : 'ch3'},
-			{name : 'ch4'},
-			{name : 'ch5'},
-			{name : 'ch6'},
-			{name : 'ch7'},
-			{name : 'ch8'}
+			{name : 'val'},
 		],undefined,{
 		timeInterval : 100,
 		maxDataPoints : 1000,
@@ -86,13 +79,9 @@ var highlighter = new Rickshaw.Graph.Behavior.Series.Highlight( {
 } );
 
 ipcRenderer.on('update',(event,data)=>{
-  console.log(data.scope['ch6']);
-  console.log(graph.series);
-  dataplot = {};
-  for(i=1;i<9;i++){
-    dataplot['ch'+i]=data.scope['ch'+i];
-  }
-	console.log(graph.series);
+  dataplot = {}
+	console.log(data);
+  dataplot['val']=data.val;
 	graph.series.addData(dataplot);
 	graph.update();
 });

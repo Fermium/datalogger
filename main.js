@@ -15,7 +15,7 @@ const PDFWindow = require('electron-pdf-window')
 // Keep a global reference of the window object, if you don't, the window will
 // be closed automatically when the JavaScript object is garbage collected.
 let mainWindow
-let plotWindow
+let plotWindow = {};
 let handbookWindow
 
 global.config = {'_experiment':'','_date':dateFormat(Date.now(), 'yyyy_mm_dd'),'_file':''}
@@ -85,18 +85,19 @@ function createHandbookWindow(){
     handbookWindow = null
   })
 }
-function createPlotWindow () {
-  plotWindow= new BrowserWindow({width:800, height:600})
-  plotWindow.loadURL(`file://${__dirname}/plot/index.html`)
+function createPlotWindow (name) {
+  plotWindow[name]= new BrowserWindow({width:800, height:600,title:name})
+  plotWindow[name].loadURL(`file://${__dirname}/plot/index.html`)
 
 
   // Emitted when the window is closed.
-  plotWindow.on('closed', function () {
+  plotWindow[name].on('closed', function () {
     // Dereference the window object, usually you would store windows
     // in an array if your app supports multi windows, this is the time
     // when you should delete the corresponding element.
 
-    plotWindow = null
+    plotWindow[name] = null
+    delete plotWindow[name]
   })
 }
 
@@ -129,7 +130,7 @@ app.on('activate', function () {
 // In this file you can include the rest of your app's specific main process
 // code. You can also put them in separate files and require them here.
 ipcMain.on('plot',(event,arg) => {
-  createPlotWindow()
+  createPlotWindow(arg.name);
 })
 ipcMain.on('handbook',(event,arg) => {
   createHandbookWindow()
@@ -156,9 +157,11 @@ ipcMain.on('off',(event,arg) => {
 })
 
 ipcMain.on('update',(event,arg)=>{
-  if(plotWindow){
-    plotWindow.webContents.send('update',{'scope':arg.scope})
+
+  for(name in plotWindow){
+    plotWindow[name].webContents.send('update',{'val':arg.scope[name].value})
   }
+
 })
 
 ipcMain.on('isrunning',(event,arg)=>{

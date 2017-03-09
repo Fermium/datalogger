@@ -18,6 +18,7 @@ var tex = {}
 var equations = 'temp=ch5 K\nvh1=ch3 V\nvh2=ch4 V\nvh=(vh1-vh1*k+vh2*k)\nvr=ch2 V\nI=ch1 A\nr=vr/(I/100)\nB=ch6 T'
 var nodes = []
 nodes = equations.split('\n');
+mathjaxHelper.loadMathJax(document);
 nodes.forEach(function(n){
   var nn=n.split('=');
   tex[nn[0].trim()]=math.parse(nn[1].trim()).toTex();
@@ -30,7 +31,7 @@ for (var key in tex) {
         placement: 'bottom',
         content: '<div id="' + key + '_formula">$$' + tex[key] + '$$</div>'
     }).on('shown.bs.popover', function() {
-        mathjaxHelper.loadAndTypeset(document, document.getElementById(key + '_formula'));
+        mathjaxHelper.typesetMath(document.getElementById(key + '_formula'));
     });
 
 }
@@ -123,9 +124,6 @@ $('#tempselect').change(function() {
     updateTex();
 
 });
-$('#plot').click(function() {
-  ipcRenderer.send('plot');
-});
 $('.gain li a').click(function() {
     var selText = $(this).text();
     $(this).parents('.gain-wrap').find('.dropdown-toggle').html(selText + ' <i class="caret"></i>');
@@ -174,22 +172,6 @@ $('[data-action="handbook"]').click(function() {
   ipcRenderer.send('handbook');
 })
 $('[data-action="editequation"]').click(function() {
-    /*bootbox.prompt({
-        size: 'medium',
-        inputType: 'textarea',
-        value: equations,
-        title: 'Insert the new equation for the cell',
-        callback: function(result) {
-          var run = ipcRenderer.sendSync('isrunning');
-          if(run){
-            if(result != null) equations=result;
-            math.eval(equations,scope);
-            evaluate();
-          }
-          updateTex();
-
-        }
-    });*/
     var editor;
     var modal=bootbox.dialog({
       message : '<div class="row d-flex flex-column" style="position:relative"><div class="col-md-6 col-sm-6 col-xs-6"><textarea class="form-control"  id="equations"></textarea></div><ul id="latex" class="col-md-6 col-sm-6 col-xs-6" style="overflow:hidden; overflow-y:scroll;"></ul></div>',
@@ -245,76 +227,42 @@ $('[data-action="editequation"]').click(function() {
 
         }
         if(!(a===undefined)){
-          $('#latex').append('<li class="list-group-item">$$'+a+'$$</li>');
+          $('#latex').append('<li class="list-group-item">$'+a+'$</li>');
         }
       }
-      mathjaxHelper.loadAndTypeset(document, document.getElementById('latex'));
-      editor.on('change',function(cm,ev){
-        console.log(ev)
-
-        switch(ev.origin) {
-          case '+delete':
-          for(i=Math.min(ev.from.line,ev.to.line);i<=Math.max(ev.from.line,ev.to.line);i++){
-            $('#latex').find('li').eq(i).remove();
-          };
-          case 'paste':
-            for(i=ev.from.line;i<ev.from.line+ev.text.length;i++){
-              a = math.parse(ev.text[i-ev.from.line]).toTex();
-              a = a=='undefined' ? '' : '$$'+a+'$$';
-              if(!(a===undefined)){
-
-                  $('#latex').find('li').eq(i-1).after('<li>'+a+'</li>');
-
-                }
-                mathjaxHelper.loadAndTypeset(document, $('#latex').find('li').eq(i).get(0));
-                $('#latex').scrollTop(0);
-
+      mathjaxHelper.typesetMath(document.getElementById('latex'));
+      editor.on('change',function(cm,chs){
+        mm = editor.getValue().split('\n');
+        len = $('#latex').find('li').length;
+        i=0;
+        for(i;i < len ;i++){
+          if(i<mm.length){
+            a  = math.parse(mm[i]).toTex().trim();
+            a = a=='undefined' ? '' : a;
+            if($('#latex').find('li').eq(i).text().trim()!=a){
+              if(a!='' && a!=undefined){
+                $('#latex').find('li').eq(i).text('$'+a+'$');
+                mathjaxHelper.typesetMath($('#latex').find('li').eq(i).get(0));
               }
-          ;
-          case '+input':
-          mm = editor.getValue().split('\n');
-          for(i=Math.min(ev.from.line,ev.to.line);i<=mm.length;i++){
-            try{
-              a  = math.parse(mm[i]).toTex();
-              a = a=='undefined' ? '' : '$$'+a+'$$';
-              console.log($('#latex').find('li').eq(i).text());
-              if($('#latex').find('li').eq(i).text()!=a){
-                if($('#latex').find('li').eq(i).length!=0){
-                  if($('#latex li').length > mm.length){
-                    $('#latex').find('li').eq(i-1).after('<li>'+a+'</li>')
-                  }
-                  else {
-                    $('#latex').find('li').eq(i).html(a)
-                  }
-
-                }
-                else{
-                  $('#latex').append('<li class="list-group-item">'+a+'</li>');
-                }
-                  mathjaxHelper.loadAndTypeset(document, $('#latex').find('li').eq(i).get(0));
-                }
-                $('#latex').scrollTop(0);
-
-
-              }
-              catch(err){
-
+              else{
+                $('#latex').find('li').eq(i).remove();
               }
             }
-          ;
+          }
+          if(i>=mm.length){
+            $('#latex').find('li').eq(i).remove();
+          }
         }
-
-
-    })
-    modal.on('show.bs.modal',function(){
-
-
-
-
-
-
+        for(i;i<mm.length;i++){
+            a  = math.parse(mm[i]).toTex().trim();
+            a = a=='undefined' ? '' : '$'+a+'$';
+            if(a!='$$'){
+              $('#latex').append('<li class="list-group-item">'+a+'</li>');
+              mathjaxHelper.typesetMath($('#latex').find('li').eq(i).get(0));
+            }
+        }
       });
-    })
+    });
     modal.modal('show');
 });
 
@@ -345,6 +293,8 @@ function updateTex(){
       popover.$tip.addClass(popover.options.placement);
     }
   });
-
-
 }
+$('[data-action="plot"]').click(function(){
+  var name=$(this).data('name');
+  ipcRenderer.send('plot',{'name':name});
+});

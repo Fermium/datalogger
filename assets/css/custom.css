@@ -63,3 +63,6 @@
 .ui-pnotify-fade-in.translucent{
   opacity: .8;
 }
+a[data-action="plot"]:after {
+    content: '\f043';
+}
