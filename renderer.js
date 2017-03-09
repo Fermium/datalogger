@@ -16,6 +16,51 @@ var scope =  {
 var timer = new easytimer();
 var tex = {}
 var equations = 'temp=ch5 K\nvh1=ch3 V\nvh2=ch4 V\nvh=(vh1-vh1*k+vh2*k)\nvr=ch2 V\nI=ch1 A\nr=vr/(I/100)\nB=ch6 T'
+var inputs = {
+  'channels':[
+      {
+      name : 'ch1',
+      gain : 1,
+      description: 'puzzi'
+    },
+    {
+      name : 'ch2',
+      gain : 1,
+      description: 'puzzi'
+    },
+    {
+      name : 'ch3',
+      gain : 1,
+      description: 'puzzi'
+    },
+    {
+      name : 'ch4',
+      gain : 1,
+      description: 'puzzi'
+    },
+    {
+      name : 'ch5',
+      gain : 1,
+      description: 'puzzi'
+    },
+    {
+      name : 'ch6',
+      gain : 1,
+      description: 'puzzi'
+    },
+    {
+      name : 'ch7',
+      gain : 1,
+      description: 'puzzi'
+    },
+    {
+      name : 'ch8',
+      gain : 1,
+      description: 'puzzi'
+    }
+  ],
+  gainvalues : [0.5,1,1.5,2,5,10]
+}
 var nodes = []
 nodes = equations.split('\n');
 mathjaxHelper.loadMathJax(document);
@@ -124,10 +169,6 @@ $('#tempselect').change(function() {
     updateTex();
 
 });
-$('.gain li a').click(function() {
-    var selText = $(this).text();
-    $(this).parents('.gain-wrap').find('.dropdown-toggle').html(selText + ' <i class="caret"></i>');
-});
 
 $('#power').ionRangeSlider({
     min: 0,
@@ -170,7 +211,44 @@ $('#k-value').keyup(function() {
 });
 $('[data-action="handbook"]').click(function() {
   ipcRenderer.send('handbook');
-})
+});
+$('[data-action="inputs"]').click(function(){
+  var modal=bootbox.dialog({
+    message : '<div id="inputs-content"</div>',
+    title : 'Experiment equations',
+    buttons : {
+      danger : {
+        label : 'Cancel',
+        className : 'btn-default',
+        callback : function(){
+        }
+
+      },
+      success : {
+        label:'Confirm',
+        className: 'btn-primary',
+        callback: function() {
+          //send shit
+        }
+      }
+
+    },
+    show : false,
+    onEscape : true
+
+  });
+  modal.on('show.bs.modal',function(){
+    for(i=0;i<inputs.channels.length;i++){
+      $('#inputs-content').append($('<div/>').addClass('row').append('<div class="col-md-3 col-sm-3 col-xs-3">'+inputs.channels[i].name+'</div><select class="gain"></select><div class="col-md-6 col-sm-6 col-xs-6">'+inputs.channels[i].description+'</div>'));
+    }
+
+     $('.gain').selectBoxIt();
+     $.each(inputs.gainvalues,function(i){
+       $('.gain').data("selectBox-selectBoxIt").add({value: inputs.gainvalues[i],text : 'x'+inputs.gainvalues[i]})
+     });
+  });
+  modal.modal('show');
+});
 $('[data-action="editequation"]').click(function() {
     var editor;
     var modal=bootbox.dialog({

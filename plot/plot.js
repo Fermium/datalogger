@@ -6,25 +6,6 @@ var source = config.source;
 var scope = remote.getGlobal('scope');
 const {ipcRenderer} = require('electron');
 
-/*var graph = new Rickshaw.Graph({
-  element : document.getElementById('plot'),
-	renderer : 'line',
-  series : new Rickshaw.Series([{ name: 'ch6' }])
-});
-
-graph.render();
-var axes = new Rickshaw.Graph.Axis.Time( {
-	graph: graph
-} );
-
-
-axes.render();
-
-ipcRenderer.on('update',(event,data)=>{
-	console.log(graph.series);
-	graph.series.addData({'ch6':{x:data.scope['time'], y:data.scope['ch6']}});
-	graph.update();
-});*/
 
 // instantiate our graph!
 var tv = 1000;
