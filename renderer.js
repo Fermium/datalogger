@@ -239,13 +239,21 @@ $('[data-action="inputs"]').click(function(){
   });
   modal.on('show.bs.modal',function(){
     for(i=0;i<inputs.channels.length;i++){
-      $('#inputs-content').append($('<div/>').addClass('row').append('<div class="col-md-3 col-sm-3 col-xs-3">'+inputs.channels[i].name+'</div><select class="gain"></select><div class="col-md-6 col-sm-6 col-xs-6">'+inputs.channels[i].description+'</div>'));
+      $('#inputs-content').append($('<div/>').addClass('row').append('<div class="col-md-3 col-sm-3 col-xs-3">'+inputs.channels[i].name+'</div><div class="col-md-3 col-sm-3 col-xs-3"><select class="gain"></select></div><div class="col-md-6 col-sm-6 col-xs-6">'+inputs.channels[i].description+'</div>'));
     }
 
-     $('.gain').selectBoxIt();
-     $.each(inputs.gainvalues,function(i){
-       $('.gain').data("selectBox-selectBoxIt").add({value: inputs.gainvalues[i],text : 'x'+inputs.gainvalues[i]})
-     });
+    $('.gain').each(function(i){
+       $(this).selectBoxIt({
+         autoWidth: false,
+         copyClasses : "container"
+       });
+       inputs.gainvalues.forEach((el)=>{
+          $(this).data("selectBox-selectBoxIt").add({value: el,text : 'x'+el});
+       });
+       $(this).find('option[value='+inputs.channels[i].gain+']').attr('selected','selected');
+       $(this).data('selectBox-selectBoxIt').refresh();
+    });
+
   });
   modal.modal('show');
 });
