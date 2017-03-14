@@ -3,11 +3,12 @@ var {dialog} = require('electron');
 var handler = require('./usb-handler');
 const math = require('mathjs');
 const dateFormat = require('dateformat'); //for date
+const _ = require('lodash');
 var fs = require('fs');
 var path = require('path')
 var http = require('https')
 var home = require('os').homedir();
-const config;
+
 // Module to control application life.
 const app = electron.app
 // Module to create native browser window.
@@ -15,16 +16,14 @@ const BrowserWindow = electron.BrowserWindow
 const {ipcMain} = require('electron')
 const PDFWindow = require('electron-pdf-window')
 const jsyaml = require('js-yaml')
-
+const config=jsyaml.safeLoad(fs.readFileSync('/home/s/Downloads/config.yaml'))
 // Keep a global reference of the window object, if you don't, the window will
 // be closed automatically when the JavaScript object is garbage collected.
 let mainWindow
 let plotWindow = {};
 let handbookWindow
 
-global.config = {'_experiment':'','_date':dateFormat(Date.now(), 'yyyy_mm_dd'),'_file':''}
-/*global.scope =  { 'k' : 0 };*/
-global.formula = {};
+global.session = {'_experiment':config.product.model,'_date':dateFormat(Date.now(), 'yyyy_mm_dd'),'_file':''}
 function createWindow () {
 
   // Create the browser window.
@@ -50,37 +49,50 @@ function createWindow () {
 
 }
 function createHandbookWindow(){
+  var manual = config.manual
   handbookWindow = new PDFWindow({width: 800, height: 600})
-  var options = {
-      host: 'api.github.com',
-      port: 443,
-      path: '/repos/fermiumlabs/hall-effect-handbook/releases/latest',
-      method: 'GET',
-      headers : {
-        'user-agent' : 'fermiumlabs-datalogger'
-      }
-  };
+  if(_.has(manual,'git')){
+    var options = {
+        host: 'api.github.com',
+        port: 443,
+        path: '/repos/'+manual.git.user+'/'+manual.git.repo+'/releases/'+manual.git.tag,
+        method: 'GET',
+        headers : {
+          'user-agent' : 'fermiumlabs-datalogger'
+        }
+    };
 
-  var latest;
-  var req = http.request(options, function(res)
-  {
-    var output='';
-    res.setEncoding('utf8');
-    res.on('data',function(chunk){
-      output+=chunk
-    });
-    res.on('end', function() {
-            var obj = JSON.parse(output);
-            assets = obj.assets;
-            for(i in assets){
-              if(assets[i].name=='Hall_Handbook.pdf'){
-                latest = assets[i].browser_download_url;
-                handbookWindow.loadURL(latest);
+    var latest;
+    var req = http.request(options, function(res)
+    {
+      var output='';
+      res.setEncoding('utf8');
+      res.on('data',function(chunk){
+        output+=chunk
+      });
+      res.on('end', function() {
+              var obj = JSON.parse(output);
+              assets = obj.assets;
+              for(i in assets){
+                if(assets[i].name==manual.git.filename){
+                  latest = assets[i].browser_download_url;
+                  handbookWindow.loadURL(latest);
+                }
               }
-            }
-        });
-  });
-  req.end();
+          });
+    });
+    req.end();
+  }
+  else{
+    if(_.has(manual,'url')){
+      handbookWindow.loadURL(manual.url);
+    }
+    else{
+      dialog.showMessageBox({message:'Handbook not available'});
+      handbookWindow=null;
+    }
+  }
+
   // and load the index.html of the app.
 
 
@@ -89,7 +101,8 @@ function createHandbookWindow(){
   handbookWindow.on('closed', function () {
 
     handbookWindow = null
-  })
+  });
+
 }
 function createPlotWindow (name) {
   plotWindow[name]= new BrowserWindow({width:800, height:600,title:name})
@@ -111,7 +124,7 @@ function createPlotWindow (name) {
 // initialization and is ready to create browser windows.
 // Some APIs can only be used after this event occurs.
 app.on('ready', function(){
-  config =jsyaml.safeLoad(fs.readFileSync('/home/s/Downloads/config.yaml'));
+
   console.log(config);
   createWindow();
 });
@@ -143,7 +156,11 @@ ipcMain.on('plot',(event,arg) => {
   createPlotWindow(arg.name);
 })
 ipcMain.on('handbook',(event,arg) => {
-  createHandbookWindow()
+  createHandbookWindow();
+  handbookWindow.webContents.on('will-navigate',ev=>{
+    console.log('will-navigate')
+    ev.preventDefault();
+  })
 })
 
 ipcMain.on('start',(event,arg) => {
@@ -176,4 +193,7 @@ ipcMain.on('update',(event,arg)=>{
 
 ipcMain.on('isrunning',(event,arg)=>{
   event.returnValue = handler.isrunning();
+})
+ipcMain.on('ready',(event,arg)=>{
+  event.returnValue={'config':config.config,'product':config.product};
 })

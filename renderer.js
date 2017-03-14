@@ -15,159 +15,119 @@ var scope =  {
 };
 var timer = new easytimer();
 var tex = {}
-var equations = 'temp=ch5 K\nvh1=ch3 V\nvh2=ch4 V\nvh=(vh1-vh1*k+vh2*k)\nvr=ch2 V\nI=ch1 A\nr=vr/(I/100)\nB=ch6 T'
-var inputs = [
-    {
-      name : 'ch1',
-      gain : 1,
-      gainvalues : [0.5,1,1.5,2,5,10],
-      description: 'puzzi'
-    },
-    {
-      name : 'ch2',
-      gain : 1,
-      gainvalues : [0.5,1,1.5,2,5,10],
-      description: 'puzzi'
-    },
-    {
-      name : 'ch3',
-      gain : 1,
-      description: 'puzzi'
-    },
-    {
-      name : 'ch4',
-      gain : 1,
-      gainvalues : [0.5,1,1.5,2,5,10],
-      description: 'puzzi'
-    },
-    {
-      name : 'ch5',
-      gain : 1,
-      gainvalues : [0.5,1,1.5,2,5,10],
-      description: 'puzzi'
-    },
-    {
-      name : 'ch6',
-      gain : 1,
-      description: 'puzzi'
-    },
-    {
-      name : 'ch7',
-      gain : 1,
-      description: 'puzzi'
-    },
-    {
-      name : 'ch8',
-      gain : 1,
-      description: 'puzzi'
-    }
-  ],
-}
-var nodes = []
-nodes = equations.split('\n');
+var mathsheet;
+var gains;
+var nodes = [];
 mathjaxHelper.loadMathJax(document);
-nodes.forEach(function(n){
-  var nn=n.split('=');
-  tex[nn[0].trim()]=math.parse(nn[1].trim()).toTex();
-});
-for (var key in tex) {
-    $('#' + key).popover({
-        trigger: 'hover',
-        title: 'Formula',
-        html: true,
-        placement: 'bottom',
-        content: '<div id="' + key + '_formula">$$' + tex[key] + '$$</div>'
-    }).on('shown.bs.popover', function() {
-        mathjaxHelper.typesetMath(document.getElementById(key + '_formula'));
-    });
+$(document).ready(function(){
+  var tmp=ipcRenderer.sendSync('ready');
+  console.log(tmp)
+  gains = tmp.config.gains;
+  mathsheet = tmp.config.mathsheet.trim();
+  nodes = mathsheet.split('\n');
+  console.log(nodes);
+  nodes.forEach(function(n){
+    var nn=n.split('=');
+    tex[nn[0].trim()]=math.parse(nn[1].trim()).toTex();
+  });
+  for (var key in tex) {
+      $('#' + key).popover({
+          trigger: 'hover',
+          title: 'Formula',
+          html: true,
+          placement: 'bottom',
+          content: '<div id="' + key + '_formula">$$' + tex[key] + '$$</div>'
+      }).on('shown.bs.popover', function() {
+          mathjaxHelper.typesetMath(document.getElementById(key + '_formula'));
+      });
 
-}
-$(function() {
-    $("[name='start-stop']").bootstrapSwitch({
-        onText: 'REC',
-        offText: '<i class="icon-pause2"></i>',
-        onSwitchChange: (event, state) => {
-            if (state) {
-              $.blockUI();
-              ipcRenderer.send('start');
-              ipcRenderer.on('started',function(event,args){
-                if(!args.return){
-                    $("[name='start-stop']").bootstrapSwitch('state', false);
-                } else {
-                    new PNotify({
-                        title: 'Recording Started',
-                        text: '',
-                        icon: false,
-                        type: 'info',
-                        styling: 'bootstrap3',
-                        addclass: 'translucent',
-                        animate_speed: 'fast'
+  }
+      $("[name='start-stop']").bootstrapSwitch({
+          onText: 'REC',
+          offText: '<i class="icon-pause2"></i>',
+          onSwitchChange: (event, state) => {
+              if (state) {
+                $.blockUI();
+                ipcRenderer.send('start');
+                ipcRenderer.on('started',function(event,args){
+                  if(!args.return){
+                      $("[name='start-stop']").bootstrapSwitch('state', false);
+                  } else {
+                      new PNotify({
+                          title: 'Recording Started',
+                          text: '',
+                          icon: false,
+                          type: 'info',
+                          styling: 'bootstrap3',
+                          addclass: 'translucent',
+                          animate_speed: 'fast'
+                      });
+                  }
+                });
+                  timer.start();
+                  timer.addEventListener('secondsUpdated', function(e) {
+                      $('#timer').html(timer.getTimeValues().toString());
                     });
-                }
-              });
-                timer.start();
-                timer.addEventListener('secondsUpdated', function(e) {
-                    $('#timer').html(timer.getTimeValues().toString());
+                  $.unblockUI();
+              } else {
+                  ipcRenderer.send('stop');
+                  timer.pause();
+                  new PNotify({
+                      title: 'Recording Stopped',
+                      text: '',
+                      icon: false,
+                      type: 'info',
+                      styling: 'bootstrap3',
+                      addclass: 'translucent',
+                      animate_speed: 'fast'
                   });
-                $.unblockUI();
-            } else {
-                ipcRenderer.send('stop');
-                timer.pause();
-                new PNotify({
-                    title: 'Recording Stopped',
-                    text: '',
-                    icon: false,
-                    type: 'info',
-                    styling: 'bootstrap3',
-                    addclass: 'translucent',
-                    animate_speed: 'fast'
-                });
-                //_.merge(formula,equations);
-            }
-        }
-    });
-    $("[name='on-off']").bootstrapSwitch({
-        onText: 'ON',
-        offText: 'OFF',
-        onSwitchChange: (event, state) => {
-            if (state) {
-                ipcRenderer.send('on');
-                bootbox.prompt({
-                    size: 'small',
-                    inputType: 'text',
-                    title: 'Input the experiment name or skip for default value',
-                    callback: function(result) {
-                        text = (result == null || result.trim() == '') ? config._experiment : result;
-                        config._experiment = text;
-                        $('#experiment').text(text);
-                        $('#date').text(' - ' + config._date);
-                    }
-                });
-                $("[name='start-stop']").bootstrapSwitch('toggleDisabled');
+                  //_.merge(formula,equations);
+              }
+          }
+      });
+      $("[name='on-off']").bootstrapSwitch({
+          onText: 'ON',
+          offText: 'OFF',
+          onSwitchChange: (event, state) => {
+              if (state) {
+                  ipcRenderer.send('on');
+                  bootbox.prompt({
+                      size: 'small',
+                      inputType: 'text',
+                      title: 'Input the experiment name or skip for default value',
+                      callback: function(result) {
+                          text = (result == null || result.trim() == '') ? config._experiment : result;
+                          config._experiment = text;
+                          $('#experiment').text(text);
+                          $('#date').text(' - ' + config._date);
+                      }
+                  });
+                  $("[name='start-stop']").bootstrapSwitch('toggleDisabled');
 
-            } else {
-                ipcRenderer.send('off');
-                timer.stop();
-                $('#timer').html('00:00:00');
-                $("[name='start-stop']").bootstrapSwitch('state', false);
-                $("[name='start-stop']").bootstrapSwitch('toggleDisabled');
-                $('#experiment').text('');
-                $('#date').text('');
+              } else {
+                  ipcRenderer.send('off');
+                  timer.stop();
+                  $('#timer').html('00:00:00');
+                  $("[name='start-stop']").bootstrapSwitch('state', false);
+                  $("[name='start-stop']").bootstrapSwitch('toggleDisabled');
+                  $('#experiment').text('');
+                  $('#date').text('');
 
-            }
-        }
-    });
-});
+              }
+          }
+      });
+})
+
 ipcRenderer.on('measure',function(event,args){
   _.extend(scope,args.scope);
-  math.format(math.eval(equations,scope),2);
+  math.format(math.eval(mathsheet,scope),2);
   evaluate();
   ipcRenderer.send('update',{'scope':scope});
 });
 $('#tempselect').change(function() {
     $('#temp').data('unit', $('#tempselect').val());
-    equations+='\ntemp=temp to '+$('#temp').data('unit');
-    math.format(math.eval(equations,scope),2);
+    mathsheet+='\ntemp=temp to '+$('#temp').data('unit');
+    math.format(math.eval(mathsheet,scope),2);
     updateTex();
 
 });
@@ -241,7 +201,7 @@ $('[data-action="inputs"]').click(function(){
   });
   modal.on('show.bs.modal',function(){
     for(i=0;i<gains.length;i++){
-      $('#inputs-content').append($('<div/>').addClass('row').append('<div class="col-md-3 col-sm-3 col-xs-3">'+inputs.channels[i].name+'</div><div class="col-md-3 col-sm-3 col-xs-3"><select class="gain"></select></div><div class="col-md-6 col-sm-6 col-xs-6">'+inputs.channels[i].description+'</div>'));
+      $('#inputs-content').append($('<div/>').addClass('row').append('<div class="col-md-3 col-sm-3 col-xs-3">'+gains[i].name+'</div><div class="col-md-3 col-sm-3 col-xs-3"><select class="gain"></select></div><div class="col-md-6 col-sm-6 col-xs-6">'+gains[i].description+'</div>'));
     }
 
     $('.gain').each(function(i){
@@ -278,9 +238,9 @@ $('[data-action="editequation"]').click(function() {
           callback: function() {
             result = editor.getValue();
             var run = ipcRenderer.sendSync('isrunning');
-            if(result != null) equations=result;
+            if(result != null) mathsheet=result;
             if(run){
-              math.eval(equations,scope);
+              math.eval(mathsheet,scope);
               evaluate();
             }
             updateTex();
@@ -302,7 +262,7 @@ $('[data-action="editequation"]').click(function() {
 
       });
       eq = $('#equations')
-      editor.setValue(equations);
+      editor.setValue(mathsheet);
       mm = editor.getValue().split('\n');
       $('#latex').html('');
       $('#latex').css('maxHeight',editor.getWrapperElement().offsetHeight);
@@ -370,7 +330,7 @@ function evaluate() {
     }
 }
 function updateTex(){
-  nodes = equations.split('\n');
+  nodes = mathsheet.split('\n');
   running = ipcRenderer.sendSync('isrunning');
   nodes.forEach(function(n){
 
