@@ -16,16 +16,17 @@ var scope =  {
 var timer = new easytimer();
 var tex = {}
 var equations = 'temp=ch5 K\nvh1=ch3 V\nvh2=ch4 V\nvh=(vh1-vh1*k+vh2*k)\nvr=ch2 V\nI=ch1 A\nr=vr/(I/100)\nB=ch6 T'
-var inputs = {
-  'channels':[
-      {
+var inputs = [
+    {
       name : 'ch1',
       gain : 1,
+      gainvalues : [0.5,1,1.5,2,5,10],
       description: 'puzzi'
     },
     {
       name : 'ch2',
       gain : 1,
+      gainvalues : [0.5,1,1.5,2,5,10],
       description: 'puzzi'
     },
     {
@@ -36,11 +37,13 @@ var inputs = {
     {
       name : 'ch4',
       gain : 1,
+      gainvalues : [0.5,1,1.5,2,5,10],
       description: 'puzzi'
     },
     {
       name : 'ch5',
       gain : 1,
+      gainvalues : [0.5,1,1.5,2,5,10],
       description: 'puzzi'
     },
     {
@@ -59,7 +62,6 @@ var inputs = {
       description: 'puzzi'
     }
   ],
-  gainvalues : [0.5,1,1.5,2,5,10]
 }
 var nodes = []
 nodes = equations.split('\n');
@@ -238,7 +240,7 @@ $('[data-action="inputs"]').click(function(){
 
   });
   modal.on('show.bs.modal',function(){
-    for(i=0;i<inputs.channels.length;i++){
+    for(i=0;i<gains.length;i++){
       $('#inputs-content').append($('<div/>').addClass('row').append('<div class="col-md-3 col-sm-3 col-xs-3">'+inputs.channels[i].name+'</div><div class="col-md-3 col-sm-3 col-xs-3"><select class="gain"></select></div><div class="col-md-6 col-sm-6 col-xs-6">'+inputs.channels[i].description+'</div>'));
     }
 
@@ -247,10 +249,10 @@ $('[data-action="inputs"]').click(function(){
          autoWidth: false,
          copyClasses : "container"
        });
-       inputs.gainvalues.forEach((el)=>{
+       gains[i].gainvalues.forEach((el)=>{
           $(this).data("selectBox-selectBoxIt").add({value: el,text : 'x'+el});
        });
-       $(this).find('option[value='+inputs.channels[i].gain+']').attr('selected','selected');
+       $(this).find('option[value='+gains[i].gain+']').attr('selected','selected');
        $(this).data('selectBox-selectBoxIt').refresh();
     });
 
@@ -323,6 +325,7 @@ $('[data-action="editequation"]').click(function() {
         i=0;
         for(i;i < len ;i++){
           if(i<mm.length){
+
             a  = math.parse(mm[i]).toTex().trim();
             a = a=='undefined' ? '' : a;
             if($('#latex').find('li').eq(i).text().trim()!=a){
@@ -370,13 +373,16 @@ function updateTex(){
   nodes = equations.split('\n');
   running = ipcRenderer.sendSync('isrunning');
   nodes.forEach(function(n){
-    var nn=n.split('=');
-    tex[nn[0].trim()]=math.parse(nn[1].trim()).toTex();
-    if(running){
-      var popover=$('#'+nn[0].trim()).data('bs.popover');
-      $('#'+nn[0].trim()).attr('data-content','$$' + tex[nn[0].trim()].trim() + '$$');
-      popover.setContent();
-      popover.$tip.addClass(popover.options.placement);
+
+    if(n.indexOf('#')==-1 && n.indexOf('=')!==-1){
+      var nn=n.split('=');
+      tex[nn[0].trim()]=math.parse(nn[1].trim()).toTex();
+      if(running){
+        var popover=$('#'+nn[0].trim()).data('bs.popover');
+        $('#'+nn[0].trim()).attr('data-content','$$' + tex[nn[0].trim()].trim() + '$$');
+        popover.setContent();
+        popover.$tip.addClass(popover.options.placement);
+      }
     }
   });
 }
