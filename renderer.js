@@ -1,7 +1,7 @@
 var _ = require('lodash');
 var app = require('electron').remote;
 var dialog = app.dialog;
-var config = app.getGlobal('config');
+var session = app.getGlobal('session');
 var scope = app.getGlobal('scope');
 var slider = require('bootstrap-slider');
 var math = require('mathjs');
@@ -94,12 +94,18 @@ $(document).ready(function(){
                   bootbox.prompt({
                       size: 'small',
                       inputType: 'text',
+                      value : session._name,
                       title: 'Input the experiment name or skip for default value',
                       callback: function(result) {
-                          text = (result == null || result.trim() == '') ? config._experiment : result;
-                          config._experiment = text;
+                          console.log(result);
+                          if(result == null ){
+                            $("[name='on-off']").bootstrapSwitch('state',false);
+                            return;
+                          }
+                          text = result.trim() == '' ? session._name : result;
+                          session._name = text;
                           $('#experiment').text(text);
-                          $('#date').text(' - ' + config._date);
+                          $('#date').text(' - ' + session._date);
                       }
                   });
                   $("[name='start-stop']").bootstrapSwitch('toggleDisabled');

@@ -39,7 +39,6 @@ module.exports = {
     clearInterval(thread);
   },
   on : function(){
-    console.log(electron);
     config._db_exists = false;
     config._file = '';
     datachan.datachan_init();
@@ -89,8 +88,8 @@ db.get('_data').push(scope).value();
 
 function initdb(experiment,date){
   db = low(config._file);
-  db.defaults({ _data : [] , _experiment : '', _date : ''}).value();
-  db.set(experiment,config._experiment).value();
+  db.defaults({ _data : [] , _session : '', _date : ''}).value();
+  db.set(experiment,config._session).value();
   db.set(date,config._date).value();
   config._db_exists = true;
 }
@@ -100,7 +99,6 @@ function createdb(diag,experiment,date){
   if(diag!=undefined){
     diag = (diag.endsWith('.json')) ? diag : diag+'.json' ;
     config._file=diag;
-    console.log(config._file);
     initdb(experiment,date);
     thread=setInterval(read,100);
   }

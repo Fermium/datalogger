@@ -23,7 +23,7 @@ let mainWindow
 let plotWindow = {};
 let handbookWindow
 
-global.session = {'_experiment':config.product.model,'_date':dateFormat(Date.now(), 'yyyy_mm_dd'),'_file':''}
+global.session = {'_name':config.product.model,'_date':dateFormat(Date.now(), 'yyyy_mm_dd'),'_file':''}
 function createWindow () {
 
   // Create the browser window.
@@ -125,7 +125,6 @@ function createPlotWindow (name) {
 // Some APIs can only be used after this event occurs.
 app.on('ready', function(){
 
-  console.log(config);
   createWindow();
 });
 
@@ -147,9 +146,15 @@ app.on('activate', function () {
   // dock icon is clicked and there are no other windows open.
   if (mainWindow === null) {
     createWindow()
+
   }
 })
-
+app.on('web-contents-created',function(ev,wc){
+  wc.on('will-navigate',ev=>{
+    console.log(ev);
+    ev.preventDefault();
+  })
+})
 // In this file you can include the rest of your app's specific main process
 // code. You can also put them in separate files and require them here.
 ipcMain.on('plot',(event,arg) => {
@@ -158,18 +163,19 @@ ipcMain.on('plot',(event,arg) => {
 ipcMain.on('handbook',(event,arg) => {
   createHandbookWindow();
   handbookWindow.webContents.on('will-navigate',ev=>{
-    console.log('will-navigate')
+    console.log(ev);
     ev.preventDefault();
+    handbookWindow.webContents.stop();
   })
 })
 
 ipcMain.on('start',(event,arg) => {
-  fs.exists(config._file,function(exists){
+  fs.exists(session._file,function(exists){
     if(!exists){
-    diag=dialog.showSaveDialog({ defaultPath : './data/'+config._experiment+"_"+config._date,title: 'Experiment file save location'});
-    config._file = diag+'.json';
+    diag=dialog.showSaveDialog({ defaultPath : home+'/.datalogger/sessions/'+session._name+"_"+session._date,title: 'Experiment file save location'});
+    session._file = diag+'.json';
     }
-  mainWindow.webContents.send('started',{'return' : handler.start(mainWindow,config._file,config._experiment,config._date)});
+  mainWindow.webContents.send('started',{'return' : handler.start(mainWindow,session._file,session._name,session._date)});
   });
 })
 ipcMain.on('stop',(event,arg) => {
@@ -180,7 +186,7 @@ ipcMain.on('on',(event,arg) => {
 })
 ipcMain.on('off',(event,arg) => {
   handler.off();
-  config._file='';
+  session._file=''; 
 })
 
 ipcMain.on('update',(event,arg)=>{

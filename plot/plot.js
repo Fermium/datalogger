@@ -61,7 +61,6 @@ var highlighter = new Rickshaw.Graph.Behavior.Series.Highlight( {
 
 ipcRenderer.on('update',(event,data)=>{
   dataplot = {}
-	console.log(data);
   dataplot['val']=data.val;
 	graph.series.addData(dataplot);
 	graph.update();
