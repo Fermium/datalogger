@@ -7,43 +7,23 @@
 	<title>Datalogger</title>
 
 	<!-- Global stylesheets -->
-	<link href='https://fonts.googleapis.com/css?family=Roboto:400,300,100,500,700,900' rel='stylesheet' type='text/css'>
-	<link href='assets/css/icons/icomoon/styles.css' rel='stylesheet' type='text/css'>
-	<link href='assets/css/bootstrap.css' rel='stylesheet' type='text/css'>
-	<link href='assets/css/core.css' rel='stylesheet' type='text/css'>
-	<link href='assets/css/components.css' rel='stylesheet' type='text/css'>
-	<link href='assets/css/colors.css' rel='stylesheet' type='text/css'>
-	<link href='assets/css/bootstrap-switch.min.css' rel='stylesheet' type='text/css'>
-	<link href='assets/css/custom.css' rel='stylesheet' type='text/css'>
+
+	<link rel='import' href='./src/header.html'>
+
 	<link href='./node_modules/codemirror/lib/codemirror.css' rel='stylesheet' type='text/css'>
+	<link href='./assets/css/bootstrap-switch.min.css' rel='stylesheet' type='text/css'>
+	<script type="text/javascript" src="./assets/js/plugins/sliders/ion_rangeslider.min.js"></script>
+	<script type="text/javascript" src="./assets/js/plugins/loaders/blockui.min.js"></script>
+	<script type='text/javascript' src='./assets/js/plugins/forms/styling/switch.min.js'></script>
+	<script type="text/javascript" src="./assets/js/plugins/forms/selects/bootstrap_select.min.js"></script>
+	<script type="text/javascript" src="./assets/js/plugins/notifications/bootbox.min.js"></script>
+	<script type="text/javascript" src="./assets/js/plugins/notifications/pnotify.min.js"></script>
+	<script type='text/javascript' src='./assets/js/core/app.js'></script>
+	<script type='text/javascript' src='assets/js/plugins/forms/selects/selectboxit.min.js'></script>
+	<link rel='import' href='./devices/fermiumlabs/hall-123A-plus/src/ui.html'>
+
 
 	<!-- /global stylesheets -->
-
-	<!-- Core JS files -->
-  <script type='text/javascript' src='assets/js/core/libraries/jquery.min.js' onload='window.$ = window.jQuery = module.exports;'></script>
-	<script type='text/javascript' src='assets/js/core/libraries/bootstrap.min.js'></script>
-	<script type='text/javascript' src='assets/js/plugins/loaders/blockui.min.js'></script>
-  <script type='text/javascript' src='assets/js/plugins/ui/drilldown.js'></script>
-  <script type='text/javascript' src='assets/js/plugins/ui/nicescroll.min.js'></script>
-	<!-- /core JS files -->
-	<!-- Path to mockjax -->
-	<script type='text/javascript' src='assets/js/plugins/extensions/mockjax.min.js'></script>
-	<!-- Theme JS files -->
-	<!-- Load plugin -->
-	<script type="text/javascript" src="assets/js/plugins/sliders/ion_rangeslider.min.js"></script>
-	<script type="text/javascript" src="assets/js/plugins/loaders/blockui.min.js"></script>
-	<script type='text/javascript' src='assets/js/plugins/forms/styling/switch.min.js'></script>
-	<script type='text/javascript' src='assets/js/core/libraries/jquery_ui/interactions.min.js'></script>
-	<script type='text/javascript' src='assets/js/core/libraries/jquery_ui/touch.min.js'></script>
-	<script type='text/javascript' src='assets/js/pages/appearance_draggable_panels.js'></script>
-	<script type="text/javascript" src="assets/js/plugins/forms/selects/bootstrap_select.min.js"></script>
-	<script type="text/javascript" src="assets/js/plugins/notifications/bootbox.min.js"></script>
-	<script type="text/javascript" src="assets/js/plugins/notifications/pnotify.min.js"></script>
-	<script type='text/javascript' src='assets/js/core/app.js'></script>
-	<script type='text/javascript' src='assets/js/plugins/forms/selects/selectboxit.min.js'></script>
-
-	<!-- /theme JS files -->
-
 </head>
 
 <body>
@@ -98,206 +78,28 @@
 				</div>
   	</div>
 	</div>
-
 	<!-- Page container -->
 	<div class='page-container'>
-
 		<!-- Page content -->
 		<div class='page-content'>
-
-
-
-
 			<!-- Main content -->
 			<div class='content-wrapper'>
-
-				<!-- row row-sortable 1 -->
-				<div class='row row-sortable'>
-					<div class='col-md-6 col-sm-6 col-xs-6'>
-
-						<!-- Current-->
-						<div class='panel panel-flat' >
-							<div class='panel-heading'>
-
-								<h5 class='panel-title'>Hall Voltage</h5><i class='info'></i>
-								<div class='heading-elements'>
-
-									<ul class='icons-list'>
-										<li><a data-action='plot' data-name='vh'></a></li>
-
-                		<li><a data-action='collapse'></a></li>
-										<li><a data-action='move'></a></li>
-
-                	</ul>
-              	</div>
-            	</div>
-
-							<div class='panel-body big-text'>
-								<div class='col-md-4 text-center measured'>
-									<div id='vh1-wrap' class='col-md-6 col-sm-6 col-xs-6 text-center'>
-										  <span id='vh1' data-baseunit='V' data-unit='V'>Vh1</span>
-									</div>
-									<div id="vh2-wrap"class='col-md-6 col-sm-6 col-xs-6 text-center'>
-										  <span id='vh2' data-baseunit='V' data-unit='V'>Vh2</span>
-									</div>
-								</div>
-								<div class='col-md-4 text-center' id="vh-wrap"><span id='vh' data-baseunit='V' data-unit='V'>Vh</span></div>
-								<hr class='visible-xs visible-sm'/>
-								<div class='col-md-4 text-center'>
-									<form class="form-inline">
-										<div id="k-slider"></div>
-										<label class='k' for='k'>K = </label>
-										<input class="form-control k" type='number' name='k' id='k-value' type='text' from='0' to='1' step="0.001">
-									</form>
-								</div>
-							</div>
-						</div>
-						<!-- /horizotal form -->
-
-					</div>
-
-					<div class='col-md-6 col-sm-6 col-xs-6'>
-
-						<!-- Vertical form -->
-						<div class='panel panel-flat'>
-							<div class='panel-heading'>
-								<h5 class='panel-title'>Current</h5>
-								<div class='heading-elements'>
-									<ul class='icons-list'>
-										<li><a data-action='plot' data-name='I'></a></li>
-
-				                		<li><a data-action='collapse'></a></li>
-														<li><a data-action='move'></a></li>
-				                	</ul>
-			                	</div>
-		                	</div>
-
-							<div class='panel-body big-text'>
-								<div class='text-center'>
-									<div id="I-wrap"><span id='I' data-baseunit='A' data-unit='A'>Current</span></div>
-							</div>
-						</div>
-					</div>
-						<!-- /vertical form -->
-
-					</div>
-
-					<div class='col-md-6 col-sm-6 col-xs-6'>
-
-						<!-- Horizontal form -->
-						<div class='panel panel-flat'>
-							<div class='panel-heading'>
-								<h5 class='panel-title'>Resistance</h5>
-								<div class='heading-elements'>
-									<ul class='icons-list'>
-										<li><a data-action='plot' data-name='r'></a></li>
-
-										<li><a data-action='collapse'></a></li>
-										<li><a data-action='move'></a></li>
-									</ul>
-								</div>
-							</div>
-
-							<div class='panel-body big-text'>
-								<div class='col-md-6 text-center' id='vr-wrap'>  <span id='vr' data-baseunit='V' data-unit='V'>Vr</span></div>
-								<div class='col-md-6 text-center' id='r-wrap'>  <span id='r' data-baseunit='ohm' data-unit='ohm'>R</span></div>
-							</div>
-						</div>
-						<!-- /horizotal form -->
-
-					</div>
-
-					<div class='col-md-6 col-sm-6 col-xs-6'>
-
-						<!-- Vertical form -->
-						<div class='panel panel-flat'>
-							<div class='panel-heading'>
-								<h5 class='panel-title'>Magnetic Field</h5>
-								<div class='heading-elements'>
-									<ul class='icons-list'>
-										<li><a data-action='plot' data-name='B'></a></li>
-
-										<li><a data-action='collapse'></a></li>
-										<li><a data-action='move'></a></li>
-									</ul>
-								</div>
-							</div>
-
-							<div class='panel-body big-text'>
-								<div class='text-center'>
-									<div id="B-wrap"><span id='B' data-baseunit='T' data-unit='T'>Magnetic Field</span></div>
-								</div>
-						</div>
-					</div>
-						<!-- /vertical form -->
-
-					</div>
-				</div>
-
-				<!-- /grid -->
-				<!-- Grid -->
-				<div class='row'>
-					<div class='col-md-12 col-sm-12 col-xs-12'>
-
-						<!-- Horizontal form -->
-						<div class='panel panel-flat'>
-							<div class='panel-heading'>
-								<h5 class='panel-title'>Temperature</h5>
-								<div class='heading-elements'>
-									<ul class='icons-list'>
-										<li><a data-action='plot' data-name='temp'></a></li>
-
-										<li><a data-action='collapse'></a></li>
-
-
-									</ul>
-								</div>
-							</div>
-							<div class='panel-body big-text'>
-								<div class='text-center'>
-									<div class='col-md-6 col-sm-6 col-xs-6'>
-										<div class='col-md-4 col-sm-4 col-xs-4'>
-											 <span id='temp' data-baseunit='K' data-unit='K'>Temperature</span>
-										</div>
-										<div class='col-md-4 col-sm-4 col-xs-4'>
-											<select class='selectpicker' id='tempselect' data-width='auto'>
-												<option value='K' >°K</option>
-											  <option value='degC'>°C</option>
-											  <option value='degF'>°F</option>
-											</select>
-										</div>
-										<div class='col-md-4 col-sm-4 col-xs-4'>
-											<i class='icon-fire' data-toggle='tooltip' title='Safe to touch'></i>
-										</div>
-									</div>
-									<div class='col-md-6 col-sm-6 col-xs-6'>
-										<div id="power"></div>
-									</div>
-								</div>
-							</div>
-						</div>
-						<!-- /horizotal form -->
-
-					</div>
-
-				</div>
-
-
 			</div>
-			<!-- /main content -->
-
 		</div>
-
+			<!-- /main content -->
 	</div>
-
   <script>
-		const riot=require('riot');
-    require('./renderer.js');
+		var link = document.querySelectorAll('link[rel="import"]');
+		// Clone the <template> in the import.
+	  link.forEach(function(x){
+			if(x.import.querySelector('template')!==null){
+		  	var template = x.import.querySelector('template');
+			  var clone = document.importNode(template.content, true);
+				document.querySelector('.content-wrapper').appendChild(clone);
+			}
+		});
+		require('./renderer.js');
 		require('./exports.js');
-		require('./experiments/components/custom-block.tag');
-		require('./experiments/components/block-header.tag');
-		require('./experiments/components/block-body.tag');
-		riot.mount('*');
   </script>
 </body>
 </html>
