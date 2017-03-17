@@ -16,14 +16,14 @@ const BrowserWindow = electron.BrowserWindow
 const {ipcMain} = require('electron')
 const PDFWindow = require('electron-pdf-window')
 const jsyaml = require('js-yaml')
-const config=jsyaml.safeLoad(fs.readFileSync('./devices/fermiumlabs/hall-123A-plus/config.yaml'))
+const config=jsyaml.safeLoad(fs.readFileSync('./devices/ACME/hall-123A-plus/config.yaml'))
 // Keep a global reference of the window object, if you don't, the window will
 // be closed automatically when the JavaScript object is garbage collected.
 let mainWindow
 let plotWindow = {};
 let handbookWindow
 
-global.session = {'_name':config.product.model,'_date':dateFormat(Date.now(), 'yyyy_mm_dd'),'_file':''}
+global.session = {'_model':config.product.model,'_manufacturer':config.product.manufacturercode,'_date':dateFormat(Date.now(), 'yyyy_mm_dd'),'_file':''}
 function createWindow () {
 
   // Create the browser window.
@@ -172,10 +172,10 @@ ipcMain.on('handbook',(event,arg) => {
 ipcMain.on('start',(event,arg) => {
   fs.exists(session._file,function(exists){
     if(!exists){
-    diag=dialog.showSaveDialog({ defaultPath : home+'/.datalogger/sessions/'+session._name+"_"+session._date,title: 'Experiment file save location'});
+    diag=dialog.showSaveDialog({ defaultPath : home+'/.datalogger/sessions/'+session._model+"_"+session._date,title: 'Experiment file save location'});
     session._file = diag+'.json';
     }
-  mainWindow.webContents.send('started',{'return' : handler.start(mainWindow,session._file,session._name,session._date)});
+  mainWindow.webContents.send('started',{'return' : handler.start(mainWindow,session._file,session._model,session._date)});
   });
 })
 ipcMain.on('stop',(event,arg) => {

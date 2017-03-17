@@ -3,6 +3,7 @@
 
 product:
   manufacturer: "ACME Inc."
+  manufacturercode : "ACME"
   name: "Hall effect apparatus"
   model: "hall-123A-plus"
 manual:

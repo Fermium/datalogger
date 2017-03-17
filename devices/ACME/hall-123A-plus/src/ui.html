@@ -1,0 +1,172 @@
+<template>
+  <!-- row row-sortable 1 -->
+  <div class='row row-sortable'>
+    <div class='col-md-6 col-sm-6 col-xs-6'>
+
+      <!-- Current-->
+      <div class='panel panel-flat' >
+        <div class='panel-heading'>
+
+          <h5 class='panel-title'>Hall Voltage</h5><i class='info'></i>
+          <div class='heading-elements'>
+
+            <ul class='icons-list'>
+              <li><a data-action='plot' data-name='vh'></a></li>
+
+              <li><a data-action='collapse'></a></li>
+              <li><a data-action='move'></a></li>
+
+            </ul>
+          </div>
+        </div>
+
+        <div class='panel-body big-text'>
+          <div class='col-md-4 text-center measured'>
+            <div id='vh1-wrap' class='col-md-6 col-sm-6 col-xs-6 text-center'>
+                <span id='vh1' data-baseunit='V' data-unit='V'>Vh1</span>
+            </div>
+            <div id="vh2-wrap"class='col-md-6 col-sm-6 col-xs-6 text-center'>
+                <span id='vh2' data-baseunit='V' data-unit='V'>Vh2</span>
+            </div>
+          </div>
+          <div class='col-md-4 text-center' id="vh-wrap"><span id='vh' data-baseunit='V' data-unit='V'>Vh</span></div>
+          <hr class='visible-xs visible-sm'/>
+          <div class='col-md-4 text-center'>
+            <form class="form-inline">
+              <div id="k-slider"></div>
+              <label class='k' for='k'>K = </label>
+              <input class="form-control k" type='number' name='k' id='k-value' type='text' from='0' to='1' step="0.001">
+            </form>
+          </div>
+        </div>
+      </div>
+      <!-- /horizotal form -->
+
+    </div>
+
+    <div class='col-md-6 col-sm-6 col-xs-6'>
+
+      <!-- Vertical form -->
+      <div class='panel panel-flat'>
+        <div class='panel-heading'>
+          <h5 class='panel-title'>Current</h5>
+          <div class='heading-elements'>
+            <ul class='icons-list'>
+              <li><a data-action='plot' data-name='I'></a></li>
+
+                      <li><a data-action='collapse'></a></li>
+                      <li><a data-action='move'></a></li>
+                    </ul>
+                  </div>
+                </div>
+
+        <div class='panel-body big-text'>
+          <div class='text-center'>
+            <div id="I-wrap"><span id='I' data-baseunit='A' data-unit='A'>Current</span></div>
+        </div>
+      </div>
+    </div>
+      <!-- /vertical form -->
+
+    </div>
+
+    <div class='col-md-6 col-sm-6 col-xs-6'>
+
+      <!-- Horizontal form -->
+      <div class='panel panel-flat'>
+        <div class='panel-heading'>
+          <h5 class='panel-title'>Resistance</h5>
+          <div class='heading-elements'>
+            <ul class='icons-list'>
+              <li><a data-action='plot' data-name='r'></a></li>
+
+              <li><a data-action='collapse'></a></li>
+              <li><a data-action='move'></a></li>
+            </ul>
+          </div>
+        </div>
+
+        <div class='panel-body big-text'>
+          <div class='col-md-6 text-center' id='vr-wrap'>  <span id='vr' data-baseunit='V' data-unit='V'>Vr</span></div>
+          <div class='col-md-6 text-center' id='r-wrap'>  <span id='r' data-baseunit='ohm' data-unit='ohm'>R</span></div>
+        </div>
+      </div>
+      <!-- /horizotal form -->
+
+    </div>
+
+    <div class='col-md-6 col-sm-6 col-xs-6'>
+
+      <!-- Vertical form -->
+      <div class='panel panel-flat'>
+        <div class='panel-heading'>
+          <h5 class='panel-title'>Magnetic Field</h5>
+          <div class='heading-elements'>
+            <ul class='icons-list'>
+              <li><a data-action='plot' data-name='B'></a></li>
+
+              <li><a data-action='collapse'></a></li>
+              <li><a data-action='move'></a></li>
+            </ul>
+          </div>
+        </div>
+
+        <div class='panel-body big-text'>
+          <div class='text-center'>
+            <div id="B-wrap"><span id='B' data-baseunit='T' data-unit='T'>Magnetic Field</span></div>
+          </div>
+      </div>
+    </div>
+      <!-- /vertical form -->
+
+    </div>
+  </div>
+
+  <!-- /grid -->
+  <!-- Grid -->
+  <div class='row'>
+    <div class='col-md-12 col-sm-12 col-xs-12'>
+
+      <!-- Horizontal form -->
+      <div class='panel panel-flat'>
+        <div class='panel-heading'>
+          <h5 class='panel-title'>Temperature</h5>
+          <div class='heading-elements'>
+            <ul class='icons-list'>
+              <li><a data-action='plot' data-name='temp'></a></li>
+
+              <li><a data-action='collapse'></a></li>
+
+
+            </ul>
+          </div>
+        </div>
+        <div class='panel-body big-text'>
+          <div class='text-center'>
+            <div class='col-md-6 col-sm-6 col-xs-6'>
+              <div class='col-md-4 col-sm-4 col-xs-4'>
+                 <span id='temp' data-baseunit='K' data-unit='K'>Temperature</span>
+              </div>
+              <div class='col-md-4 col-sm-4 col-xs-4'>
+                <select class='selectpicker' id='tempselect' data-width='auto'>
+                  <option value='K' >°K</option>
+                  <option value='degC'>°C</option>
+                  <option value='degF'>°F</option>
+                </select>
+              </div>
+              <div class='col-md-4 col-sm-4 col-xs-4'>
+                <i class='icon-fire' data-toggle='tooltip' title='Safe to touch'></i>
+              </div>
+            </div>
+            <div class='col-md-6 col-sm-6 col-xs-6'>
+              <div id="power"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+<script>
+console.log(__filename);
+</script>
+</template>
