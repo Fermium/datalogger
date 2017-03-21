@@ -304,9 +304,19 @@ function init(){
   var tmp=ipcRenderer.sendSync('ready');
   channels = tmp.config.channels;
   mathsheet = tmp.config.mathsheet.trim();
+  var inputs = tmp.config.inputs;
+  ui.init(inputs,scope);
+  ui.handler.on('input-change',function(data){
+    if(data.hardware){
+      ipcRenderer.send('hardware-input',{name:data.id,value:data.value});
+    }
+    else{
+      scope[data.id]=data.value;
+    }
+  });
   updateTex();
+
   ui.blocks.forEach(function(block){
-    console.log(block);
     $('[data-measure="'+block+'"]').popover({
       trigger: 'hover',
       title: 'Formula',
