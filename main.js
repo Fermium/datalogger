@@ -16,14 +16,14 @@ const BrowserWindow = electron.BrowserWindow
 const {ipcMain} = require('electron')
 const PDFWindow = require('electron-pdf-window')
 const jsyaml = require('js-yaml')
-const config=jsyaml.safeLoad(fs.readFileSync('./devices/ACME/hall-123A-plus/config.yaml'))
+var config;
 // Keep a global reference of the window object, if you don't, the window will
 // be closed automatically when the JavaScript object is garbage collected.
 let mainWindow
 let plotWindow = {};
 let handbookWindow
-
-global.session = {'_model':config.product.model,'_manufacturer':config.product.manufacturercode,'_date':dateFormat(Date.now(), 'yyyy_mm_dd'),'_file':''}
+let selectDeviceWindow
+global.session = {'_date':dateFormat(Date.now(), 'yyyy_mm_dd'),'_file':''}
 function createWindow () {
 
   // Create the browser window.
@@ -41,6 +41,24 @@ function createWindow () {
     if(handler.ison()){
       handler.off();
     }
+    // Dereference the window object, usually you would store windows
+    // in an array if your app supports multi windows, this is the time
+    // when you should delete the corresponding element.
+    mainWindow = null
+  });
+}
+
+function createSelectDevice () {
+
+  // Create the browser window.
+  selectDeviceWindow = new BrowserWindow({width: 850, height: 950,transparent:true,frame:false})
+
+  // and load the index.html of the app.
+  selectDeviceWindow.loadURL(`file://${__dirname}/selectdevice.html`)
+
+
+  // Emitted when the window is closed.
+  selectDeviceWindow.on('closed', function () {
     // Dereference the window object, usually you would store windows
     // in an array if your app supports multi windows, this is the time
     // when you should delete the corresponding element.
@@ -125,7 +143,7 @@ function createPlotWindow (name) {
 // Some APIs can only be used after this event occurs.
 app.on('ready', function(){
 
-  createWindow();
+  createSelectDevice();
 });
 
 // Quit when all windows are closed.
@@ -146,7 +164,6 @@ app.on('activate', function () {
   // dock icon is clicked and there are no other windows open.
   if (mainWindow === null) {
     createWindow()
-
   }
 })
 app.on('web-contents-created',function(ev,wc){
@@ -172,10 +189,10 @@ ipcMain.on('handbook',(event,arg) => {
 ipcMain.on('start',(event,arg) => {
   fs.exists(session._file,function(exists){
     if(!exists){
-    diag=dialog.showSaveDialog({ defaultPath : home+'/.datalogger/sessions/'+session._model+"_"+session._date,title: 'Experiment file save location'});
+    diag=dialog.showSaveDialog({ defaultPath : home+'/.datalogger/sessions/'+config.model+"_"+session._date,title: 'Experiment file save location'});
     session._file = diag+'.json';
     }
-  mainWindow.webContents.send('started',{'return' : handler.start(mainWindow,session._file,session._model,session._date)});
+  mainWindow.webContents.send('started',{'return' : handler.start(mainWindow,session._file,config.model,session._date)});
   });
 })
 ipcMain.on('stop',(event,arg) => {
@@ -202,4 +219,11 @@ ipcMain.on('isrunning',(event,arg)=>{
 })
 ipcMain.on('ready',(event,arg)=>{
   event.returnValue={'config':config.config,'product':config.product};
+})
+ipcMain.on('get-device',(event,arg)=>{
+  event.returnValue='./devices/'+config.product.manufacturercode+'/'+config.product.model+'/';
+})
+ipcMain.on('device-select',(event,arg)=>{
+  config=jsyaml.safeLoad(fs.readFileSync(arg.device+'config.yaml'));
+  createWindow();
 })

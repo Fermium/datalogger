@@ -110,44 +110,6 @@ $('#tempselect').change(function() {
   updateTex();
 });
 
-$('#power').ionRangeSlider({
-  min: 0,
-  max: 100,
-  prefix: 'Power: ',
-  postfix: '%'
-});
-
-$('#k-slider').ionRangeSlider({
-  min: 0,
-  max: 1,
-  step: 0.001,
-  prefix: 'K: ',
-  keyboard: true,
-  onChange: function(data) {
-    scope.k = data.from;
-    $('#k-value').val(data.from);
-  },
-  onStart: function(data) {
-    scope.k = data.from;
-    $('#k-value').val(data.from);
-  }
-});
-
-$('#k-value').keyup(function() {
-  val = $('#k-value').val();
-  if (val > 1) {
-    val = 1;
-    $('#k-value').val(val);
-  }
-  if (val < 0) {
-    val = 0;
-    $('#k-value').val(val);
-  }
-  scope.k = val;
-  $("#k-slider").data("ionRangeSlider").update({
-      from: val
-  });
-});
 $('[data-action="handbook"]').click(function() {
   ipcRenderer.send('handbook');
 });

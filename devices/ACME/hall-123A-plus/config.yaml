@@ -6,6 +6,8 @@ product:
   manufacturercode : "ACME"
   name: "Hall effect apparatus"
   model: "hall-123A-plus"
+  description: ""
+  picture: ""
 manual:
   # URL should be HTTPS
   url: "https://example.com/manuals/hall-effect.pdf"
