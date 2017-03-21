@@ -2,9 +2,9 @@
 # File di configurazione
 
 product:
-  manufacturer: "ACME Inc."
-  manufacturercode : "ACME"
-  name: "Hall effect apparatus"
+  manufacturer: "Fermium LABS srl"
+  manufacturercode : "fermiumlabs"
+  name: "Hall effect apparatus fermium"
   model: "hall-123A-plus"
   description: "Something magical doing stuff with magnets"
   image: "pic.jpg"

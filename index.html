@@ -25,7 +25,7 @@
 	var tmp=ipcRenderer.sendSync('get-device');
 	$('head').append($('<link/>').attr({
 		rel : 'import',
-		href : tmp+'/src/ui.html'
+		href : tmp+'src/ui.html'
 	}));
 	</script>
 
@@ -34,63 +34,68 @@
 </head>
 
 <body>
+
 	<!-- Main navbar -->
-	<div class="navbar navbar-inverse bg-inverse navbar-toggleable-sm">
-	    <div class="navbar-brand">
-	        <img src="assets/images/logo_light.png" alt="" />
-	    </div>
-	    <ul class="nav navbar-nav float-right hidden-sm-up-block">
-	        <li class="nav-item"><a data-toggle="collapse" data-target="#navbar-mobile" class="nav-link"><i class="icon-tree5"></i></a>
-	        </li>
-	        <li class="nav-item"><a class="sidebar-mobile-main-toggle nav-link"><i class="icon-paragraph-justify3"></i></a>
-	        </li>
-	    </ul>
-	    <ul class="nav navbar-nav">
-	        <li id="exportdd" class="dropdown nav-item">	<a data-toggle="dropdown" class="sidebar-control sidebar-main-toggle hidden-xs-down nav-link">
+	<div class='navbar navbar-inverse'>
+		<div class='navbar-header'>
+			<div class='navbar-brand'><img src='assets/images/logo_light.png' alt=''></img></div>
 
-							<i class="icon-table2" data-toggle="tooltip" data-placement="bottom" title="Export"></i>
+			<ul class='nav navbar-nav pull-right visible-xs-block'>
+				<li><a data-toggle='collapse' data-target='#navbar-mobile'><i class='icon-tree5'></i></a></li>
+				<li><a class='sidebar-mobile-main-toggle'><i class='icon-paragraph-justify3'></i></a></li>
+			</ul>
+		</div>
 
-							<i class="caret"></i>
-
-						</a>
-	            <ul class="dropdown-menu dropdown-menu-left">
-	                <li id="tocsv" class="dropdown-item"><a href="#">Export to CSV</a>
-	                </li>
-	                <li id="totsv" class="dropdown-item"><a href="#">Export to TSV (SciDAVis standard)</a>
-	                </li>
-	                <!--<li id='toxls'><a href='#'>Export to XLS</a></li>-->
-	            </ul>
-	        </li>
-	        <li class="nav-item">	<a data-action="editequation" class="nav-link"><i class="icon-pencil" data-toggle="tooltip" data-placement="bottom" title="Edit math"></i></a>
-	        </li>
-	        <li class="nav-item">	<a data-action="handbook" class="nav-link"><i class="icon-book" data-toggle="tooltip" data-placement="bottom" title="Handbook"></i></a>
-	        </li>
-	        <li class="nav-item">	<a data-action="inputs" class="nav-link"><i class="icon-hammer" data-toggle="tooltip" data-placement="bottom" title="Inputs"></i></a>
-	        </li>
-	    </ul>
+		<div class='navbar-collapse collapse' id='navbar-mobile'>
+			<ul class='nav navbar-nav'>
+				<li  id='exportdd' class='dropdown'>
+					<a data-toggle='dropdown' class='sidebar-control sidebar-main-toggle hidden-xs'>
+						<i class='icon-table2' data-toggle='tooltip' data-placement='bottom' title='Export'></i>
+						<i class='caret'></i>
+					</a>
+					<ul class='dropdown-menu dropdown-menu-left'>
+						<li id='tocsv'><a href='#'>Export to CSV</a></li>
+						<li id='totsv'><a href='#'>Export to TSV (SciDAVis standard)</a></li>
+						<!--<li id='toxls'><a href='#'>Export to XLS</a></li>-->
+					</ul>
+				</li>
+				<li>
+					<a data-action='editequation'><i class='icon-pencil' data-toggle='tooltip' data-placement='bottom' title='Edit math'></i></a>
+				</li>
+				<li>
+					<a data-action='handbook'><i class='icon-book' data-toggle='tooltip' data-placement='bottom' title='Handbook'></i></a>
+				</li>
+				<li>
+					<a data-action='inputs'><i class='icon-hammer' data-toggle='tooltip' data-placement='bottom' title='Inputs'></i></a>
+				</li>
+			</ul>
+		</div>
 	</div>
 	<!-- /main navbar -->
-	<div class="page-header">
-	    <div class="page-header-content">
-	        <div class="page-title">
-	            	<h4><span class="text-semibold" id="session"></span><span id="date"></span> - <span id="timer">00:00:00</span></h4>
-	        </div>
-	        <div class="heading-elements">
-	            <input type="checkbox" name="on-off" />
-	            <input type="checkbox" name="start-stop" id="start-stop" disabled="disabled"
-	            />
-	        </div>
-	    </div>
+
+  <div class='page-header'>
+  		<div class='page-header-content'>
+  			<div class='page-title'>
+  				<h4><span class='text-semibold' id='session'></span><span id='date'></span> - <span id='timer'>00:00:00</span></h4>
+  			</div>
+
+				<div class='heading-elements'>
+					<input type='checkbox' name='on-off'>
+					<input type='checkbox' name='start-stop' id='start-stop' disabled>
+				</div>
+  	</div>
 	</div>
 	<!-- Page container -->
-	<div class="page-container">
-	    <!-- Page content -->
-	    <div class="page-content">
-	        <!-- Main content -->
-	        <div class="content-wrapper"></div>
-	    </div>
-	    <!-- /main content -->
-	</div>  <script>
+	<div class='page-container'>
+		<!-- Page content -->
+		<div class='page-content'>
+			<!-- Main content -->
+			<div class='content-wrapper'>
+			</div>
+		</div>
+			<!-- /main content -->
+	</div>
+  <script>
 		var link = document.querySelectorAll('link[rel="import"]');
 		// Clone the <template> in the import.
 	  link.forEach(function(x){

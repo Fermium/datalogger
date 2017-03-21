@@ -14,7 +14,8 @@ $(document).ready(function(){
   var producers = getDirectories('./devices');
   $('select').selectBoxIt({
     autoWidth: false,
-    populate : producers
+    populate : producers,
+    copyClasses : "container"
   })
   $('select').change(function(){
     updateList($('select').val());
@@ -36,21 +37,21 @@ function updateList(producer){
 function appendProduct(producer,name){
   $('.content-wrapper').empty();
   var product=jsyaml.safeLoad(fs.readFileSync('./devices/'+producer+'/'+name+'/config.yaml')).product;
-  $('.content-wrapper').append($('<div/>').addClass('card col-md-4 col-sm-4 col-xs-4').attr({
+  $('.content-wrapper').append($('<div/>').addClass('col-xs-6').append($('<div/>').addClass('panel panel-default').attr({
     'id':product.model,
-    'style':"width:20rem;-webkit-app-region: no-drag"
-  }));
-  $('#'+product.model).append($('<img/>').addClass('card-img-top').attr({
-    src : product.image,
+    'style':"-webkit-app-region: no-drag"
+  })));
+  $('#'+product.model).append($('<img/>').addClass('panel-heading').attr({
+    src : './devices/'+producer+'/'+name+'/'+product.image,
     alt : product.name
   }));
-  $('#'+product.model).append($('<div/>').addClass('card-block'));
-  $('#'+product.model+" .card-block").append($('<h4/>').addClass('card-title').text(product.name));
-  $('#'+product.model+" .card-block").append($('<p/>').addClass('card-text').text(product.description));
-  $('#'+product.model+" .card-block").append($('<a/>').addClass('btn btn-primary select-device').attr({
+  $('#'+product.model).append($('<div/>').addClass('panel-body'));
+  $('#'+product.model+" .panel-body").append($('<h4/>').text(product.name));
+  $('#'+product.model+" .panel-body").append($('<p/>').text(product.description));
+  $('#'+product.model+" .panel-body").append($('<a/>').addClass('btn btn-primary select-device').attr({
     href : '#',
     'data-device' : './devices/'+producer+'/'+name+'/'
-  }).text(product.description));
+  }).text('Next'));
   $('.select-device').each(function(x){
 
     $(this).click(function(){
