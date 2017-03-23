@@ -186,14 +186,20 @@ ipcMain.on('handbook',(event,arg) => {
   })
 })
 
-ipcMain.on('start',(event,arg) => {
+ipcMain.on('save-file',(event,arg)=>{
   fs.exists(session._file,function(exists){
     if(!exists){
-    diag=dialog.showSaveDialog({ defaultPath : home+'/.datalogger/sessions/'+config.model+"_"+session._date,title: 'Experiment file save location'});
+    diag=dialog.showSaveDialog({ defaultPath : home+'/.datalogger/sessions/'+session._name+"_"+session._date,title: 'Experiment file save location'});
     session._file = diag+'.json';
+    handler.save(session,config.product);
     }
-  mainWindow.webContents.send('started',{'return' : handler.start(mainWindow,session._file,config.model,session._date)});
   });
+})
+
+ipcMain.on('start',(event,arg) => {
+
+//  mainWindow.webContents.send('started',{'return' : handler.save(session,config.product)});
+
 })
 ipcMain.on('stop',(event,arg) => {
   handler.stop();
@@ -225,5 +231,6 @@ ipcMain.on('get-device',(event,arg)=>{
 })
 ipcMain.on('device-select',(event,arg)=>{
   config=jsyaml.safeLoad(fs.readFileSync(arg.device+'config.yaml'));
+  session['_name']=config.product.model
   createWindow();
 })

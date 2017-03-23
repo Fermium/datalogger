@@ -1,7 +1,10 @@
+// TODO : Spostare controllo db verso un altro file non nell'hander
+
+
 var electron = require('./main.js');
 var low = require('lowdb'); //db .json
 var _ = require('lodash');
-var config = {'_file': '','_db_exists':false};
+var db_exists = false;
 var math = require('mathjs');
 var datachan = require('data-chan').lib;
 var dc_search_results = require('data-chan').search_enum;
@@ -36,12 +39,10 @@ var scope = {
 }
 var debug;
 module.exports = {
-  start : function (win,diag,experiment,date) {
+  start : function (win) {
     _.extend(mainWindow,win);
-    createdb(diag,experiment,date);
-    datachan.datachan_device_enable(usb_thing.device);
     running = true;
-    return config._db_exists;
+    return running;
   },
   stop : function() {
     datachan.datachan_device_disable(usb_thing.device);
@@ -49,12 +50,13 @@ module.exports = {
     clearInterval(thread);
   },
   on : function(deb=false){
-    config._db_exists = false;
-    config._file = '';
+    db_exists = false;
     datachan.datachan_init();
     on = true;
     debug=deb;
     usb_thing=datachan.datachan_device_acquire();
+    datachan.datachan_device_enable(usb_thing.device);
+
   },
   off : function(){
     datachan.datachan_device_disable(usb_thing.device);
@@ -69,6 +71,11 @@ module.exports = {
   },
   ison: function(){
     return on;
+  },
+  save : function(session,product){
+    createdb(session._file);
+    initdb(session,product)
+    return db_exists;
   }
 }
 
@@ -101,29 +108,27 @@ if(datachan.datachan_device_is_enabled(usb_thing.device)){
 mainWindow.webContents.send('measure',  {'scope':scope});
 //////////////////////////////
 
-db.get('_data').push(scope).value();
+db.get('_data').push(scope).write();
 
 
 }
 
-function initdb(experiment,date){
-  db = low(config._file);
-  db.defaults({ _data : [] , _session : '', _date : ''}).value();
-  db.set(experiment,config._session).value();
-  db.set(date,config._date).value();
-  config._db_exists = true;
+function initdb(session,product){
+  db.defaults({ _data : [] , _session : '', _date : '',_model : '',_manufacturer : ''}).write();
+  db.set('_session',session._name).write();
+  db.set('_date',session._date).write();
+  db.set('_model',product.model).write();
+  db.set('_manufacturer',product.manufacturercode).write();
+  db_exists = true;
 }
 
-function createdb(diag,experiment,date){
-  if(!config._db_exists){
+function createdb(diag){
     if(diag!=undefined){
       diag = (diag.endsWith('.json')) ? diag : diag+'.json' ;
-      config._file=diag;
-      initdb(experiment,date);
-      thread=setInterval(read,100);
+      console.log(diag);
+      db = low(diag);
     }
-  }
-  else{
-    thread=setInterval(read,100);
-  }
 }
+
+
+//thread=setInterval(read,100);
