@@ -36,17 +36,12 @@
 <body>
 
 	<!-- Main navbar -->
-	<div class='navbar navbar-inverse'>
+	<div class='navbar navbar-inverse '>
 		<div class='navbar-header'>
 			<div class='navbar-brand'><img src='assets/images/logo_light.png' alt=''></img></div>
-
-			<ul class='nav navbar-nav pull-right visible-xs-block'>
-				<li><a data-toggle='collapse' data-target='#navbar-mobile'><i class='icon-tree5'></i></a></li>
-				<li><a class='sidebar-mobile-main-toggle'><i class='icon-paragraph-justify3'></i></a></li>
-			</ul>
 		</div>
 
-		<div class='navbar-collapse collapse' id='navbar-mobile'>
+		<div class='not-collapsible'>
 			<ul class='nav navbar-nav'>
 				<li  id='exportdd' class='dropdown'>
 					<a data-toggle='dropdown' class='sidebar-control sidebar-main-toggle hidden-xs'>
@@ -79,7 +74,7 @@
   				<h4><span class='text-semibold' id='session'></span><span id='date'></span> - <span id='timer'>00:00:00</span></h4>
   			</div>
 
-				<div class='heading-elements'>
+				<div class='heading-elements '>
 					<input type='checkbox' name='on-off'>
 					<input type='checkbox' name='start-stop' id='start-stop' disabled>
 				</div>
