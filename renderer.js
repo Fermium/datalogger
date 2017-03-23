@@ -99,6 +99,7 @@ $(document).ready(function(){
 
 ipcRenderer.on('measure',function(event,args){
   _.extend(scope,args.scope);
+  console.log(scope)
   math.format(math.eval(mathsheet,scope),2);
   evaluate();
   ipcRenderer.send('update',{'scope':scope});
@@ -245,10 +246,11 @@ $('[data-action="editequation"]').click(function() {
 function evaluate() {
   for (var block in ui.blocks) {
     try {
-      $('#' + block).text(math.format(scope[block],{precision:5}));
+      $('[data-measure=' + ui.blocks[block]+']').text(math.format(scope[ui.blocks[block]],{precision:5}));
     } catch (err) {
+      console.log(err);
       if (err.toString().indexOf('Undefined symbol') != -1) {
-        $('#' + block).text('Reading...');
+        $('[data-measure=' + ui.blocks[block]+']').text('Reading...');
       } else {
         console.log(err.toString());
       }
@@ -267,13 +269,22 @@ function init(){
   channels = tmp.config.channels;
   mathsheet = tmp.config.mathsheet.trim();
   var inputs = tmp.config.inputs;
+  inputs.forEach(function(input){
+    if(!input.sendtohardware){
+      scope[input.name]=input.default;
+    }
+    else{
+      ipcRenderer.send('send-to-hardware',{name:input.name,value:input.default});
+    }
+  });
   ui.init(inputs,scope);
   ui.handler.on('input-change',function(data){
     if(data.hardware){
-      ipcRenderer.send('hardware-input',{name:data.id,value:data.value});
+      ipcRenderer.send('send-to-hardware',{name:data.id,value:data.value});
     }
     else{
       scope[data.id]=data.value;
+
     }
   });
   updateTex();

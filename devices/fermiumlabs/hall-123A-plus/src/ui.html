@@ -159,7 +159,8 @@
     </div>
   </div>
   <script>
-  var session = require('electron').remote.getGlobal('session');
-  var ui = require('./devices/'+session._manufacturer+'/'+session._model+'/src/renderer.js')
+  var {ipcRenderer} = require('electron');
+  var device=ipcRenderer.sendSync('get-device');
+  var ui = require(device+'/src/renderer.js');
   </script>
 </template>
