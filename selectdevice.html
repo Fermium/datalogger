@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang='en'>
+<head>
+	<meta charset='utf-8'>
+	<meta http-equiv='X-UA-Compatible' content='IE=edge'>
+	<meta name='viewport' content='width=device-width, initial-scale=1'>
+	<title>Datalogger</title>
+
+	<!-- Global stylesheets -->
+
+	<link rel='import' href='./src/header.html'>
+
+	<link href='./node_modules/codemirror/lib/codemirror.css' rel='stylesheet' type='text/css'>
+	<link href='./assets/css/bootstrap-switch.min.css' rel='stylesheet' type='text/css'>
+	<script type="text/javascript" src="./assets/js/plugins/sliders/ion_rangeslider.min.js"></script>
+	<script type="text/javascript" src="./assets/js/plugins/loaders/blockui.min.js"></script>
+	<script type='text/javascript' src='./assets/js/plugins/forms/styling/switch.min.js'></script>
+	<script type="text/javascript" src="./assets/js/plugins/forms/selects/bootstrap_select.min.js"></script>
+	<script type="text/javascript" src="./assets/js/plugins/notifications/bootbox.min.js"></script>
+	<script type="text/javascript" src="./assets/js/plugins/notifications/pnotify.min.js"></script>
+	<script type='text/javascript' src='assets/js/plugins/forms/selects/selectboxit.min.js'></script>
+	<link rel='import' href='./devices/fermiumlabs/hall-123A-plus/src/ui.html'>
+
+<style>
+img {
+    max-width: 100%;
+    max-height: 100%;
+}
+</style>
+	<!-- /global stylesheets -->
+</head>
+
+<body>
+	<div class='page-header'>
+  		<div class='page-header-content '>
+				<span class='col-md-10 col-xs-10 col-sm-10'><select class='producer' ></select></span>
+				<span class='col-md-2 col-xs-2 col-sm-2'>
+					<input type='button' name='on-off'>
+					<input type='button' name='start-stop' >
+				</span>
+  	</div>
+	</div>
+<!-- Page container -->
+<div class='page-container'>
+  <!-- Page content -->
+  <div class='page-content'>
+    <!-- Main content -->
+    <div class='content-wrapper row' style='-webkit-app-region: drag'>
+
+    </div>
+  </div>
+    <!-- /main content -->
+</div>
+  <script>
+		require('./selectdevice.js');
+  </script>
+</body>
+</html>

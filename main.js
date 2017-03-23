@@ -3,25 +3,29 @@ var {dialog} = require('electron');
 var handler = require('./usb-handler');
 const math = require('mathjs');
 const dateFormat = require('dateformat'); //for date
+const _ = require('lodash');
 var fs = require('fs');
 var path = require('path')
 var http = require('https')
+var home = require('os').homedir();
+
 // Module to control application life.
 const app = electron.app
 // Module to create native browser window.
 const BrowserWindow = electron.BrowserWindow
 const {ipcMain} = require('electron')
 const PDFWindow = require('electron-pdf-window')
+const jsyaml = require('js-yaml')
+var config;
 // Keep a global reference of the window object, if you don't, the window will
 // be closed automatically when the JavaScript object is garbage collected.
 let mainWindow
 let plotWindow = {};
 let handbookWindow
-
-global.config = {'_experiment':'','_date':dateFormat(Date.now(), 'yyyy_mm_dd'),'_file':''}
-/*global.scope =  { 'k' : 0 };*/
-global.formula = {};
+let selectDeviceWindow
+global.session = {'_date':dateFormat(Date.now(), 'yyyy_mm_dd'),'_file':''}
 function createWindow () {
+
   // Create the browser window.
   mainWindow = new BrowserWindow({width: 850, height: 950})
 
@@ -41,40 +45,72 @@ function createWindow () {
     // in an array if your app supports multi windows, this is the time
     // when you should delete the corresponding element.
     mainWindow = null
-  })
+  });
+}
+
+function createSelectDevice () {
+
+  // Create the browser window.
+  selectDeviceWindow = new BrowserWindow({width: 850, height: 950,transparent:true,frame:false})
+
+  // and load the index.html of the app.
+  selectDeviceWindow.loadURL(`file://${__dirname}/selectdevice.html`)
+
+
+  // Emitted when the window is closed.
+  selectDeviceWindow.on('closed', function () {
+    // Dereference the window object, usually you would store windows
+    // in an array if your app supports multi windows, this is the time
+    // when you should delete the corresponding element.
+    selectDeviceWindow = null
+  });
+
 }
 function createHandbookWindow(){
+  var manual = config.manual
   handbookWindow = new PDFWindow({width: 800, height: 600})
-  var options = {
-      host: 'api.github.com',
-      port: 443,
-      path: '/repos/fermiumlabs/hall-effect-handbook/releases/latest',
-      method: 'GET',
-      headers : {
-        'user-agent' : 'fermiumlabs-datalogger'
-      }
-  };
+  if(_.has(manual,'git')){
+    var options = {
+        host: 'api.github.com',
+        port: 443,
+        path: '/repos/'+manual.git.user+'/'+manual.git.repo+'/releases/'+manual.git.tag,
+        method: 'GET',
+        headers : {
+          'user-agent' : 'fermiumlabs-datalogger'
+        }
+    };
 
-  var latest;
-  var req = http.request(options, function(res)
-  {
-    var output='';
-    res.setEncoding('utf8');
-    res.on('data',function(chunk){
-      output+=chunk
-    });
-    res.on('end', function() {
-            var obj = JSON.parse(output);
-            assets = obj.assets;
-            for(i in assets){
-              if(assets[i].name=='Hall_Handbook.pdf'){
-                latest = assets[i].browser_download_url;
-                handbookWindow.loadURL(latest);
+    var latest;
+    var req = http.request(options, function(res)
+    {
+      var output='';
+      res.setEncoding('utf8');
+      res.on('data',function(chunk){
+        output+=chunk
+      });
+      res.on('end', function() {
+              var obj = JSON.parse(output);
+              assets = obj.assets;
+              for(i in assets){
+                if(assets[i].name==manual.git.filename){
+                  latest = assets[i].browser_download_url;
+                  handbookWindow.loadURL(latest);
+                }
               }
-            }
-        });
-  });
-  req.end();
+          });
+    });
+    req.end();
+  }
+  else{
+    if(_.has(manual,'url')){
+      handbookWindow.loadURL(manual.url);
+    }
+    else{
+      dialog.showMessageBox({message:'Handbook not available'});
+      handbookWindow=null;
+    }
+  }
+
   // and load the index.html of the app.
 
 
@@ -83,7 +119,8 @@ function createHandbookWindow(){
   handbookWindow.on('closed', function () {
 
     handbookWindow = null
-  })
+  });
+
 }
 function createPlotWindow (name) {
   plotWindow[name]= new BrowserWindow({width:800, height:600,title:name})
@@ -104,7 +141,10 @@ function createPlotWindow (name) {
 // This method will be called when Electron has finished
 // initialization and is ready to create browser windows.
 // Some APIs can only be used after this event occurs.
-app.on('ready', createWindow)
+app.on('ready', function(){
+
+  createSelectDevice();
+});
 
 // Quit when all windows are closed.
 
@@ -126,23 +166,33 @@ app.on('activate', function () {
     createWindow()
   }
 })
-
+app.on('web-contents-created',function(ev,wc){
+  wc.on('will-navigate',ev=>{
+    console.log(ev);
+    ev.preventDefault();
+  })
+})
 // In this file you can include the rest of your app's specific main process
 // code. You can also put them in separate files and require them here.
 ipcMain.on('plot',(event,arg) => {
   createPlotWindow(arg.name);
 })
 ipcMain.on('handbook',(event,arg) => {
-  createHandbookWindow()
+  createHandbookWindow();
+  handbookWindow.webContents.on('will-navigate',ev=>{
+    console.log(ev);
+    ev.preventDefault();
+    handbookWindow.webContents.stop();
+  })
 })
 
 ipcMain.on('start',(event,arg) => {
-  fs.exists(config._file,function(exists){
+  fs.exists(session._file,function(exists){
     if(!exists){
-    diag=dialog.showSaveDialog({ defaultPath : './data/'+config._experiment+"_"+config._date,title: 'Experiment file save location'});
-    config._file = diag+'.json';
+    diag=dialog.showSaveDialog({ defaultPath : home+'/.datalogger/sessions/'+config.model+"_"+session._date,title: 'Experiment file save location'});
+    session._file = diag+'.json';
     }
-  mainWindow.webContents.send('started',{'return' : handler.start(mainWindow,config._file,config._experiment,config._date)});
+  mainWindow.webContents.send('started',{'return' : handler.start(mainWindow,session._file,config.model,session._date)});
   });
 })
 ipcMain.on('stop',(event,arg) => {
@@ -153,7 +203,7 @@ ipcMain.on('on',(event,arg) => {
 })
 ipcMain.on('off',(event,arg) => {
   handler.off();
-  config._file='';
+  session._file='';
 })
 
 ipcMain.on('update',(event,arg)=>{
@@ -166,4 +216,14 @@ ipcMain.on('update',(event,arg)=>{
 
 ipcMain.on('isrunning',(event,arg)=>{
   event.returnValue = handler.isrunning();
+})
+ipcMain.on('ready',(event,arg)=>{
+  event.returnValue={'config':config.config,'product':config.product};
+})
+ipcMain.on('get-device',(event,arg)=>{
+  event.returnValue='./devices/'+config.product.manufacturercode+'/'+config.product.model+'/';
+})
+ipcMain.on('device-select',(event,arg)=>{
+  config=jsyaml.safeLoad(fs.readFileSync(arg.device+'config.yaml'));
+  createWindow();
 })

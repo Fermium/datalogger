@@ -1,6 +1,6 @@
 var remote = require('electron').remote;
 var _ = require('lodash');
-var config = remote.getGlobal('config');
+var config = remote.getGlobal('session');
 var file=config._file;
 var source = config.source;
 var scope = remote.getGlobal('scope');
@@ -61,7 +61,6 @@ var highlighter = new Rickshaw.Graph.Behavior.Series.Highlight( {
 
 ipcRenderer.on('update',(event,data)=>{
   dataplot = {}
-	console.log(data);
   dataplot['val']=data.val;
 	graph.series.addData(dataplot);
 	graph.update();
