@@ -2,12 +2,15 @@
   "name": "Datalogger",
   "version": "1.0.0",
   "description": "A datalogger application",
-  "main": "src/main.js",
+  "main": "app/main.js",
   "scripts": {
     "start": "electron .",
     "rebuild": "electron-rebuild",
     "pack": "build --dir",
-    "dist": "build"
+    "dist": "build",
+    "dist:mac": "build --mac",
+    "dist:win": "build --win",
+    "dist:linux": "build --linux"
   },
   "postinstall": "install-app-deps",
   "repository": "https://github.com/fermiumlabs/datalogger",
@@ -19,6 +22,7 @@
     "babel-preset-env": "^1.2.2",
     "babel-preset-react": "^6.23.0",
     "electron-builder": "^16.6.0",
+    "electron-builder-squirrel-windows": "^16.6.0",
     "electron-prebuilt-compile": "1.6.2",
     "electron-rebuild": "^1.5.7",
     "gulp": "^3.9.0",
@@ -59,10 +63,6 @@
   },
   "build": {
     "appId": "org.fermiumlabs.datalogger",
-    "files": [
-      "out",
-      "node_modules"
-    ],
     "mac": {
       "category": "public.app-category.utilities"
     },
@@ -83,7 +83,17 @@
     "linux": {
       "target": [
         "AppImage",
-        "deb"
+        "deb",
+        "rpm",
+        "tar.gz"
+      ]
+    },
+    "win": {
+      "target": [
+        "nsis",
+        "nsis-web",
+        "squirrel",
+        "zip"
       ]
     }
   }
