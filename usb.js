@@ -55,6 +55,7 @@ module.exports = {
 function read(){
   var measure;
   if(datachan.datachan_device_is_enabled(usb.device)){
+
     if(datachan.datachan_device_enqueued_measures(usb.device)){
       measure =ref.deref(datachan.datachan_device_dequeue_measure(usb.device));
     }

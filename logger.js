@@ -40,5 +40,4 @@ module.exports={
   isrunning: function(){
     return running;
   }
-
 }
