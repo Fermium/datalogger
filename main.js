@@ -170,7 +170,6 @@ app.on('activate', function () {
 })
 app.on('web-contents-created',function(ev,wc){
   wc.on('will-navigate',ev=>{
-    console.log(ev);
     ev.preventDefault();
   })
 })
@@ -182,7 +181,6 @@ ipcMain.on('plot',(event,arg) => {
 ipcMain.on('handbook',(event,arg) => {
   createHandbookWindow();
   handbookWindow.webContents.on('will-navigate',ev=>{
-    console.log(ev);
     ev.preventDefault();
     handbookWindow.webContents.stop();
   })
@@ -205,7 +203,7 @@ ipcMain.on('stop',(event,arg) => {
   logger.stop();
 })
 ipcMain.on('on',(event,arg) => {
-  usb.on(true);
+  usb.on();
 })
 ipcMain.on('off',(event,arg) => {
   usb.off();
@@ -213,7 +211,6 @@ ipcMain.on('off',(event,arg) => {
 })
 
 usb.handler.on('measure',(arg)=>{
-  console.log(logger.isrunning());
   if(logger.isrunning()){
     logger.write(arg);
   }
