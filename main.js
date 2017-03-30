@@ -1,6 +1,6 @@
 const electron = require('electron')
 var {dialog} = require('electron');
-var handler = require('./usb-handler');
+var usb = require('./usb');
 const math = require('mathjs');
 const dateFormat = require('dateformat'); //for date
 const _ = require('lodash');
@@ -8,6 +8,7 @@ var fs = require('fs');
 var path = require('path')
 var http = require('https')
 var home = require('os').homedir();
+var logger = require('./logger');
 
 // Module to control application life.
 const app = electron.app
@@ -23,7 +24,7 @@ let mainWindow
 let plotWindow = {};
 let handbookWindow
 let selectDeviceWindow
-global.session = {'_date':dateFormat(Date.now(), 'yyyy_mm_dd'),'_file':''}
+global.session = {'_date':dateFormat(Date.now(), 'yyyy_mm_dd')}
 function createWindow () {
 
   // Create the browser window.
@@ -35,11 +36,12 @@ function createWindow () {
 
   // Emitted when the window is closed.
   mainWindow.on('closed', function () {
-    if(handler.isrunning()){
-      handler.stop();
+    if(logger.isrunning()){
+      logger.close();
+      logger.stop();
     }
-    if(handler.ison()){
-      handler.off();
+    if(usb.ison()){
+      usb.off();
     }
     // Dereference the window object, usually you would store windows
     // in an array if your app supports multi windows, this is the time
@@ -152,7 +154,7 @@ app.on('window-all-closed', function () {
   // On OS X it is common for applications and their menu bar
   // to stay active until the user quits explicitly with Cmd + Q
   if (process.platform !== 'darwin') {
-    /*if(handler.isrunning()){
+    /*if(usb.isrunning()){
 
     }*/
     app.quit()
@@ -168,7 +170,6 @@ app.on('activate', function () {
 })
 app.on('web-contents-created',function(ev,wc){
   wc.on('will-navigate',ev=>{
-    console.log(ev);
     ev.preventDefault();
   })
 })
@@ -180,42 +181,50 @@ ipcMain.on('plot',(event,arg) => {
 ipcMain.on('handbook',(event,arg) => {
   createHandbookWindow();
   handbookWindow.webContents.on('will-navigate',ev=>{
-    console.log(ev);
     ev.preventDefault();
     handbookWindow.webContents.stop();
   })
 })
 
-ipcMain.on('start',(event,arg) => {
-  fs.exists(session._file,function(exists){
-    if(!exists){
-    diag=dialog.showSaveDialog({ defaultPath : home+'/.datalogger/sessions/'+config.model+"_"+session._date,title: 'Experiment file save location'});
-    session._file = diag+'.json';
+ipcMain.on('save-file',(event,arg)=>{
+    if(!logger.existsdb()){
+    diag=dialog.showSaveDialog({ defaultPath : home+'/.datalogger/sessions/'+session._name+"_"+session._date,title: 'Experiment file save location'});
+    logger.createdb(diag);
+    logger.initdb(session._name,session._date,config.product.model,config.product.manufacturercode);
     }
-  mainWindow.webContents.send('started',{'return' : handler.start(mainWindow,session._file,config.model,session._date)});
-  });
 })
+
+ipcMain.on('start',(event,arg) => {
+logger.start();
+mainWindow.webContents.send('started',  {'return':logger.isrunning()});
+})
+
 ipcMain.on('stop',(event,arg) => {
-  handler.stop();
+  logger.stop();
 })
 ipcMain.on('on',(event,arg) => {
-  handler.on();
+  usb.on();
 })
 ipcMain.on('off',(event,arg) => {
-  handler.off();
-  session._file='';
+  usb.off();
+  logger.close();
 })
 
-ipcMain.on('update',(event,arg)=>{
+usb.handler.on('measure',(arg)=>{
+  if(logger.isrunning()){
+    logger.write(arg);
+  }
+  mainWindow.webContents.send('measure',  {'scope':arg});
 
+})
+ipcMain.on('update',(event,arg)=>{
   for(name in plotWindow){
     plotWindow[name].webContents.send('update',{'val':arg.scope[name].value})
   }
 
 })
-
 ipcMain.on('isrunning',(event,arg)=>{
-  event.returnValue = handler.isrunning();
+  event.returnValue = usb.isrunning();
 })
 ipcMain.on('ready',(event,arg)=>{
   event.returnValue={'config':config.config,'product':config.product};
@@ -225,5 +234,6 @@ ipcMain.on('get-device',(event,arg)=>{
 })
 ipcMain.on('device-select',(event,arg)=>{
   config=jsyaml.safeLoad(fs.readFileSync(arg.device+'config.yaml'));
+  session['_name']=config.product.model
   createWindow();
 })

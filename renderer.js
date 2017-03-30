@@ -5,7 +5,7 @@ const math = require('mathjs');
 const mathjaxHelper = require('mathjax-electron');
 const easytimer = require('easytimer');
 const codemirror = require('codemirror');
-
+const db = require('./logger').existsdb;
 /* End NodeJS Requires */
 
 /* Electron requires */
@@ -76,6 +76,13 @@ $('[data-action="handbook"]').click(function() {
   ipcRenderer.send('handbook');
 });
 
+$('[data-action="save-file"]').click(function(){
+  ipcRenderer.send('save-file');
+  if($("[name='start-stop']").prop("disabled") && $("[name='on-off']").bootstrapSwitch('state')){
+    $("[name='start-stop']").bootstrapSwitch('toggleDisabled');
+  }
+
+})
 $('[data-action="plot"]').click(function(){
   var name=$(this).data('plot');
   ipcRenderer.send('plot',{'name':name});
@@ -314,9 +321,44 @@ function updatePopover(block){
 
 
 /* Machine controls */
+
+function on(){
+  ipcRenderer.send('on');
+  bootbox.prompt({
+    size: 'small',
+    inputType: 'text',
+    value : session._name,
+    title: 'Input the experiment name or skip for default value',
+    callback: function(result) {
+      if(result == null ){
+        $("[name='on-off']").bootstrapSwitch('state',false);
+        return;
+      }
+      text = result.trim() == '' ? session._name : result;
+      session._name = text;
+      $('#session').text(text);
+      $('#date').text(' - ' + session._date);
+      if(!db() && $("[name='start-stop']").prop("disabled")){
+        $("[name='start-stop']").bootstrapSwitch('toggleDisabled');
+      }
+    }
+  });
+
+}
+
+function off(){
+  ipcRenderer.send('off');
+  timer.stop();
+  $('#timer').html('00:00:00');
+  $("[name='start-stop']").bootstrapSwitch('state', false);
+  $("[name='start-stop']").bootstrapSwitch('toggleDisabled');
+  $('#experiment').text('');
+  $('#date').text('');
+}
+
 function rec(){
   $.blockUI();
-  ipcRenderer.send('start');
+  ipcRenderer.send('start')
   ipcRenderer.on('started',function(event,args){
     if(!args.return){
       $("[name='start-stop']").bootstrapSwitch('state', false);
@@ -353,34 +395,5 @@ function pause(){
   });
 }
 
-function on(){
-  ipcRenderer.send('on');
-  bootbox.prompt({
-    size: 'small',
-    inputType: 'text',
-    value : session._model,
-    title: 'Input the experiment name or skip for default value',
-    callback: function(result) {
-      if(result == null ){
-        $("[name='on-off']").bootstrapSwitch('state',false);
-        return;
-      }
-      text = result.trim() == '' ? session._model : result;
-      session._model = text;
-      $('#session').text(text);
-      $('#date').text(' - ' + session._date);
-    }
-  });
-  $("[name='start-stop']").bootstrapSwitch('toggleDisabled');
-}
 
-function off(){
-  ipcRenderer.send('off');
-  timer.stop();
-  $('#timer').html('00:00:00');
-  $("[name='start-stop']").bootstrapSwitch('state', false);
-  $("[name='start-stop']").bootstrapSwitch('toggleDisabled');
-  $('#experiment').text('');
-  $('#date').text('');
-}
 /*****************************/
