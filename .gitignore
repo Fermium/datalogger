@@ -39,3 +39,5 @@ jspm_packages
 # data folder
 data
 out
+.cache
+dist

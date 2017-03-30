@@ -4,11 +4,12 @@
   "description": "A datalogger application",
   "main": "src/main.js",
   "scripts": {
-    "start": "electron-forge start",
+    "start": "electron .",
     "rebuild": "electron-rebuild",
-    "package": "electron-forge package",
-    "make": "electron-forge make"
+    "pack": "build --dir",
+    "dist": "build"
   },
+  "postinstall": "install-app-deps",
   "repository": "https://github.com/fermiumlabs/datalogger",
   "keywords": [],
   "author": "GitHub",
@@ -17,6 +18,7 @@
     "babel-plugin-transform-async-to-generator": "^6.22.0",
     "babel-preset-env": "^1.2.2",
     "babel-preset-react": "^6.23.0",
+    "electron-builder": "^16.6.0",
     "electron-prebuilt-compile": "1.6.2",
     "electron-rebuild": "^1.5.7",
     "gulp": "^3.9.0",
@@ -55,33 +57,34 @@
     "ref-struct": "^1.1.0",
     "riot": "^2.3.15"
   },
-  "config": {
-    "forge": {
-      "make_targets": {
-        "win32": [
-          "squirrel"
-        ],
-        "darwin": [
-          "zip"
-        ],
-        "linux": [
-          "deb",
-          "rpm"
-        ]
-      },
-      "electronPackagerConfig": {},
-      "electronWinstallerConfig": {
-        "name": ""
-      },
-      "electronInstallerDebian": {},
-      "electronInstallerRedhat": {},
-      "github_repository": {
-        "owner": "",
-        "name": ""
-      },
-      "windowsStoreConfig": {
-        "packageName": ""
-      }
+  "build": {
+    "appId": "org.fermiumlabs.datalogger",
+    "files": [
+      "out",
+      "node_modules"
+    ],
+    "mac": {
+      "category": "public.app-category.utilities"
+    },
+    "dmg": {
+      "contents": [
+        {
+          "x": 110,
+          "y": 150
+        },
+        {
+          "x": 240,
+          "y": 150,
+          "type": "link",
+          "path": "/Applications"
+        }
+      ]
+    },
+    "linux": {
+      "target": [
+        "AppImage",
+        "deb"
+      ]
     }
   }
 }
