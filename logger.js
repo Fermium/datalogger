@@ -1,5 +1,4 @@
 var low = require('lowdb'); //db .json
-var math = require('mathjs');
 var db;
 var dbfile= '';
 var running=false;

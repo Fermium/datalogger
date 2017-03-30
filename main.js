@@ -1,6 +1,6 @@
 const electron = require('electron')
 var {dialog} = require('electron');
-var handler = require('./usb-handler');
+var usb = require('./usb');
 const math = require('mathjs');
 const dateFormat = require('dateformat'); //for date
 const _ = require('lodash');
@@ -36,11 +36,12 @@ function createWindow () {
 
   // Emitted when the window is closed.
   mainWindow.on('closed', function () {
-    if(handler.isrunning()){
-      handler.stop();
+    if(logger.isrunning()){
+      logger.close();
+      logger.stop();
     }
-    if(handler.ison()){
-      handler.off();
+    if(usb.ison()){
+      usb.off();
     }
     // Dereference the window object, usually you would store windows
     // in an array if your app supports multi windows, this is the time
@@ -153,7 +154,7 @@ app.on('window-all-closed', function () {
   // On OS X it is common for applications and their menu bar
   // to stay active until the user quits explicitly with Cmd + Q
   if (process.platform !== 'darwin') {
-    /*if(handler.isrunning()){
+    /*if(usb.isrunning()){
 
     }*/
     app.quit()
@@ -197,31 +198,36 @@ ipcMain.on('save-file',(event,arg)=>{
 
 ipcMain.on('start',(event,arg) => {
 logger.start();
-
+mainWindow.webContents.send('started',  {'return':logger.isrunning()});
 })
+
 ipcMain.on('stop',(event,arg) => {
   logger.stop();
 })
 ipcMain.on('on',(event,arg) => {
-  handler.on();
+  usb.on(true);
 })
 ipcMain.on('off',(event,arg) => {
-  handler.off();
+  usb.off();
   logger.close();
 })
 
-ipcMain.on('update',(event,arg)=>{
+usb.handler.on('measure',(arg)=>{
+  console.log(logger.isrunning());
   if(logger.isrunning()){
-    logger.write(arg.scope);
+    logger.write(arg);
   }
+  mainWindow.webContents.send('measure',  {'scope':arg});
+
+})
+ipcMain.on('update',(event,arg)=>{
   for(name in plotWindow){
     plotWindow[name].webContents.send('update',{'val':arg.scope[name].value})
   }
 
 })
-
 ipcMain.on('isrunning',(event,arg)=>{
-  event.returnValue = handler.isrunning();
+  event.returnValue = usb.isrunning();
 })
 ipcMain.on('ready',(event,arg)=>{
   event.returnValue={'config':config.config,'product':config.product};

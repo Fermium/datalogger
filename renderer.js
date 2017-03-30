@@ -5,7 +5,7 @@ const math = require('mathjs');
 const mathjaxHelper = require('mathjax-electron');
 const easytimer = require('easytimer');
 const codemirror = require('codemirror');
-const db = require('./logger').existsdb();
+const db = require('./logger').existsdb;
 /* End NodeJS Requires */
 
 /* Electron requires */
@@ -343,7 +343,6 @@ function on(){
       }
     }
   });
-  ipcRenderer.send('start');
 
 }
 
@@ -359,6 +358,7 @@ function off(){
 
 function rec(){
   $.blockUI();
+  ipcRenderer.send('start')
   ipcRenderer.on('started',function(event,args){
     if(!args.return){
       $("[name='start-stop']").bootstrapSwitch('state', false);
