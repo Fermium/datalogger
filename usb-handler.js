@@ -1,4 +1,4 @@
-// TODO : Spostare controllo db verso un altro file non nell'hander
+// TODO : Spostare controllo db verso un altro file non nell'handler
 
 
 var electron = require('./main.js');
@@ -108,7 +108,7 @@ if(datachan.datachan_device_is_enabled(usb_thing.device)){
 mainWindow.webContents.send('measure',  {'scope':scope});
 //////////////////////////////
 
-db.get('_data').push(scope).write();
+//db.get('_data').push(scope).write();
 
 
 }
@@ -125,7 +125,6 @@ function initdb(session,product){
 function createdb(diag){
     if(diag!=undefined){
       diag = (diag.endsWith('.json')) ? diag : diag+'.json' ;
-      console.log(diag);
       db = low(diag);
     }
 }

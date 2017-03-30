@@ -8,6 +8,7 @@ var fs = require('fs');
 var path = require('path')
 var http = require('https')
 var home = require('os').homedir();
+var logger = require('./logger');
 
 // Module to control application life.
 const app = electron.app
@@ -23,7 +24,7 @@ let mainWindow
 let plotWindow = {};
 let handbookWindow
 let selectDeviceWindow
-global.session = {'_date':dateFormat(Date.now(), 'yyyy_mm_dd'),'_file':''}
+global.session = {'_date':dateFormat(Date.now(), 'yyyy_mm_dd')}
 function createWindow () {
 
   // Create the browser window.
@@ -187,33 +188,32 @@ ipcMain.on('handbook',(event,arg) => {
 })
 
 ipcMain.on('save-file',(event,arg)=>{
-  fs.exists(session._file,function(exists){
-    if(!exists){
+    if(!logger.existsdb()){
     diag=dialog.showSaveDialog({ defaultPath : home+'/.datalogger/sessions/'+session._name+"_"+session._date,title: 'Experiment file save location'});
-    session._file = diag+'.json';
-    handler.save(session,config.product);
+    logger.createdb(diag);
+    logger.initdb(session._name,session._date,config.product.model,config.product.manufacturercode);
     }
-  });
 })
 
 ipcMain.on('start',(event,arg) => {
-
-//  mainWindow.webContents.send('started',{'return' : handler.save(session,config.product)});
+logger.start();
 
 })
 ipcMain.on('stop',(event,arg) => {
-  handler.stop();
+  logger.stop();
 })
 ipcMain.on('on',(event,arg) => {
   handler.on();
 })
 ipcMain.on('off',(event,arg) => {
   handler.off();
-  session._file='';
+  logger.close();
 })
 
 ipcMain.on('update',(event,arg)=>{
-
+  if(logger.isrunning()){
+    logger.write(arg.scope);
+  }
   for(name in plotWindow){
     plotWindow[name].webContents.send('update',{'val':arg.scope[name].value})
   }

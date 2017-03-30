@@ -5,7 +5,7 @@ const math = require('mathjs');
 const mathjaxHelper = require('mathjax-electron');
 const easytimer = require('easytimer');
 const codemirror = require('codemirror');
-
+const db = require('./logger').existsdb();
 /* End NodeJS Requires */
 
 /* Electron requires */
@@ -338,7 +338,7 @@ function on(){
       session._name = text;
       $('#session').text(text);
       $('#date').text(' - ' + session._date);
-      if(session._file!='' && $("[name='start-stop']").prop("disabled")){
+      if(!db() && $("[name='start-stop']").prop("disabled")){
         $("[name='start-stop']").bootstrapSwitch('toggleDisabled');
       }
     }
