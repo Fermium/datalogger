@@ -67,6 +67,9 @@
   },
   "build": {
     "appId": "org.fermiumlabs.datalogger",
+    "asarUnpack" : [
+      "./app/devices/**/**"
+    ],
     "mac": {
       "category": "public.app-category.utilities"
     },
