@@ -18,3 +18,7 @@ pipeline:
     icon_url: https://github.com/drone/brand/raw/master/logos/png/drone-logo_512.png
     when:
      status: [ failure, success ]
+
+# Build only on workers that have usb on docker enabled
+labels:
+  USB: false
