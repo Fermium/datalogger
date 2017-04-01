@@ -2,10 +2,6 @@ pipeline:
 
   build:
     image: electronuserland/electron-builder:wine
-    # see https://github.com/docker/docker/issues/19763 to why we use --volumes and not --device
-    volumes:
-      - "/dev/bus/usb:/dev/bus/usb"
-    privileged: true
     commands:
       - export DEBIAN_FRONTEND=noninteractive
       - npm install 
