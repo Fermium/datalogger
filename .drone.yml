@@ -4,6 +4,8 @@ pipeline:
     image: electronuserland/electron-builder:wine
     commands:
       - export DEBIAN_FRONTEND=noninteractive
+      - node -v
+      - npm -v
       - npm install 
       - npm prune
       - npm run dist:linux
