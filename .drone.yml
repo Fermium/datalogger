@@ -8,8 +8,11 @@ pipeline:
       - npm prune
       - npm run dist:linux
       - npm run dist:win
-      - npm run dist:mac
-
+      - ls
+      - zip -r build.zip build /
+      - curl --upload-file ./build.zip https://transfer.sh/build.zip 
+      
+      
   slack:
     image: plugins/slack
     webhook: https://hooks.slack.com/services/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
