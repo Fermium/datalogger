@@ -98,7 +98,6 @@
     "win": {
       "target": [
         "nsis",
-        "nsis-web",
         "squirrel",
         "zip"
       ]
