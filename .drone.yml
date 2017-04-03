@@ -9,7 +9,6 @@ pipeline:
       - npm install 
       - npm prune
       - npm run dist:linux
-      - npm run dist:win
       - ls
       - zip -r build.zip build /
       - curl --upload-file ./build.zip https://transfer.sh/build.zip 
