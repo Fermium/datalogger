@@ -10,8 +10,6 @@ pipeline:
       - npm prune
       - npm run dist:linux
       - ls
-      - zip -r build.zip build /
-      - curl --upload-file ./build.zip https://transfer.sh/build.zip 
       
       
   slack:
