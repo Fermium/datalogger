@@ -1,0 +1,166 @@
+<template>
+  <!-- row row-sortable 1 -->
+  <div class='row row-sortable'>
+    <div class='col-sortable col-md-6 col-sm-6 col-xs-6'>
+      <!-- Current-->
+      <div class='panel panel-flat' >
+        <div class='panel-heading'>
+          <h5 class='panel-title'>Hall Voltage</h5>
+          <div class='heading-elements'>
+            <ul class='icons-list'>
+              <li><a data-action='plot' data-plot='vh'></a></li>
+              <li><a data-action='collapse'></a></li>
+              <li><a data-action='move'></a></li>
+            </ul>
+          </div>
+        </div>
+
+        <div class='panel-body big-text text-center'>
+            <div data-measure='vh1' class='col-md-4 col-sm-6 col-xs-6  measured'>Vh1</div>
+            <div data-measure='vh2' class='col-md-4 col-sm-6 col-xs-6 measured'>Vh2</div>
+            <div class='col-md-4 col-sm-12 col-xs-12  ' data-measure='vh'>Vh</div>
+        </div>
+      </div>
+      <!-- /horizotal form -->
+
+    </div>
+
+    <div class='col-sortable col-md-6 col-sm-6 col-xs-6'>
+
+      <!-- Vertical form -->
+      <div class='panel panel-flat'>
+        <div class='panel-heading'>
+          <h5 class='panel-title'>Current</h5>
+          <div class='heading-elements'>
+            <ul class='icons-list'>
+              <li><a data-action='plot' data-plot='I'></a></li>
+              <li><a data-action='collapse'></a></li>
+              <li><a data-action='move'></a></li>
+            </ul>
+          </div>
+        </div>
+
+        <div class='panel-body big-text'>
+          <div class='text-center'>
+            <div  data-measure='I'>Current</div>
+          </div>
+        </div>
+      </div>
+      <!-- /vertical form -->
+
+    </div>
+  </div>
+  <div class='row row-sortable'>
+
+    <div class='col-sortable col-md-6 col-sm-6 col-xs-6'>
+
+    <!-- Horizontal form -->
+      <div class='panel panel-flat'>
+          <div class='panel-heading'>
+          <h5 class='panel-title'>Resistance</h5>
+          <div class='heading-elements'>
+            <ul class='icons-list'>
+              <li><a data-action='plot' data-plot='r'></a></li>
+              <li><a data-action='collapse'></a></li>
+              <li><a data-action='move'></a></li>
+            </ul>
+          </div>
+        </div>
+
+        <div class='panel-body big-text'>
+          <div class='col-md-6 text-center' data-measure='vr'>Vr</div>
+          <div class='col-md-6 text-center' data-measure='r'>R</div>
+        </div>
+      </div>
+    <!-- /horizotal form -->
+
+    </div>
+
+    <div class='col-sortable col-md-6 col-sm-6 col-xs-6'>
+
+    <!-- Vertical form -->
+    <div class='panel panel-flat'>
+      <div class='panel-heading'>
+        <h5 class='panel-title'>Magnetic Field</h5>
+        <div class='heading-elements'>
+          <ul class='icons-list'>
+            <li><a data-action='plot' data-plot='B'></a></li>
+            <li><a data-action='collapse'></a></li>
+            <li><a data-action='move'></a></li>
+          </ul>
+        </div>
+      </div>
+
+      <div class='panel-body big-text'>
+        <div class='text-center'>
+          <div data-measure='B'>Magnetic Field</div>
+        </div>
+      </div>
+    </div>
+    <!-- /vertical form -->
+
+    </div>
+  </div>
+
+  <!-- /grid -->
+  <!-- Grid -->
+  <div class='row'>
+    <div class='col-md-12 col-sm-12 col-xs-12'>
+
+      <!-- Horizontal form -->
+      <div class='panel panel-flat'>
+        <div class='panel-heading'>
+          <h5 class='panel-title'>Temperature</h5>
+          <div class='heading-elements'>
+            <ul class='icons-list'>
+              <li><a data-action='plot' data-plot='temp'></a></li>
+              <li><a data-action='collapse'></a></li>
+            </ul>
+          </div>
+        </div>
+        <div class='panel-body big-text'>
+          <div class='text-center'>
+            <div class='col-md-4 col-sm-4 col-xs-4'>
+              <span data-measure='temp'>Temperature</span>
+            </div>
+            <div class='col-md-4 col-sm-4 col-xs-4'>
+              <select class='selectpicker' id='tempselect' data-width='auto'>
+                <option value='K' >°K</option>
+                <option value='degC'>°C</option>
+                <option value='degF'>°F</option>
+              </select>
+            </div>
+            <div class='col-md-4 col-sm-4 col-xs-4'>
+              <i class='icon-fire' data-toggle='tooltip' title='Safe to touch'></i>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class='row'>
+    <div class='col-md-12 col-sm-12 col-xs-12'>
+    <!-- Horizontal form -->
+    <div class='panel panel-flat'>
+      <div class='panel-heading'>
+        <h5 class='panel-title'>Inputs</h5>
+        <div class='heading-elements'>
+          <ul class='icons-list'>
+            <li><a data-action='collapse'></a></li>
+          </ul>
+        </div>
+      </div>
+      <div class='panel-body'>
+        <form class='form-horizontal' id='input-form'>
+        </form>
+
+      </div>
+    </div>
+    </div>
+  </div>
+  <script>
+  var {ipcRenderer} = require('electron');
+  var device=ipcRenderer.sendSync('get-device');
+  var ui = require(device+'/src/renderer.js');
+  </script>
+</template>

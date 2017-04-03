@@ -1,0 +1,25 @@
+---
+# File di configurazione
+
+product:
+  manufacturer:
+  name:
+  model:
+manual:
+  # URL should be HTTPS
+  url:
+  #If a git repository is specified and available, the previous url will be ignored
+  git:
+    user:
+    repo:
+    tag:
+    filename:  #PDF is the only filetype supported
+config:
+  mathsheet: |
+  channels:
+      - name:
+        code:   #unique data-chan identifier
+        gain:   #default gain
+        gainvalues:  #mapped to a 0-N array
+        description:
+  calibration:
