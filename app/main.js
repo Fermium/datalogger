@@ -58,6 +58,7 @@ function createSelectDevice () {
 
   // and load the index.html of the app.
   selectDeviceWindow.loadURL(`file://${__dirname}/selectdevice.html`)
+  selectDeviceWindow.webContents.openDevTools()
 
 
   // Emitted when the window is closed.
