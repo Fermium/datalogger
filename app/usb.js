@@ -27,7 +27,7 @@ var scope = {
   'ch6'  : 0,
   'ch7'  : 0,
   'ch8'  : 0
-}
+};
 var debug;
 module.exports = {
   on : function(deb=false){
@@ -50,7 +50,7 @@ module.exports = {
     return on;
   },
   handler
-}
+};
 
 function read(){
   var measure;
@@ -59,7 +59,7 @@ function read(){
     if(datachan.datachan_device_enqueued_measures(usb.device)){
       measure =ref.deref(datachan.datachan_device_dequeue_measure(usb.device));
     }
-    scope['time']=measure.time*1000+measure.millis;
+    scope.time=measure.time*1000+measure.millis;
     for(i=0;i<measure.measureNum;i++){
               scope['ch'+measure.channels[i]]=measure.values[i];
             }
@@ -76,7 +76,7 @@ function read(){
         'ch6' : Math.floor(Math.random() * (-25 + 30 + 1)) + 25,
         'ch7' : Math.floor(Math.random() * (-30 + 35 + 1)) + 30,
         'ch8' : Math.floor(Math.random() * (-35 + 40 + 1)) + 35
-      }
+      };
   }
   handler.emit('measure', scope);
 }

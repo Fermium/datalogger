@@ -59,8 +59,8 @@ var highlighter = new Rickshaw.Graph.Behavior.Series.Highlight( {
 } );
 
 ipcRenderer.on('update',(event,data)=>{
-  dataplot = {}
-  dataplot['val']=data.val;
+  dataplot = {};
+  dataplot.val=data.val;
 	graph.series.addData(dataplot);
 	graph.update();
 });

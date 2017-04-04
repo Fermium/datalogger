@@ -1,38 +1,38 @@
-const electron = require('electron')
+const electron = require('electron');
 var {dialog} = require('electron');
 var usb = require('./usb');
 const math = require('mathjs');
 const dateFormat = require('dateformat'); //for date
 const _ = require('lodash');
 var fs = require('fs');
-var path = require('path')
-var http = require('https')
+var path = require('path');
+var http = require('https');
 var home = require('os').homedir();
 var logger = require('./logger');
 
 // Module to control application life.
-const app = electron.app
+const app = electron.app;
 // Module to create native browser window.
-const BrowserWindow = electron.BrowserWindow
-const {ipcMain} = require('electron')
-const PDFWindow = require('electron-pdf-window')
-const jsyaml = require('js-yaml')
+const BrowserWindow = electron.BrowserWindow;
+const {ipcMain} = require('electron');
+const PDFWindow = require('electron-pdf-window');
+const jsyaml = require('js-yaml');
 var config;
 // Keep a global reference of the window object, if you don't, the window will
 // be closed automatically when the JavaScript object is garbage collected.
-let mainWindow
+let mainWindow;
 let plotWindow = {};
-let handbookWindow
-let selectDeviceWindow
-global.session = {'_date':dateFormat(Date.now(), 'yyyy_mm_dd')}
+let handbookWindow;
+let selectDeviceWindow;
+global.session = {'_date':dateFormat(Date.now(), 'yyyy_mm_dd')};
 function createWindow () {
 
   // Create the browser window.
-  mainWindow = new BrowserWindow({width: 850, height: 950})
+  mainWindow = new BrowserWindow({width: 850, height: 950});
 
   // and load the index.html of the app.
-  mainWindow.loadURL(`file://${__dirname}/index.html`)
-  mainWindow.webContents.openDevTools()
+  mainWindow.loadURL(`file://${__dirname}/index.html`);
+  mainWindow.webContents.openDevTools();
 
 
   // Emitted when the window is closed.
@@ -47,18 +47,18 @@ function createWindow () {
     // Dereference the window object, usually you would store windows
     // in an array if your app supports multi windows, this is the time
     // when you should delete the corresponding element.
-    mainWindow = null
+    mainWindow = null;
   });
 }
 
 function createSelectDevice () {
 
   // Create the browser window.
-  selectDeviceWindow = new BrowserWindow({width: 850, height: 950})
+  selectDeviceWindow = new BrowserWindow({width: 850, height: 950});
 
   // and load the index.html of the app.
-  selectDeviceWindow.loadURL(`file://${__dirname}/selectdevice.html`)
-  selectDeviceWindow.webContents.openDevTools()
+  selectDeviceWindow.loadURL(`file://${__dirname}/selectdevice.html`);
+  selectDeviceWindow.webContents.openDevTools();
 
 
   // Emitted when the window is closed.
@@ -66,13 +66,13 @@ function createSelectDevice () {
     // Dereference the window object, usually you would store windows
     // in an array if your app supports multi windows, this is the time
     // when you should delete the corresponding element.
-    selectDeviceWindow = null
+    selectDeviceWindow = null;
   });
 
 }
 function createHandbookWindow(){
-  var manual = config.manual
-  handbookWindow = new PDFWindow({width: 800, height: 600})
+  var manual = config.manual;
+  handbookWindow = new PDFWindow({width: 800, height: 600});
   if(_.has(manual,'git')){
     var options = {
         host: 'api.github.com',
@@ -90,12 +90,12 @@ function createHandbookWindow(){
       var output='';
       res.setEncoding('utf8');
       res.on('data',function(chunk){
-        output+=chunk
+        output+=chunk;
       });
       res.on('end', function() {
               var obj = JSON.parse(output);
-              assets = obj.assets;
-              for(i in assets){
+              var assets = obj.assets;
+              for(var i in assets){
                 if(assets[i].name==manual.git.filename){
                   latest = assets[i].browser_download_url;
                   handbookWindow.loadURL(latest);
@@ -122,13 +122,13 @@ function createHandbookWindow(){
   // Emitted when the window is closed.
   handbookWindow.on('closed', function () {
 
-    handbookWindow = null
+    handbookWindow = null;
   });
 
 }
 function createPlotWindow (name) {
-  plotWindow[name]= new BrowserWindow({width:800, height:600,title:name})
-  plotWindow[name].loadURL(`file://${__dirname}/plot/index.html`)
+  plotWindow[name]= new BrowserWindow({width:800, height:600,title:name});
+  plotWindow[name].loadURL(`file://${__dirname}/plot/index.html`);
 
 
   // Emitted when the window is closed.
@@ -137,9 +137,9 @@ function createPlotWindow (name) {
     // in an array if your app supports multi windows, this is the time
     // when you should delete the corresponding element.
 
-    plotWindow[name] = null
-    delete plotWindow[name]
-  })
+    plotWindow[name] = null;
+    delete plotWindow[name];
+  });
 }
 
 // This method will be called when Electron has finished
@@ -159,34 +159,34 @@ app.on('window-all-closed', function () {
     /*if(usb.isrunning()){
 
     }*/
-    app.quit()
+    app.quit();
   }
-})
+});
 
 app.on('activate', function () {
   // On OS X it's common to re-create a window in the app when the
   // dock icon is clicked and there are no other windows open.
   if (mainWindow === null) {
-    createWindow()
+    createWindow();
   }
-})
+});
 app.on('web-contents-created',function(ev,wc){
   wc.on('will-navigate',ev=>{
     ev.preventDefault();
-  })
-})
+  });
+});
 // In this file you can include the rest of your app's specific main process
 // code. You can also put them in separate files and require them here.
 ipcMain.on('plot',(event,arg) => {
   createPlotWindow(arg.name);
-})
+});
 ipcMain.on('handbook',(event,arg) => {
   createHandbookWindow();
   handbookWindow.webContents.on('will-navigate',ev=>{
     ev.preventDefault();
     handbookWindow.webContents.stop();
-  })
-})
+  });
+});
 
 ipcMain.on('save-file',(event,arg)=>{
     if(!logger.existsdb()){
@@ -194,23 +194,23 @@ ipcMain.on('save-file',(event,arg)=>{
     logger.createdb(diag);
     logger.initdb(session._name,session._date,config.product.model,config.product.manufacturercode);
     }
-})
+});
 
 ipcMain.on('start',(event,arg) => {
 logger.start();
 mainWindow.webContents.send('started',  {'return':logger.isrunning()});
-})
+});
 
 ipcMain.on('stop',(event,arg) => {
   logger.stop();
-})
+});
 ipcMain.on('on',(event,arg) => {
   usb.on();
-})
+});
 ipcMain.on('off',(event,arg) => {
   usb.off();
   logger.close();
-})
+});
 
 usb.handler.on('measure',(arg)=>{
   if(logger.isrunning()){
@@ -218,24 +218,24 @@ usb.handler.on('measure',(arg)=>{
   }
   mainWindow.webContents.send('measure',  {'scope':arg});
 
-})
+});
 ipcMain.on('update',(event,arg)=>{
-  for(name in plotWindow){
-    plotWindow[name].webContents.send('update',{'val':arg.scope[name].value})
+  for(var name in plotWindow){
+    plotWindow[name].webContents.send('update',{'val':arg.scope[name].value});
   }
 
-})
+});
 ipcMain.on('isrunning',(event,arg)=>{
   event.returnValue = usb.isrunning();
-})
+});
 ipcMain.on('ready',(event,arg)=>{
   event.returnValue={'config':config.config,'product':config.product};
-})
+});
 ipcMain.on('get-device',(event,arg)=>{
   event.returnValue='./devices/'+config.product.manufacturercode+'/'+config.product.model+'/';
-})
+});
 ipcMain.on('device-select',(event,arg)=>{
   config=jsyaml.safeLoad(fs.readFileSync(arg.device+'config.yaml'));
-  session['_name']=config.product.model
+  session._name=config.product.model;
   createWindow();
-})
+});

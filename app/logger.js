@@ -9,11 +9,11 @@ module.exports={
       db = low(dbfile);
     }
     catch(e){
-      console.log(e)
+      console.log(e);
     }
   },
   existsdb : function(){
-    return dbfile!=''
+    return dbfile!=='';
   },
   initdb: function(name,date,model,manufacturer){
     db.defaults({ _data : [] , _session : '', _date : '',_model : '',_manufacturer : ''}).write();
@@ -40,4 +40,4 @@ module.exports={
   isrunning: function(){
     return running;
   }
-}
+};

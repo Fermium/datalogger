@@ -4,7 +4,7 @@ const EventEmitter = require('events');
 var handler = new EventEmitter();
 $('[data-measure]').each(function(i){
   blocks.push($(this).data('measure'));
-})
+});
 
 module.exports = {
   blocks,
@@ -44,4 +44,4 @@ module.exports = {
       },1000));
     });
   }
-}
+};
