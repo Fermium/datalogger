@@ -27,7 +27,7 @@ var scope = {
   'ch6'  : 0,
   'ch7'  : 0,
   'ch8'  : 0
-}
+};
 var debug;
 module.exports = {
   on : function(deb=false){
@@ -35,8 +35,10 @@ module.exports = {
     on = true;
     debug=deb;
     usb=datachan.datachan_device_acquire();
-    datachan.datachan_device_enable(usb.device);
-    thread=setInterval(read,100);
+    if(usb.result === dc_search_results.success){
+      datachan.datachan_device_enable(usb.device);
+      thread=setInterval(read,100);
+    }
   },
   off : function(){
     datachan.datachan_device_disable(usb.device);
@@ -50,20 +52,20 @@ module.exports = {
     return on;
   },
   handler
-}
+};
 
 function read(){
   var measure;
+  var mes;
   if(datachan.datachan_device_is_enabled(usb.device)){
-
     if(datachan.datachan_device_enqueued_measures(usb.device)){
-      measure =ref.deref(datachan.datachan_device_dequeue_measure(usb.device));
+      mes = datachan.datachan_device_dequeue_measure(usb.device);
+      measure =ref.deref(mes);
+      scope.time=measure.time*1000+measure.millis;
+      for(i=0;i<measure.measureNum;i++){
+        scope['ch'+measure.channels[i]]=measure.values[i];
+      }
     }
-    scope['time']=measure.time*1000+measure.millis;
-    for(i=0;i<measure.measureNum;i++){
-              scope['ch'+measure.channels[i]]=measure.values[i];
-            }
-
   }
   else if(debug){
       scope= {
@@ -76,7 +78,7 @@ function read(){
         'ch6' : Math.floor(Math.random() * (-25 + 30 + 1)) + 25,
         'ch7' : Math.floor(Math.random() * (-30 + 35 + 1)) + 30,
         'ch8' : Math.floor(Math.random() * (-35 + 40 + 1)) + 35
-      }
+      };
   }
   handler.emit('measure', scope);
 }

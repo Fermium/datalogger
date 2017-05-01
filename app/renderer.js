@@ -52,13 +52,13 @@ $(document).ready(function(){
       }
     }
   });
-})
+});
 
 /* Events */
 
 ipcRenderer.on('measure',function(event,args){
   _.extend(scope,args.scope);
-  console.log(scope)
+  console.log(scope);
   math.format(math.eval(mathsheet,scope),2);
   evaluate();
   ipcRenderer.send('update',{'scope':scope});
@@ -82,7 +82,7 @@ $('[data-action="save-file"]').click(function(){
     $("[name='start-stop']").bootstrapSwitch('toggleDisabled');
   }
 
-})
+});
 $('[data-action="plot"]').click(function(){
   var name=$(this).data('plot');
   ipcRenderer.send('plot',{'name':name});
@@ -112,11 +112,11 @@ $('[data-action="inputs"]').click(function(){
   modal.on('show.bs.modal',function(){
     for(i=0;i<channels.length;i++){
       $('#inputs-content').append($('<div/>').addClass('row').append(
-        '<div class="col-md-3 col-sm-3 col-xs-3">'
-        +channels[i].name+
-        '</div><div class="col-md-3 col-sm-3 col-xs-3">\
-        <select class="gain"></select></div><div class="col-md-6 col-sm-6 col-xs-6">'
-        +channels[i].description+
+        '<div class="col-md-3 col-sm-3 col-xs-3">'+
+        channels[i].name+
+        '</div><div class="col-md-3 col-sm-3 col-xs-3">'+
+        '<select class="gain"></select></div><div class="col-md-6 col-sm-6 col-xs-6">'+
+        channels[i].description+
         '</div>'));
     }
     $('.gain').each(function(i){
@@ -137,14 +137,14 @@ $('[data-action="inputs"]').click(function(){
 $('[data-action="editequation"]').click(function() {
   var editor;
   var modal=bootbox.dialog({
-    message : '\
-    <div class="row d-flex flex-column" style="position:relative">\
-      <div class="col-md-6 col-sm-6 col-xs-6">\
-        <textarea class="form-control"  id="equations"></textarea>\
-      </div>\
-      <ul id="latex" class="col-md-6 col-sm-6 col-xs-6" style="overflow:hidden; overflow-y:scroll;">\
-      </ul>\
-    </div>',
+    message : ''+
+    '<div class="row d-flex flex-column" style="position:relative">'+
+      '<div class="col-md-6 col-sm-6 col-xs-6">'+
+        '<textarea class="form-control"  id="equations"></textarea>'+
+      '</div>'+
+      '<ul id="latex" class="col-md-6 col-sm-6 col-xs-6" style="overflow:hidden; overflow-y:scroll;">'+
+      '</ul>'+
+    '</div>',
     title : 'Experiment equations',
     buttons : {
       danger : {
@@ -159,7 +159,7 @@ $('[data-action="editequation"]').click(function() {
         callback: function() {
           result = editor.getValue();
           var run = ipcRenderer.sendSync('isrunning');
-          if(result != null) mathsheet=result;
+          if(result !== null) mathsheet=result;
           if(run){
             math.eval(mathsheet,scope);
             evaluate();
@@ -178,19 +178,19 @@ $('[data-action="editequation"]').click(function() {
       lineNumbers: true,
       matchBrackets: true,
     });
-    eq = $('#equations')
+    eq = $('#equations');
     editor.setValue(mathsheet);
     mm = editor.getValue().split('\n');
     $('#latex').html('');
     $('#latex').css('maxHeight',editor.getWrapperElement().offsetHeight);
-    for(i in mm){
+    for(var i in mm){
       try{
         a  = math.parse(mm[i]).toTex();
       }
       catch(err){
 
       }
-      if(!(a===undefined)){
+      if(a!==undefined){
         $('#latex').append('<li class="list-group-item">$'+a+'$</li>');
       }
     }
@@ -204,7 +204,7 @@ $('[data-action="editequation"]').click(function() {
           a  = math.parse(mm[i]).toTex().trim();
           a = a=='undefined' ? '' : a;
           if($('#latex').find('li').eq(i).text().trim()!=a){
-            if(a!='' && a!=undefined){
+            if(a!=='' && a!==undefined){
               $('#latex').find('li').eq(i).text('$'+a+'$');
               mathjaxHelper.typesetMath($('#latex').find('li').eq(i).get(0));
             }
@@ -330,11 +330,11 @@ function on(){
     value : session._name,
     title: 'Input the experiment name or skip for default value',
     callback: function(result) {
-      if(result == null ){
+      if(result === null ){
         $("[name='on-off']").bootstrapSwitch('state',false);
         return;
       }
-      var text = result.trim() == '' ? session._name : result;
+      var text = result.trim() === '' ? session._name : result;
       session._name = text;
       $('#session').text(text);
       $('#date').text(' - ' + session._date);
@@ -358,7 +358,7 @@ function off(){
 
 function rec(){
   $.blockUI();
-  ipcRenderer.send('start')
+  ipcRenderer.send('start');
   ipcRenderer.on('started',function(event,args){
     if(!args.return){
       $("[name='start-stop']").bootstrapSwitch('state', false);
