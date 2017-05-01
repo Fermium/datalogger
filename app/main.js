@@ -94,7 +94,7 @@ function createHandbookWindow(){
       });
       res.on('end', function() {
               var obj = JSON.parse(output);
-              assets = obj.assets;
+              var assets = obj.assets;
               for(var i in assets){
                 if(assets[i].name==manual.git.filename){
                   latest = assets[i].browser_download_url;

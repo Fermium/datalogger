@@ -110,6 +110,7 @@ $('[data-action="inputs"]').click(function(){
     onEscape : true
   });
   modal.on('show.bs.modal',function(){
+    var i;
     for(i=0;i<channels.length;i++){
       $('#inputs-content').append($('<div/>').addClass('row').append(
         '<div class="col-md-3 col-sm-3 col-xs-3">'+
@@ -180,12 +181,15 @@ $('[data-action="editequation"]').click(function() {
     });
     eq = $('#equations');
     editor.setValue(mathsheet);
-    mm = editor.getValue().split('\n');
+    var mm = editor.getValue().split('\n');
     $('#latex').html('');
     $('#latex').css('maxHeight',editor.getWrapperElement().offsetHeight);
     for(var i in mm){
       try{
-        a  = math.parse(mm[i]).toTex();
+        var a  = math.parse(mm[i]).toTex();
+        if(a!==undefined){
+          $('#latex').append('<li class="list-group-item">$'+a+'$</li>');
+        }
       }
       catch(err){
 
@@ -196,9 +200,10 @@ $('[data-action="editequation"]').click(function() {
     }
     mathjaxHelper.typesetMath(document.getElementById('latex'));
     editor.on('change',function(cm,chs){
-      mm = editor.getValue().split('\n');
-      len = $('#latex').find('li').length;
-      i=0;
+      var mm = editor.getValue().split('\n');
+      var len = $('#latex').find('li').length;
+      var i=0;
+      var a;
       for(i;i < len ;i++){
         if(i<mm.length){
           a  = math.parse(mm[i]).toTex().trim();
