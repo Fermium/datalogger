@@ -138,9 +138,9 @@ $('[data-action="inputs"]').click(function(){
 $('[data-action="editequation"]').click(function() {
   var editor;
   var modal=bootbox.dialog({
-    message :
+    message : ''+
     '<div class="row d-flex flex-column" style="position:relative">'+
-    ' <div class="col-md-6 col-sm-6 col-xs-6">'+
+      '<div class="col-md-6 col-sm-6 col-xs-6">'+
         '<textarea class="form-control"  id="equations"></textarea>'+
       '</div>'+
       '<ul id="latex" class="col-md-6 col-sm-6 col-xs-6" style="overflow:hidden; overflow-y:scroll;">'+
@@ -179,7 +179,7 @@ $('[data-action="editequation"]').click(function() {
       lineNumbers: true,
       matchBrackets: true,
     });
-    var eq = $('#equations');
+    eq = $('#equations');
     editor.setValue(mathsheet);
     var mm = editor.getValue().split('\n');
     $('#latex').html('');
@@ -194,7 +194,9 @@ $('[data-action="editequation"]').click(function() {
       catch(err){
 
       }
-
+      if(a!==undefined){
+        $('#latex').append('<li class="list-group-item">$'+a+'$</li>');
+      }
     }
     mathjaxHelper.typesetMath(document.getElementById('latex'));
     editor.on('change',function(cm,chs){
