@@ -41,10 +41,6 @@ var yAxis = new Rickshaw.Graph.Axis.Y({
 });
 
 yAxis.render();
-var legend = new Rickshaw.Graph.Legend( {
-	graph: graph,
-	element: document.getElementById('legend')
-} );
 var shelving = new Rickshaw.Graph.Behavior.Series.Toggle( {
 	graph: graph,
 	legend: legend
@@ -60,6 +56,7 @@ var highlighter = new Rickshaw.Graph.Behavior.Series.Highlight( {
 
 ipcRenderer.on('update',(event,data)=>{
   dataplot = {};
+	console.log(data);
   dataplot.val=data.val;
 	graph.series.addData(dataplot);
 	graph.update();

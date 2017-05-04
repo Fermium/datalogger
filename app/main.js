@@ -32,7 +32,6 @@ function createWindow () {
 
   // and load the index.html of the app.
   mainWindow.loadURL(`file://${__dirname}/index.html`);
-  mainWindow.webContents.openDevTools();
 
 
   // Emitted when the window is closed.
@@ -58,7 +57,6 @@ function createSelectDevice () {
 
   // and load the index.html of the app.
   selectDeviceWindow.loadURL(`file://${__dirname}/selectdevice.html`);
-  selectDeviceWindow.webContents.openDevTools();
 
 
   // Emitted when the window is closed.
@@ -226,7 +224,14 @@ ipcMain.on('update',(event,arg)=>{
 
 });
 ipcMain.on('isrunning',(event,arg)=>{
-  event.returnValue = usb.isrunning();
+  event.returnValue = usb.ison();
+});
+ipcMain.on('send-to-hardware',(event,arg)=>{
+  console.log("input-change");
+  console.log(arg);
+  if(usb.ison()){
+    usb.send_command(arg)
+  }
 });
 ipcMain.on('ready',(event,arg)=>{
   event.returnValue={'config':config.config,'product':config.product};

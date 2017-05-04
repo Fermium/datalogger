@@ -19,14 +19,14 @@ manual:
     filename: "Hall_Handbook.pdf" #PDF is the only filetype supported
 config:
   mathsheet: |
-    vh1 = ch1 V
-    vh2 = ch2 V
+    vh1 = ch6 V
+    vh2 = ch7 V
     vh = vh1-vh1*k+vh2*k
-    temp = ch3 K
-    vr = ch4 V
-    I = ch5 A
+    temp = ch2 K
+    vr = ch1 V
+    I = ch3 A
     r = vr/(I/100)
-    B = ch6 T
+    B = ch5 T
   channels:
       - name: "ch1"
         code: 1  #unique data-chan identifier
@@ -50,10 +50,17 @@ config:
         max: 1
         step: 0.001
         default: 0.7
-      - name: "power"
+      - name: "set_heater_state"
         type: "slider"
         min: 0
         max: 1
+        step: 0.001
+        default: 0
+        sendtohardware : true
+      - name: "set_current_output"
+        type: "slider"
+        min: -2
+        max: 2
         step: 0.001
         default: 0
         sendtohardware : true

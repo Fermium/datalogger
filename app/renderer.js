@@ -264,7 +264,7 @@ function init(){
 
 function inputhandler(data){
   if(data.hardware){
-    ipcRenderer.send('send-to-hardware',{name:data.id,value:data.value});
+    ipcRenderer.send('send-to-hardware',{id:data.id,value:data.value});
   }
   else{
     scope[data.id]=data.value;
