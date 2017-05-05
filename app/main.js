@@ -203,7 +203,7 @@ ipcMain.on('stop',(event,arg) => {
   logger.stop();
 });
 ipcMain.on('on',(event,arg) => {
-  usb.on();
+  usb.on(true);
 });
 ipcMain.on('off',(event,arg) => {
   usb.off();
@@ -212,6 +212,7 @@ ipcMain.on('off',(event,arg) => {
 
 usb.handler.on('measure',(arg)=>{
   if(logger.isrunning()){
+    console.log(arg);
     logger.write(arg);
   }
   mainWindow.webContents.send('measure',  {'scope':arg});

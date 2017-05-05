@@ -1,6 +1,7 @@
 var low = require('lowdb'); //db .json
 var db;
 var dbfile= '';
+const _ = require('lodash');
 var running=false;
 module.exports={
   createdb: function(file){
@@ -23,7 +24,8 @@ module.exports={
     db.set('_manufacturer',manufacturer).write();
   },
   write: function(data){
-    db.get('_data').push(data).write();
+    dd = _.clone(data);
+    db.get('_data').push(dd).write();
   },
   close: function(){
     db=null;

@@ -2,6 +2,8 @@ var electron = require('./main.js');
 var datachan = require('data-chan').lib;
 var dc_search_results = require('data-chan').search_enum;
 var ref = require('ref');
+var arr = require('ref-array');
+var f_arr = arr('float');
 var struct = require('ref-struct');
 var measure_t = struct({
   'type' : ref.types.uint8,
@@ -37,7 +39,7 @@ module.exports = {
     usb=datachan.datachan_device_acquire();
     if(usb.result === dc_search_results.success){
       datachan.datachan_device_enable(usb.device);
-      thread=setInterval(read,500);
+      thread=setInterval(read,200);
     }
   },
   off : function(){
@@ -80,8 +82,8 @@ function read(){
       for(i=0;i<measure.measureNum;i++){
         scope['ch'+measure.channels[i]]=measure.values[i];
       }
+      datachan.datachan_clean_measure(mes);
     }
-    datachan.datachan_clean_measure(mes);
   }
   else if(debug){
       scope= {
