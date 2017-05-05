@@ -15,6 +15,7 @@ var graph = new Rickshaw.Graph( {
 	height: window.innerHeight - 20,
   renderer: 'line',
 	interpolation: 'step-after',
+  min: 'auto',
 	series: new Rickshaw.Series.FixedDuration(
 		[
 			{name : 'val'},
@@ -37,26 +38,13 @@ var xAxes = new Rickshaw.Graph.Axis.X( {
 
 xAxes.render();
 var yAxis = new Rickshaw.Graph.Axis.Y({
-    graph: graph
+    graph: graph,
 });
 
 yAxis.render();
-var shelving = new Rickshaw.Graph.Behavior.Series.Toggle( {
-	graph: graph,
-	legend: legend
-} );
-var order = new Rickshaw.Graph.Behavior.Series.Order( {
-	graph: graph,
-	legend: legend
-} );
-var highlighter = new Rickshaw.Graph.Behavior.Series.Highlight( {
-	graph: graph,
-	legend: legend
-} );
 
 ipcRenderer.on('update',(event,data)=>{
   dataplot = {};
-	console.log(data);
   dataplot.val=data.val;
 	graph.series.addData(dataplot);
 	graph.update();
