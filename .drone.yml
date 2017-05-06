@@ -6,7 +6,8 @@ pipeline:
       - export DEBIAN_FRONTEND=noninteractive
       - node -v
       - npm -v
-      - npm install 
+      - npm install
+      - npm run rebuild
       - npm prune
       - npm run dist:linux
       - ls
