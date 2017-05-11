@@ -19,14 +19,21 @@ manual:
     filename: "Hall_Handbook.pdf" #PDF is the only filetype supported
 config:
   mathsheet: |
-    vh1 = ch6 V
-    vh2 = ch7 V
-    vh = (1-k)*vh1+vh2*k
-    temp = (-0.383695902+ch2*25.215123839+ch2^2*(-0.279516961)+ch2^3*(0.072045800)+ch2^4*(-0.014094503)+ch2^5*(0.001055528)) K
-    vr = ch1 V
-    I = ch3*7/4  A
-    r = vr/(I/100)
-    B = ch5 T
+    Vh = ch7 V
+    # Voltage on the thermocouple
+    E_mv = (ch2/122.4)*1000
+    # Temperature from a termocouple voltage. See NIST tables and user manual
+    temp = (-0.383695902+E_mv*25.215123839+E_mv^2*(-0.279516961)+E_mv^3*(0.072045800)+E_mv^4*(-0.014094503)+E_mv^5*(0.001055528)) degC
+    # Vr is the voltage measured at the hall sensor ends, using a 4-wire (kelvin) resistance measurement method.
+    # The signal is amplified with a gain G=1/7
+    Vr = ch1*7 V
+    # The current is revealed on a precision 4 Ohm resistor. The voltage on this resistor is amplified with a gain G=1/7
+    I = (ch3 * 7 ) V / (4 ohm)
+    # resistance of the sample
+    R = abs( Vr / I )
+    # Magnetic field probe. The signal from a Hall sensor is amplified with a gain of about G=9.82
+    # The sensor output voltage is about 0.2V/Tesla
+    B = (ch5/9.821428571-0.0255) V / (0.2 V / T)
   channels:
       - name: "ch1"
         code: 1  #unique data-chan identifier
@@ -44,12 +51,7 @@ config:
       #  step: i think this is quite clear
       #  default: default value for the input
       #  hardware : boolean, if true the value must be sent to the device
-      - name: "k"
-        type: "slider"
-        min: 0
-        max: 1
-        step: 0.001
-        default: 0.7
+
       - name: "set_heater_state"
         type: "slider"
         min: 0
@@ -59,8 +61,8 @@ config:
         sendtohardware : true
       - name: "set_current_output"
         type: "slider"
-        min: -2
-        max: 2
+        min: -0.5
+        max: 0.5
         step: 0.001
         default: 0
         sendtohardware : true

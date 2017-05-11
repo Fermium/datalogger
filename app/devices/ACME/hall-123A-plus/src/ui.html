@@ -8,7 +8,7 @@
           <h5 class='panel-title'>Hall Voltage</h5>
           <div class='heading-elements'>
             <ul class='icons-list'>
-              <li><a data-action='plot' data-plot='vh'></a></li>
+              <li><a data-action='plot' data-plot='Vh'></a></li>
               <li><a data-action='collapse'></a></li>
               <li><a data-action='move'></a></li>
             </ul>
@@ -16,9 +16,7 @@
         </div>
 
         <div class='panel-body big-text text-center'>
-            <div data-measure='vh1' class='col-md-4 col-sm-6 col-xs-6  measured'>Vh1</div>
-            <div data-measure='vh2' class='col-md-4 col-sm-6 col-xs-6 measured'>Vh2</div>
-            <div class='col-md-4 col-sm-12 col-xs-12  ' data-measure='vh'>Vh</div>
+            <div class='col-md-4 col-sm-12 col-xs-12  ' data-measure='{"val":"Vh","format":"auto","sig":5}'>Vh</div>
         </div>
       </div>
       <!-- /horizotal form -->
@@ -42,7 +40,7 @@
 
         <div class='panel-body big-text'>
           <div class='text-center'>
-            <div  data-measure='I'>Current</div>
+            <div  data-measure='{"val":"I","format":"auto","sig":5}'>Current</div>
           </div>
         </div>
       </div>
@@ -60,7 +58,7 @@
           <h5 class='panel-title'>Resistance</h5>
           <div class='heading-elements'>
             <ul class='icons-list'>
-              <li><a data-action='plot' data-plot='r'></a></li>
+              <li><a data-action='plot' data-plot='R'></a></li>
               <li><a data-action='collapse'></a></li>
               <li><a data-action='move'></a></li>
             </ul>
@@ -68,8 +66,8 @@
         </div>
 
         <div class='panel-body big-text'>
-          <div class='col-md-6 text-center' data-measure='vr'>Vr</div>
-          <div class='col-md-6 text-center' data-measure='r'>R</div>
+          <div class='col-md-6 text-center' data-measure='{"val":"Vr","format":"auto","sig":5}'>Vr</div>
+          <div class='col-md-6 text-center' data-measure='{"val":"R","format":"auto","sig":5}'>R</div>
         </div>
       </div>
     <!-- /horizotal form -->
@@ -93,7 +91,7 @@
 
       <div class='panel-body big-text'>
         <div class='text-center'>
-          <div data-measure='B'>Magnetic Field</div>
+          <div data-measure='{"val":"B","format":"auto","sig":5}'>Magnetic Field</div>
         </div>
       </div>
     </div>
@@ -121,7 +119,7 @@
         <div class='panel-body big-text'>
           <div class='text-center'>
             <div class='col-md-4 col-sm-4 col-xs-4'>
-              <span data-measure='temp'>Temperature</span>
+              <span data-measure='{ "val":"temp","format":"fixed","sig":1}'>Temperature</span>
             </div>
             <div class='col-md-4 col-sm-4 col-xs-4'>
               <select class='selectpicker' id='tempselect' data-width='auto'>
@@ -158,7 +156,7 @@
     </div>
     </div>
   </div>
-  
+
   <script>
   var {ipcRenderer} = require('electron');
   var device=ipcRenderer.sendSync('get-device');

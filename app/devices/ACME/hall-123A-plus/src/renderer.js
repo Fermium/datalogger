@@ -3,6 +3,7 @@ var blocks = [];
 const EventEmitter = require('events');
 var handler = new EventEmitter();
 $('[data-measure]').each(function(i){
+  console.log($(this).data('measure'));
   blocks.push($(this).data('measure'));
 });
 
@@ -41,6 +42,7 @@ module.exports = {
           'data-hardware' : input.sendtohardware
         }));
       }
+
       else {
         $('#'+input.name+" .input").append($('<input/>').attr({
           'id' : 'input-'+input.name,
@@ -83,5 +85,6 @@ module.exports = {
           handler.emit('input-change',{id:$(this).attr('name'),value:$(this).val(),hardware:$(this).data('hardware')});
       },1000));
     });
+
   }
 };

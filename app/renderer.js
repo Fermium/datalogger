@@ -288,12 +288,14 @@ function updateTex(){
 }
 function evaluate() {
   for (var block in ui.blocks) {
+    var bb = ui.blocks[block];
+    console.log(bb);
     try {
-      $('[data-measure=' + ui.blocks[block]+']').text(math.format(scope[ui.blocks[block]],{precision:5}));
+      $('[data-measure*='+ bb.val+']').text(math.format(scope[bb.val],{notation:bb.format,precision:bb.sig}));
     } catch (err) {
       console.log(err);
       if (err.toString().indexOf('Undefined symbol') != -1) {
-        $('[data-measure=' + ui.blocks[block]+']').text('Reading...');
+        $('[data-measure=' + bb.val+']').text('Reading...');
       } else {
         console.log(err.toString());
       }
@@ -304,14 +306,14 @@ function evaluate() {
 /* Popovers */
 function initpopover(block){
   {
-    $('[data-measure="'+block+'"]').popover({
+    $('[data-measure="'+block.val+'"]').popover({
       trigger: 'hover',
       title: 'Formula',
       html: true,
       placement: 'bottom',
-      content: '<div id="' + block + '_formula">$$' + tex[block] + '$$</div>'
+      content: '<div id="' + block + '_formula">$$' + tex[block.val] + '$$</div>'
     }).on('shown.bs.popover', function() {
-      mathjaxHelper.typesetMath(document.getElementById(block + '_formula'));
+      mathjaxHelper.typesetMath(document.getElementById(block.val + '_formula'));
     });
   }
 }

@@ -46,7 +46,7 @@ module.exports = {
     datachan.datachan_device_disable(usb.device);
     clearInterval(thread);
     on = false;
-    datachan.datachan_send_async_command(usb.device,4,new Buffer(),buf.length);
+    datachan.datachan_send_async_command(usb.device,4,new Buffer(1),1);
     datachan.datachan_device_release(usb.device);
     datachan.datachan_shutdown();
 
