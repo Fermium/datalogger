@@ -60,6 +60,7 @@ ipcRenderer.on('measure',function(event,args){
   _.extend(scope,args.scope);
   math.format(math.eval(mathsheet,scope),2);
   evaluate();
+  check_temp();
   ipcRenderer.send('update',{'scope':scope});
 });
 
@@ -103,6 +104,10 @@ $('[data-action="inputs"]').click(function(){
         label:'Confirm',
         className: 'btn-primary',
         callback: function() {
+          $('select.gain').each(function(i){
+            channels[i].gain = $(this).val();
+            ipcRenderer.send('send-to-hardware',{id:'set_gain',channel: channels[i].code,value:channels[i].gain});
+          });
         }
       }
     },
@@ -123,7 +128,7 @@ $('[data-action="inputs"]').click(function(){
     $('.gain').each(function(i){
       $(this).selectBoxIt({
         autoWidth: false,
-        copyClasses : "container"
+        copyClasses : "container",
       });
       channels[i].gainvalues.forEach((el)=>{
         $(this).data("selectBox-selectBoxIt").add({value: el,text : 'x'+el});
@@ -172,6 +177,7 @@ $('[data-action="editequation"]').click(function() {
 
           }
           updateTex();
+          ui.blocks.forEach(updatePopover);
         }
       }
     },
@@ -191,7 +197,6 @@ $('[data-action="editequation"]').click(function() {
     $('#latex').html('');
     $('#latex').css('maxHeight',editor.getWrapperElement().offsetHeight);
     for(var i in mm){
-      console.log(i)
       try{
         var a  = math.parse(mm[i]).toTex();
         if(a!==undefined){
@@ -228,7 +233,6 @@ $('[data-action="editequation"]').click(function() {
       }
       for(i;i<mm.length;i++){
         a  = math.parse(mm[i]).toTex().trim();
-        console.log(a)
         a = a=='undefined' ? '' : '$'+a+'$';
         if(a!='$$'){
           $('#latex').append('<li class="list-group-item">'+a+'</li>');
@@ -257,7 +261,7 @@ function init(){
       ipcRenderer.send('send-to-hardware',{name:input.name,value:input.default});
     }
   });
-  ui.init(inputs,scope);
+  ui.init(inputs);
   ui.handler.on('input-change',inputhandler);
   updateTex();
   ui.blocks.forEach(initpopover);
@@ -289,7 +293,6 @@ function updateTex(){
 function evaluate() {
   for (var block in ui.blocks) {
     var bb = ui.blocks[block];
-    console.log(bb);
     try {
       $('[data-measure*='+ bb.val+']').text(math.format(scope[bb.val],{notation:bb.format,precision:bb.sig}));
     } catch (err) {
@@ -306,12 +309,12 @@ function evaluate() {
 /* Popovers */
 function initpopover(block){
   {
-    $('[data-measure="'+block.val+'"]').popover({
+    $('[data-measure*="'+block.val+'"]').popover({
       trigger: 'hover',
       title: 'Formula',
       html: true,
       placement: 'bottom',
-      content: '<div id="' + block + '_formula">$$' + tex[block.val] + '$$</div>'
+      content: '<div id="' + block.val + '_formula">$$' + tex[block.val] + '$$</div>'
     }).on('shown.bs.popover', function() {
       mathjaxHelper.typesetMath(document.getElementById(block.val + '_formula'));
     });
@@ -321,12 +324,9 @@ function initpopover(block){
 
 function updatePopover(block){
   running = ipcRenderer.sendSync('isrunning');
-  if(running && tex.hasOwnProperty(block)){
-    var popover=$('#'+block).data('bs.popover');
-    $('#'+block).attr('data-content','$$' + tex[block].trim() + '$$');
-    popover.setContent();
-    popover.$tip.addClass(popover.options.placement);
-  }
+  var popover=$('[data-measure*="'+block.val+'"]').attr('data-content','$$' + tex[block.val].trim() + '$$').data('bs.popover');
+  popover.setContent();
+  popover.$tip.addClass(popover.options.placement);
 }
 /********************/
 
@@ -350,7 +350,6 @@ function on(){
       session._name = text;
       $('#session').text(text);
       $('#date').text(' - ' + session._date);
-      console.log(db.existsdb());
       if(db.existsdb() && $("[name='start-stop']").prop("disabled")){
         $("[name='start-stop']").bootstrapSwitch('toggleDisabled');
       }
@@ -367,6 +366,7 @@ function off(){
   $("[name='start-stop']").bootstrapSwitch('disabled',true);
   $('#experiment').text('');
   $('#date').text('');
+  ui.init();
 }
 
 function rec(){
@@ -407,6 +407,15 @@ function pause(){
     animate_speed: 'fast'
   });
 }
-
+function check_temp(){
+  if(math.eval('abs(temp)>=65 degC',scope)){
+    $('.icon-fire').addClass('hot');
+    $('.icon-fire').attr({'title': 'Not safe to touch'})
+  }
+  else{
+    $('.icon-fire').removeClass('hot');
+    $('.icon-fire').attr({'title': 'Safe to touch'})
+  }
+}
 
 /*****************************/

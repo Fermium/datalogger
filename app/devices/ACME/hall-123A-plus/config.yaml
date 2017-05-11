@@ -22,8 +22,9 @@ config:
     Vh = ch7 V
     # Voltage on the thermocouple
     E_mv = (ch2/122.4)*1000
+    coeff = [-0.383695902,25.215123839,-0.279516961,0.072045800,-0.014094503,0.001055528]
     # Temperature from a termocouple voltage. See NIST tables and user manual
-    temp = (-0.383695902+E_mv*25.215123839+E_mv^2*(-0.279516961)+E_mv^3*(0.072045800)+E_mv^4*(-0.014094503)+E_mv^5*(0.001055528)) degC
+    temp =  coeff*(E_mv.^range(0,5))degC
     # Vr is the voltage measured at the hall sensor ends, using a 4-wire (kelvin) resistance measurement method.
     # The signal is amplified with a gain G=1/7
     Vr = ch1*7 V
@@ -33,14 +34,38 @@ config:
     R = abs( Vr / I )
     # Magnetic field probe. The signal from a Hall sensor is amplified with a gain of about G=9.82
     # The sensor output voltage is about 0.2V/Tesla
-    B = (ch5/9.821428571-0.0255) V / (0.2 V / T)
+    B = ((ch5-0.2475)/9.821428571) V / (0.2 V / T)
   channels:
       - name: "ch1"
-        code: 1  #unique data-chan identifier
-        gain: 1  #default gain
-        gainvalues: [0.5, 1, 2, 5, 10, 20, 50, 100] #mapped to a 0-N array
+        code: 0  #unique data-chan identifier
+        gain: 6  #default gain
+        gainvalues: [1, 2, 3, 4, 5, 6] #mapped to a 0-N array
         description: "Voltage output of the first channel"
-  calibration:
+      - name: "ch2"
+        code: 1  #unique data-chan identifier
+        gain: 6  #default gain
+        gainvalues: [1, 2, 3, 4, 5, 6] #mapped to a 0-N array
+        description: "Voltage output of the first channel"
+      - name: "ch3"
+        code: 2  #unique data-chan identifier
+        gain: 6  #default gain
+        gainvalues: [1, 2, 3, 4, 5, 6] #mapped to a 0-N array
+        description: "Voltage output of the first channel"
+      - name: "ch5"
+        code: 4  #unique data-chan identifier
+        gain: 6  #default gain
+        gainvalues: [1, 2, 3, 4, 5, 6] #mapped to a 0-N array
+        description: "Voltage output of the first channel"
+      - name: "ch6"
+        code: 5  #unique data-chan identifier
+        gain: 6  #default gain
+        gainvalues: [1, 2, 3, 4, 5, 6] #mapped to a 0-N array
+        description: "Voltage output of the first channel"
+      - name: "ch7"
+        code: 6  #unique data-chan identifier
+        gain: 6  #default gain
+        gainvalues: [1, 2, 3, 4, 5, 6] #mapped to a 0-N array
+        description: "Voltage output of the first channel"
 
   inputs :
       #- name: the name of the input

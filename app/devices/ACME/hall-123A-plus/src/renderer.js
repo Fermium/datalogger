@@ -3,16 +3,19 @@ var blocks = [];
 const EventEmitter = require('events');
 var handler = new EventEmitter();
 $('[data-measure]').each(function(i){
-  console.log($(this).data('measure'));
   blocks.push($(this).data('measure'));
 });
 
 module.exports = {
   blocks,
   handler,
-  init : function(inputs){
+  inputs : [],
+  init : function(n_inputs=this.inputs){
+    _.merge(this.inputs,n_inputs);
     var form = $('#input-form');
-    inputs.forEach(function(input){
+    form.empty();
+
+    this.inputs.forEach(function(input){
       form.append($('<div/>').addClass('form-group').attr('id',input.name));
       $('#'+input.name).append($('<label/>').attr({
         'for' : 'input-'+input.name,

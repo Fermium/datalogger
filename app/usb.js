@@ -66,6 +66,10 @@ module.exports = {
           var buf = new Buffer([parseInt(command.value*255)]);
           datachan.datachan_send_async_command(usb.device,2,buf,buf.length);
         break;
+        case "set_gain" :
+          var buf = new Buffer([parseInt(command.channel),parseInt(command.value)]);
+          datachan.datachan_send_async_command(usb.device,3,buf,buf.length);
+        break;
       }
     }
   },

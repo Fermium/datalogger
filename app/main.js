@@ -227,8 +227,6 @@ ipcMain.on('isrunning',(event,arg)=>{
   event.returnValue = usb.ison();
 });
 ipcMain.on('send-to-hardware',(event,arg)=>{
-  console.log("input-change");
-  console.log(arg);
   if(usb.ison()){
     usb.send_command(arg)
   }

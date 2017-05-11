@@ -1,3 +1,18 @@
+@-webkit-keyframes fadeIn { from { opacity:0; } to { opacity:1; } }
+@-moz-keyframes fadeIn { from { opacity:0; } to { opacity:1; } }
+@keyframes fadeIn { from { opacity:0; } to { opacity:1; } }
+
+.hot {
+  color : rgb(255,14,14) !important;
+  animation-duration: 1000ms;
+  animation-name: fadeIn;
+  animation-iteration-count: infinite;
+  animation-direction: alternate;
+  -webkit-animation:fadeIn 1000ms infinite; /* Safari and Chrome */
+}
+
+
+
 .switch-field {
   font-family: "Lucida Grande", Tahoma, Verdana, sans-serif;
 	overflow: hidden;
