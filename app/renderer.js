@@ -5,7 +5,7 @@ const math = require('mathjs');
 const mathjaxHelper = require('mathjax-electron');
 const easytimer = require('easytimer');
 const codemirror = require('codemirror');
-const db = require('./logger').existsdb;
+const db = require('./logger');
 /* End NodeJS Requires */
 
 /* Electron requires */
@@ -58,7 +58,6 @@ $(document).ready(function(){
 
 ipcRenderer.on('measure',function(event,args){
   _.extend(scope,args.scope);
-  console.log(scope);
   math.format(math.eval(mathsheet,scope),2);
   evaluate();
   ipcRenderer.send('update',{'scope':scope});
@@ -77,7 +76,8 @@ $('[data-action="handbook"]').click(function() {
 });
 
 $('[data-action="save-file"]').click(function(){
-  ipcRenderer.send('save-file');
+  var diag=dialog.showSaveDialog({ defaultPath : require('os').homedir()+'/.datalogger/sessions/'+session._name+"_"+session._date,title: 'Experiment file save location'});
+  ipcRenderer.send('save-file',{path : diag});
   if($("[name='start-stop']").prop("disabled") && $("[name='on-off']").bootstrapSwitch('state')){
     $("[name='start-stop']").bootstrapSwitch('toggleDisabled');
   }
@@ -160,10 +160,16 @@ $('[data-action="editequation"]').click(function() {
         callback: function() {
           result = editor.getValue();
           var run = ipcRenderer.sendSync('isrunning');
-          if(result !== null) mathsheet=result;
           if(run){
-            math.eval(mathsheet,scope);
-            evaluate();
+            try{
+              if(result !== null) mathsheet=result;
+              math.eval(mathsheet,scope);
+              evaluate();
+            }
+            catch(err){
+              dialog.showMessageBox({type: 'error',title: 'Error in math', message : err.toString()})
+            }
+
           }
           updateTex();
         }
@@ -185,6 +191,7 @@ $('[data-action="editequation"]').click(function() {
     $('#latex').html('');
     $('#latex').css('maxHeight',editor.getWrapperElement().offsetHeight);
     for(var i in mm){
+      console.log(i)
       try{
         var a  = math.parse(mm[i]).toTex();
         if(a!==undefined){
@@ -192,10 +199,7 @@ $('[data-action="editequation"]').click(function() {
         }
       }
       catch(err){
-
-      }
-      if(a!==undefined){
-        $('#latex').append('<li class="list-group-item">$'+a+'$</li>');
+        dialog.showMessageBox({type: 'error',title: 'Error in math', message : err.toString()})
       }
     }
     mathjaxHelper.typesetMath(document.getElementById('latex'));
@@ -206,24 +210,25 @@ $('[data-action="editequation"]').click(function() {
       var a;
       for(i;i < len ;i++){
         if(i<mm.length){
-          a  = math.parse(mm[i]).toTex().trim();
-          a = a=='undefined' ? '' : a;
-          if($('#latex').find('li').eq(i).text().trim()!=a){
-            if(a!=='' && a!==undefined){
-              $('#latex').find('li').eq(i).text('$'+a+'$');
-              mathjaxHelper.typesetMath($('#latex').find('li').eq(i).get(0));
+            a  = math.parse(mm[i]).toTex().trim();
+            a = a=='undefined' ? '' : a;
+            if($('#latex').find('li').eq(i).text().trim()!=a){
+              if(a!=='' && a!==undefined){
+                $('#latex').find('li').eq(i).text('$'+a+'$');
+                mathjaxHelper.typesetMath($('#latex').find('li').eq(i).get(0));
+              }
+              else{
+                $('#latex').find('li').eq(i).remove();
+              }
             }
-            else{
-              $('#latex').find('li').eq(i).remove();
-            }
+          if(i>=mm.length){
+            $('#latex').find('li').eq(i).remove();
           }
-        }
-        if(i>=mm.length){
-          $('#latex').find('li').eq(i).remove();
         }
       }
       for(i;i<mm.length;i++){
         a  = math.parse(mm[i]).toTex().trim();
+        console.log(a)
         a = a=='undefined' ? '' : '$'+a+'$';
         if(a!='$$'){
           $('#latex').append('<li class="list-group-item">'+a+'</li>');
@@ -343,7 +348,8 @@ function on(){
       session._name = text;
       $('#session').text(text);
       $('#date').text(' - ' + session._date);
-      if(!db() && $("[name='start-stop']").prop("disabled")){
+      console.log(db.existsdb());
+      if(db.existsdb() && $("[name='start-stop']").prop("disabled")){
         $("[name='start-stop']").bootstrapSwitch('toggleDisabled');
       }
     }
@@ -356,7 +362,7 @@ function off(){
   timer.stop();
   $('#timer').html('00:00:00');
   $("[name='start-stop']").bootstrapSwitch('state', false);
-  $("[name='start-stop']").bootstrapSwitch('toggleDisabled');
+  $("[name='start-stop']").bootstrapSwitch('disabled',true);
   $('#experiment').text('');
   $('#date').text('');
 }

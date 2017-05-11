@@ -46,6 +46,7 @@ module.exports = {
     datachan.datachan_device_disable(usb.device);
     clearInterval(thread);
     on = false;
+    datachan.datachan_send_async_command(usb.device,4,new Buffer(),buf.length);
     datachan.datachan_device_release(usb.device);
     datachan.datachan_shutdown();
 
@@ -75,12 +76,15 @@ function read(){
   var measure;
   var mes;
   if(datachan.datachan_device_is_enabled(usb.device)){
-    if(datachan.datachan_device_enqueued_measures(usb.device)){
+    n_mes=datachan.datachan_device_enqueued_measures(usb.device);
+    for(var i=0;i<n_mes;i++){
       mes = datachan.datachan_device_dequeue_measure(usb.device);
       measure =ref.deref(mes);
-      scope.time=measure.time*1000+measure.millis;
-      for(i=0;i<measure.measureNum;i++){
-        scope['ch'+measure.channels[i]]=measure.values[i];
+      if(i==n_mes-1){
+        scope.time=measure.time*1000+measure.millis;
+        for(i=0;i<measure.measureNum;i++){
+          scope['ch'+measure.channels[i]]=measure.values[i];
+        }
       }
       datachan.datachan_clean_measure(mes);
     }

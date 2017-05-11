@@ -188,8 +188,7 @@ ipcMain.on('handbook',(event,arg) => {
 
 ipcMain.on('save-file',(event,arg)=>{
     if(!logger.existsdb()){
-    var diag=dialog.showSaveDialog({ defaultPath : home+'/.datalogger/sessions/'+session._name+"_"+session._date,title: 'Experiment file save location'});
-    logger.createdb(diag);
+    logger.createdb(arg.path);
     logger.initdb(session._name,session._date,config.product.model,config.product.manufacturercode);
     }
 });

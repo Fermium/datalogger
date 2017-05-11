@@ -21,10 +21,10 @@ config:
   mathsheet: |
     vh1 = ch6 V
     vh2 = ch7 V
-    vh = vh1-vh1*k+vh2*k
-    temp = ch2 K
+    vh = (1-k)*vh1+vh2*k
+    temp = (-0.383695902+ch2*25.215123839+ch2^2*(-0.279516961)+ch2^3*(0.072045800)+ch2^4*(-0.014094503)+ch2^5*(0.001055528)) K
     vr = ch1 V
-    I = ch3 A
+    I = ch3*7/4  A
     r = vr/(I/100)
     B = ch5 T
   channels:
