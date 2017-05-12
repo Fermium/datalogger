@@ -55,6 +55,9 @@ $(document).ready(function(){
 });
 
 /* Events */
+ipcRenderer.on('usb-fail',function(event,args){
+  $("[name='on-off']").bootstrapSwitch('state', false);
+});
 
 ipcRenderer.on('measure',function(event,args){
   _.extend(scope,args.scope);
@@ -335,31 +338,43 @@ function updatePopover(block){
 /* Machine controls */
 
 function on(){
-  ipcRenderer.send('on');
-  bootbox.prompt({
-    size: 'small',
-    inputType: 'text',
-    value : session._name,
-    title: 'Input the experiment name or skip for default value',
-    callback: function(result) {
-      if(result === null ){
-        $("[name='on-off']").bootstrapSwitch('state',false);
-        return;
+  if(ipcRenderer.sendSync('on')){
+    bootbox.prompt({
+      size: 'small',
+      inputType: 'text',
+      value : session._name,
+      title: 'Input the experiment name or skip for default value',
+      callback: function(result) {
+        if(result === null ){
+          $("[name='on-off']").bootstrapSwitch('state',false);
+          return;
+        }
+        var text = result.trim() === '' ? session._name : result;
+        session._name = text;
+        $('#session').text(text);
+        $('#date').text(' - ' + session._date);
+        if(db.existsdb() && $("[name='start-stop']").prop("disabled")){
+          $("[name='start-stop']").bootstrapSwitch('toggleDisabled');
+        }
       }
-      var text = result.trim() === '' ? session._name : result;
-      session._name = text;
-      $('#session').text(text);
-      $('#date').text(' - ' + session._date);
-      if(db.existsdb() && $("[name='start-stop']").prop("disabled")){
-        $("[name='start-stop']").bootstrapSwitch('toggleDisabled');
+    });
+  }
+  else {
+    $("[name='on-off']").bootstrapSwitch('state',false);
+    bootbox.confirm({
+      size: 'small',
+      title : 'Usb Error',
+      message: 'Usb device disconnected, please reconnect and then click ok',
+      callback: function(result){
+        if(result){
+          $("[name='on-off']").bootstrapSwitch('state',true);
+        }
       }
-    }
-  });
-
+    });
+  }
 }
 
 function off(){
-  ipcRenderer.send('off');
   timer.stop();
   $('#timer').html('00:00:00');
   $("[name='start-stop']").bootstrapSwitch('state', false);
@@ -367,6 +382,7 @@ function off(){
   $('#experiment').text('');
   $('#date').text('');
   ui.init();
+  ipcRenderer.send('off');
 }
 
 function rec(){

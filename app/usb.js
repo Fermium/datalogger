@@ -41,15 +41,17 @@ module.exports = {
       datachan.datachan_device_enable(usb.device);
       thread=setInterval(read,200);
     }
+    return usb.result === dc_search_results.success;
   },
   off : function(){
-    datachan.datachan_device_disable(usb.device);
-    clearInterval(thread);
-    on = false;
-    datachan.datachan_send_async_command(usb.device,4,new Buffer(1),1);
-    datachan.datachan_device_release(usb.device);
-    datachan.datachan_shutdown();
-
+    if(usb.result === dc_search_results.success){
+      datachan.datachan_device_disable(usb.device);
+      clearInterval(thread);
+      on = false;
+      datachan.datachan_send_async_command(usb.device,4,new Buffer(1),1);
+      datachan.datachan_device_release(usb.device);
+      datachan.datachan_shutdown();
+    }
   },
   ison: function(){
     return on;
@@ -77,6 +79,10 @@ module.exports = {
 };
 
 function read(){
+  if(datachan.datachan_device_acquire().result===dc_search_results.not_found_or_inaccessible){
+    handler.emit('usb-fail');
+    return;
+  }
   var measure;
   var mes;
   if(datachan.datachan_device_is_enabled(usb.device)){
@@ -106,5 +112,6 @@ function read(){
         'ch8' : Math.floor(Math.random() * (-35 + 40 + 1)) + 35
       };
   }
+
   handler.emit('measure', scope);
 }

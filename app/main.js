@@ -202,16 +202,18 @@ ipcMain.on('stop',(event,arg) => {
   logger.stop();
 });
 ipcMain.on('on',(event,arg) => {
-  usb.on(true);
+  event.returnValue=usb.on();
 });
 ipcMain.on('off',(event,arg) => {
   usb.off();
-  logger.close();
+  if(logger.isrunning())
+    logger.close();
 });
-
+usb.handler.on('usb-fail',(event,arg) => {
+  mainWindow.webContents.send('usb-fail', {});
+});
 usb.handler.on('measure',(arg)=>{
   if(logger.isrunning()){
-    console.log(arg);
     logger.write(arg);
   }
   mainWindow.webContents.send('measure',  {'scope':arg});
