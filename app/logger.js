@@ -41,5 +41,10 @@ module.exports={
   },
   isrunning: function(){
     return running;
+  },
+  getdb : function(){
+    if(dbfile!==''){
+      return dbfile;
+    }
   }
 };

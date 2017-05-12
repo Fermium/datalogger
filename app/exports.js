@@ -1,13 +1,17 @@
 " use strict";
-var remote = require('electron').remote;
+var logger = require('./logger.js');
+var fs = require('fs');
+var path = require('path');
+var fsPath = require('fs-path');
+var json2csv = require('json2csv');
+var math = require('mathjs');
+var _ = require('lodash');
+/*/var remote = require('electron').remote;
 var config = remote.getGlobal('config');
 var formula = remote.getGlobal('formula');
 var scope = remote.getGlobal('scope');
-var json2csv = require('json2csv');
 /*var json2xls = require('json2xls');*/
-var math = require('mathjs');
-var fs = require('fs');
-var fsPath = require('fs-path');
+/*
 var cols = [
     'time',
     {
@@ -83,3 +87,51 @@ $('#totsv').click(function(){
   	fs.writeFileSync(name,xls,'binary');
 });
 */
+
+var values={};
+var cols = [];
+function export_data(file,sep,extension){
+  var data = JSON.parse(fs.readFileSync(file, 'utf8'));
+  var name = path.dirname(file)+'/'+path.basename(file,'.json')+'/experiment_data.'+extension;
+
+	json2csv({ data: data._data , fields:cols,del: sep}, (err,csv) => {
+  		if (err) console.log(err);
+      fsPath.writeFile(name, csv, function(err) {
+          if(err) console.log(err);
+      });
+	});
+};
+function init_math(mathsh,to_export){
+
+    cols.push('time');
+    for(i in to_export){
+      cols.push(_.clone({
+        label: to_export[i],
+        value: function(row,field,data){
+          values=math.eval(mathsh,row);
+          console.log(this.label);
+          console.log(row[this.label].value);
+          return row[this.label].value;
+        }
+      }));
+    }
+  };
+  /*function scidavis(){
+    var file = logger.getfile();
+    var data = JSON.parse(fs.readFileSync(file, 'utf8'));
+    var name = path.dirname(file)+path.basename(file,'.json')+'/tmp.tsv';
+  	json2csv({ data: data._data ,fields:this.cols,del: '\t'}, (err,csv) => {
+    		if (err) throw err;
+        fsPath.writeFile(name, csv, function(err) {
+            if(err) throw err;
+            else{
+              require('child_process').exec('scidavis '+name);
+            }
+        });
+  	});
+  }
+};
+*/
+var data=JSON.parse(process.argv[2]);
+init_math(data.math,data.to_export);
+export_data(data.file,data.ex.sep,data.ex.extension);

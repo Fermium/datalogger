@@ -78,14 +78,19 @@ $('#tempselect').change(function() {
 $('[data-action="handbook"]').click(function() {
   ipcRenderer.send('handbook');
 });
-
+$('[data-export]').click(function(){
+  ipcRenderer.send('export',{ex:$(this).data('export'),math:mathsheet});
+})
 $('[data-action="save-file"]').click(function(){
-  var diag=dialog.showSaveDialog({ defaultPath : require('os').homedir()+'/.datalogger/sessions/'+session._name+"_"+session._date,title: 'Experiment file save location'});
-  ipcRenderer.send('save-file',{path : diag});
-  if($("[name='start-stop']").prop("disabled") && $("[name='on-off']").bootstrapSwitch('state')){
-    $("[name='start-stop']").bootstrapSwitch('toggleDisabled');
+  var path = dialog.showSaveDialog({
+    defaultPath : require('os').homedir()+'/.datalogger/sessions/'+session._name+"_"+session._date,
+    title: 'Experiment file save location' });
+  if(path!==undefined){
+    ipcRenderer.send('save-file',{'path' : path});
+    if($("[name='start-stop']").prop("disabled") && $("[name='on-off']").bootstrapSwitch('state')){
+      $("[name='start-stop']").bootstrapSwitch('toggleDisabled');
+    }
   }
-
 });
 $('[data-action="plot"]').click(function(){
   var name=$(this).data('plot');

@@ -1,5 +1,6 @@
 const electron = require('electron');
 var {dialog} = require('electron');
+const {spawn} = require('child_process');
 var usb = require('./usb');
 const math = require('mathjs');
 const dateFormat = require('dateformat'); //for date
@@ -7,7 +8,6 @@ const _ = require('lodash');
 var fs = require('fs');
 var path = require('path');
 var http = require('https');
-var home = require('os').homedir();
 var logger = require('./logger');
 
 // Module to control application life.
@@ -243,4 +243,16 @@ ipcMain.on('device-select',(event,arg)=>{
   config=jsyaml.safeLoad(fs.readFileSync(arg.device+'config.yaml'));
   session._name=config.product.model;
   createWindow();
+});
+ipcMain.on('export',(event,args)=>{
+  if(!logger.isrunning()){
+    args['to_export']=['Vh','temp','Vr','I','R','B'];
+    args['file']=logger.getdb();
+    spawn('node',[__dirname+'/exports.js',JSON.stringify(args)],{stdio: ['inherit', 'inherit', 'inherit']});
+    /*exprt.init_math(args.math,['Vh','temp','Vr','I','R','B']);
+    if(args.ex=='scidavis')
+      exprt.scidavis();
+    exprt.export(args.ex.sep,args.ex.extension);*/
+  }
+
 });

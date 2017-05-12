@@ -49,8 +49,9 @@
 						<i class='caret'></i>
 					</a>
 					<ul class='dropdown-menu dropdown-menu-left'>
-						<li id='tocsv'><a href='#'>Export to CSV</a></li>
-						<li id='totsv'><a href='#'>Export to TSV (SciDAVis standard)</a></li>
+						<li data-export='{"extension": "csv","sep": ","}'><a href='#'>Export to CSV</a></li>
+						<li data-export='{"extension": "tsv","sep": "\t"}'><a href='#'>Export to TSV (SciDAVis standard)</a></li>
+						<li data-export='scidavis'><a href='#'>Export to TSV (SciDAVis standard)</a></li>
 						<!--<li id='toxls'><a href='#'>Export to XLS</a></li>-->
 					</ul>
 				</li>
@@ -102,7 +103,6 @@
 			}
 		});
 		require('./renderer.js');
-		require('./exports.js');
   </script>
 </body>
 </html>
