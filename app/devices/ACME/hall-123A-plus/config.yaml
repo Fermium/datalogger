@@ -10,16 +10,17 @@ product:
   image: "pic.jpg"
 manual:
   # URL should be HTTPS
-  url: "https://example.com/manuals/hall-effect.pdf"
+  url: "https://s3-eu-west-1.amazonaws.com/handbooks-autobuild/hall-effect-handbook/Hall_Handbook.pdf"
   #If a git repository is specified and available, the previous url will be ignored
-  git:
-    user: "fermiumlabs"
-    repo: "hall-effect-handbook"
-    tag: "latest"
-    filename: "Hall_Handbook.pdf" #PDF is the only filetype supported
+  #git:
+  #  user: "fermiumlabs"
+  #  repo: "hall-effect-handbook"
+  #  tag: "latest"
+  #  filename: "Hall_Handbook.pdf" #PDF is the only filetype supported
 config:
   mathsheet: |
-    Vh = ch7 V
+    # Temporarely used CH6 (not amplified) as ch7 appears to not work correctly
+    Vh = ch6 V
     # Voltage on the thermocouple
     E_mv = (ch2/122.4)*1000
     coeff = [-0.383695902,25.215123839,-0.279516961,0.072045800,-0.014094503,0.001055528]
@@ -86,8 +87,8 @@ config:
         sendtohardware : true
       - name: "set_current_output"
         type: "slider"
-        min: -0.5
-        max: 0.5
+        min: -0.05
+        max: 0.05
         step: 0.001
         default: 0
         sendtohardware : true
