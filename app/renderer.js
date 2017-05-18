@@ -274,7 +274,7 @@ function init(){
   updateTex();
   ui.blocks.forEach(initpopover);
 }
-
+ipcRenderer.on('init',init);
 
 
 

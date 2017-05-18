@@ -37,32 +37,32 @@ config:
     B = ((ch5-0.2475)/9.821428571) V / (0.2 V / T)
   channels:
       - name: "ch1"
-        code: 0  #unique data-chan identifier
-        gain: 6  #default gain
-        gainvalues: [1, 2, 3, 4, 5, 6] #mapped to a 0-N array
-        description: "Voltage output of the first channel"
-      - name: "ch2"
         code: 1  #unique data-chan identifier
         gain: 6  #default gain
         gainvalues: [1, 2, 3, 4, 5, 6] #mapped to a 0-N array
         description: "Voltage output of the first channel"
-      - name: "ch3"
+      - name: "ch2"
         code: 2  #unique data-chan identifier
         gain: 6  #default gain
         gainvalues: [1, 2, 3, 4, 5, 6] #mapped to a 0-N array
         description: "Voltage output of the first channel"
-      - name: "ch5"
-        code: 4  #unique data-chan identifier
+      - name: "ch3"
+        code: 3  #unique data-chan identifier
         gain: 6  #default gain
         gainvalues: [1, 2, 3, 4, 5, 6] #mapped to a 0-N array
         description: "Voltage output of the first channel"
-      - name: "ch6"
+      - name: "ch5"
         code: 5  #unique data-chan identifier
         gain: 6  #default gain
         gainvalues: [1, 2, 3, 4, 5, 6] #mapped to a 0-N array
         description: "Voltage output of the first channel"
-      - name: "ch7"
+      - name: "ch6"
         code: 6  #unique data-chan identifier
+        gain: 6  #default gain
+        gainvalues: [1, 2, 3, 4, 5, 6] #mapped to a 0-N array
+        description: "Voltage output of the first channel"
+      - name: "ch7"
+        code: 7  #unique data-chan identifier
         gain: 6  #default gain
         gainvalues: [1, 2, 3, 4, 5, 6] #mapped to a 0-N array
         description: "Voltage output of the first channel"
@@ -83,6 +83,7 @@ config:
         max: 1
         step: 0.001
         default: 0
+        pretty : true
         sendtohardware : true
       - name: "set_current_output"
         type: "slider"
@@ -90,4 +91,5 @@ config:
         max: 0.5
         step: 0.001
         default: 0
+        pretty : false
         sendtohardware : true

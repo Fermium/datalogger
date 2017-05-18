@@ -26,9 +26,9 @@ module.exports = {
         $('#'+input.name+" .input").append($('<input/>').attr({
           'id' : 'input-'+input.name+"-t",
           'type' :  'number',
-          'min' : input.min,
-          'max': input.max,
-          'step' : input.step,
+          'min' : input.min*(input.pretty)?100:1,
+          'max': input.max*(input.pretty)?100:1,
+          'step' : input.step*(input.pretty)?100:1,
           'class' : 'form-control slider-value col-md-3',
           'value' : input.default
         }));
@@ -42,6 +42,7 @@ module.exports = {
           'data-from' : input.default,
           'data-step':  input.step,
           'data-slider' : input.type=='slider',
+          'data-pretty' : false | input.pretty,
           'data-hardware' : input.sendtohardware
         }));
       }
@@ -63,20 +64,34 @@ module.exports = {
     });
     $('input[data-slider=true]').each(function(i){
       var id = this.id;
-      $(this).ionRangeSlider({
-        onChange: function(data){
-          $('#'+id+'-t').val(data.from);
-        }
-      });
+      var pretty = $(this).data('pretty');
+      if(pretty){
+        $(this).ionRangeSlider({
+          onChange: function(data){
+            $('#'+id+'-t').val((data.from*100).toFixed(2));
+          },
+          prettify: function (num) {
+              return (num * 100).toFixed(2);
+          },
+          postfix: ' %'
+        })
+      }
+      else{
+        $(this).ionRangeSlider({
+          onChange: function(data){
+            $('#'+id+'-t').val(data.from);
+          },
+        });
+      }
       $('#'+id+'-t').on('change',function(){
         var slider = $('#'+id).data('ionRangeSlider');
         slider.update({
-          from : $(this).val()
+          from : $(this).val()/(pretty*99+1)
         });
-        if($(this).val()>slider.result.max){
-          $(this).val(slider.result.max);
+        if($(this).val()>slider.result.max*pretty*100){
+          $(this).val(slider.result.max*pretty*100);
         }
-        if($(this).val()<slider.result.min){
+        if($(this).val()<slider.result.min*pretty*100){
           $(this).val(slider.result.min);
         }
       });

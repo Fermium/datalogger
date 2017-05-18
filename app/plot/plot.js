@@ -27,13 +27,20 @@ var graph = new Rickshaw.Graph( {
 } );
 var hoverDetail = new Rickshaw.Graph.HoverDetail( {
 	graph: graph,
-	xFormatter: function(x) {
-		return new Date(x * 1000).toString();
-	}
+	formatter: function(series, x, y) {
+        var date = '<span class="date">' + new Date(x * 1000).toLocaleTimeString() + '</span>';
+        var swatch = '<span class="detail_swatch" style="background-color: ' + series.color + '"></span>';
+        var content = swatch + series.name + ": " + parseInt(y) + '<br>' + date;
+        return content;
+    }
 } );
 graph.render();
 var xAxes = new Rickshaw.Graph.Axis.X( {
-	graph: graph
+	graph: graph,
+	tickFormat: function(x){
+		return new Date(x*1000).toLocaleTimeString()
+	},
+	ticks: 4,
 } );
 
 xAxes.render();
@@ -45,6 +52,7 @@ yAxis.render();
 
 ipcRenderer.on('update',(event,data)=>{
   dataplot = {};
+	console.log(data.val);
   dataplot.val=data.val;
 	graph.series.addData(dataplot);
 	graph.update();

@@ -32,6 +32,28 @@ var scope = {
 };
 var debug;
 module.exports = {
+  handler,
+  init : function(){
+    datachan.datachan_send_async_command(usb.device,4,new Buffer(1),1);
+    var buf = new Buffer(4);
+    buf.writeFloatLE(0,0);
+    datachan.datachan_send_async_command(usb.device,1,buf,buf.length);
+    buf = new Buffer([0]);
+    datachan.datachan_send_async_command(usb.device,2,buf,buf.length);
+    buf = new Buffer([1,6]);
+    datachan.datachan_send_async_command(usb.device,3,buf,buf.length);
+    buf = new Buffer([2,6]);
+    datachan.datachan_send_async_command(usb.device,3,buf,buf.length);
+    buf = new Buffer([3,6]);
+    datachan.datachan_send_async_command(usb.device,3,buf,buf.length);
+    buf = new Buffer([5,6]);
+    datachan.datachan_send_async_command(usb.device,3,buf,buf.length);
+    buf = new Buffer([6,6]);
+    datachan.datachan_send_async_command(usb.device,3,buf,buf.length);
+    buf = new Buffer([7,6]);
+    datachan.datachan_send_async_command(usb.device,3,buf,buf.length);
+    this.handler.emit('init');
+  },
   on : function(deb=false){
     datachan.datachan_init();
     on = true;
@@ -39,6 +61,7 @@ module.exports = {
     usb=datachan.datachan_device_acquire();
     if(usb.result === dc_search_results.success){
       datachan.datachan_device_enable(usb.device);
+      this.init();
       thread=setInterval(read,200);
     }
     return usb.result === dc_search_results.success;
@@ -75,7 +98,7 @@ module.exports = {
       }
     }
   },
-  handler
+
 };
 
 function read(){

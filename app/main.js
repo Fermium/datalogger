@@ -179,11 +179,16 @@ ipcMain.on('plot',(event,arg) => {
   createPlotWindow(arg.name);
 });
 ipcMain.on('handbook',(event,arg) => {
-  createHandbookWindow();
-  handbookWindow.webContents.on('will-navigate',ev=>{
-    ev.preventDefault();
-    handbookWindow.webContents.stop();
-  });
+  try{
+    createHandbookWindow();
+    handbookWindow.webContents.on('will-navigate',ev=>{
+      ev.preventDefault();
+      handbookWindow.webContents.stop();
+    });
+  }
+  catch(e){
+    console.log('lol nope')
+  }
 });
 
 ipcMain.on('save-file',(event,arg)=>{
@@ -211,6 +216,9 @@ ipcMain.on('off',(event,arg) => {
 });
 usb.handler.on('usb-fail',(event,arg) => {
   mainWindow.webContents.send('usb-fail', {});
+});
+usb.handler.on('init',(event,arg) => {
+  mainWindow.webContents.send('init', {});
 });
 usb.handler.on('measure',(arg)=>{
   if(logger.isrunning()){
