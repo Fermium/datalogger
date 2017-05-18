@@ -6,6 +6,7 @@ const mathjaxHelper = require('mathjax-electron');
 const easytimer = require('easytimer');
 const codemirror = require('codemirror');
 const db = require('./logger');
+const fs = require('fs');
 /* End NodeJS Requires */
 
 /* Electron requires */
@@ -67,14 +68,20 @@ ipcRenderer.on('measure',function(event,args){
   ipcRenderer.send('update',{'scope':scope});
 });
 
-//TODO: Rifare
-$('#tempselect').change(function() {
-  $('#temp').data('unit', $('#tempselect').val());
-  mathsheet+='\ntemp=temp to '+$('#temp').data('unit');
+$('[data-unit]').change(function(){
+  mm = mathsheet.split('\n');
+  for(var i in mm){
+    if(mm[i].indexOf('temp') != -1){
+      mm[i] = mm[i].split(' to ')[0]+ ' to '+$(this).val();
+    }
+  }
+  mathsheet = mm.join('\n');
   math.format(math.eval(mathsheet,scope),2);
+  evaluate();
   updateTex();
-});
 
+
+})
 $('[data-action="handbook"]').click(function() {
   ipcRenderer.send('handbook');
 });
@@ -153,21 +160,50 @@ $('[data-action="editequation"]').click(function() {
   var modal=bootbox.dialog({
     message : ''+
     '<div class="row d-flex flex-column" style="position:relative">'+
-      '<div class="col-md-6 col-sm-6 col-xs-6">'+
         '<textarea class="form-control"  id="equations"></textarea>'+
       '</div>'+
-      '<ul id="latex" class="col-md-6 col-sm-6 col-xs-6" style="overflow:hidden; overflow-y:scroll;">'+
+      '<div class="row d-flex flex-column" style="position:relative">'+
+      '<ul id="latex" style="overflow:hidden; overflow-y:scroll;">'+
       '</ul>'+
+      '</div>'+
     '</div>',
     title : 'Experiment equations',
     buttons : {
-      danger : {
+
+      import : {
+        label:'Import',
+        className : 'btn-default',
+        callback: function() {
+          dialog.showOpenDialog({
+          defaultPath : require('os').homedir()+'/.datalogger/math/mathsheet.txt',
+        title: 'Import math file' }, function(path){
+          console.log(path);
+          try { mathsheet=fs.readFileSync(path[0],'utf8'); console.log(mathsheet)}
+          catch(e) { console.log(e); alert('Failed to read the file !'); }
+        });
+      }
+      },
+      export : {
+        label : 'Export',
+        className : 'btn-default',
+        callback: function(){
+          dialog.showSaveDialog({
+          defaultPath : require('os').homedir()+'/.datalogger/math/mathsheet.txt',
+          title: 'Export math file' }, function(path){
+            var result = editor.getValue();
+            if(result !== null) mathsheet=result;
+            try { fs.writeFileSync(path,mathsheet,'utf8'); }
+            catch(e) { console.log(e); alert('Failed to save the file !'); }
+          });
+        }
+      },
+      cancel : {
         label : 'Cancel',
         className : 'btn-default',
         callback : function(){
         }
       },
-      success : {
+      confirm : {
         label:'Confirm',
         className: 'btn-primary',
         callback: function() {
@@ -186,8 +222,9 @@ $('[data-action="editequation"]').click(function() {
           }
           updateTex();
           ui.blocks.forEach(updatePopover);
-        }
-      }
+          }
+        },
+
     },
     show : false,
     onEscape : true

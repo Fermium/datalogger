@@ -179,16 +179,12 @@ ipcMain.on('plot',(event,arg) => {
   createPlotWindow(arg.name);
 });
 ipcMain.on('handbook',(event,arg) => {
-  try{
-    createHandbookWindow();
-    handbookWindow.webContents.on('will-navigate',ev=>{
-      ev.preventDefault();
-      handbookWindow.webContents.stop();
-    });
-  }
-  catch(e){
-    console.log('lol nope')
-  }
+  createHandbookWindow();
+
+  handbookWindow.webContents.on('will-navigate',ev=>{
+    ev.preventDefault();
+    handbookWindow.webContents.stop();
+  });
 });
 
 ipcMain.on('save-file',(event,arg)=>{

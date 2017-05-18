@@ -35,7 +35,7 @@ config:
     R = abs( Vr / I )
     # Magnetic field probe. The signal from a Hall sensor is amplified with a gain of about G=9.82
     # The sensor output voltage is about 0.2V/Tesla
-    B = ((ch5-0.2475)/9.821428571) V / (0.2 V / T)
+    B = (ch5/9.821428571) V / (0.2 V / T)
   channels:
       - name: "ch1"
         code: 1  #unique data-chan identifier

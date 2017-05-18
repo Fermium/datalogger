@@ -14,7 +14,8 @@ module.exports = {
     _.merge(this.inputs,n_inputs);
     var form = $('#input-form');
     form.empty();
-
+    $('[data-unit]').val('degC');
+    $('[data-unit]').selectpicker('refresh');
     this.inputs.forEach(function(input){
       form.append($('<div/>').addClass('form-group').attr('id',input.name));
       $('#'+input.name).append($('<label/>').attr({
