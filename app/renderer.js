@@ -8,7 +8,7 @@ const codemirror = require('codemirror');
 const db = require('./logger');
 const fs = require('fs');
 /* End NodeJS Requires */
-
+doSomethingElse()
 /* Electron requires */
 
 const app = require('electron').remote;
