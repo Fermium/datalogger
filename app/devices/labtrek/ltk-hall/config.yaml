@@ -1,12 +1,11 @@
 ---
 # File di configurazione
-
 product:
-  manufacturer: "ACME Inc."
-  manufacturercode : "ACME"
+  manufacturer: "LabTrek"
+  manufacturercode : "labtrek"
   name: "Hall effect apparatus"
-  model: "hall-123A-plus"
-  description: "Something magical doing stuff with magnets"
+  model: "ltk-hall"
+  description: "Measure the Hall effect over a broad range of temperatures, magnetic fields and current"
   image: "pic.jpg"
 manual:
   # URL should be HTTPS
@@ -35,38 +34,38 @@ config:
     R = abs( Vr / I )
     # Magnetic field probe. The signal from a Hall sensor is amplified with a gain of about G=9.82
     # The sensor output voltage is about 0.2V/Tesla
-    B = (ch5/9.821428571) V / (0.2 V / T)
+    B = (ch5-0.0245) V / (0.2 V / T)
   channels:
       - name: "ch1"
         code: 1  #unique data-chan identifier
         gain: 6  #default gain
         gainvalues: [1, 2, 3, 4, 5, 6] #mapped to a 0-N array
-        description: "Voltage output of the first channel"
+        description: "Voltage at the sample top and bottom ends, to measure resistance"
       - name: "ch2"
         code: 2  #unique data-chan identifier
         gain: 6  #default gain
         gainvalues: [1, 2, 3, 4, 5, 6] #mapped to a 0-N array
-        description: "Voltage output of the first channel"
+        description: "Voltage on the thermocouple, to measure the sample Temperature"
       - name: "ch3"
         code: 3  #unique data-chan identifier
         gain: 6  #default gain
         gainvalues: [1, 2, 3, 4, 5, 6] #mapped to a 0-N array
-        description: "Voltage output of the first channel"
+        description: "Voltage on the 4ohm precision current-sensing resistor"
       - name: "ch5"
         code: 5  #unique data-chan identifier
         gain: 6  #default gain
         gainvalues: [1, 2, 3, 4, 5, 6] #mapped to a 0-N array
-        description: "Voltage output of the first channel"
+        description: "Voltage on the gaussmeter's Hall sensor. (not the sample)"
       - name: "ch6"
         code: 6  #unique data-chan identifier
         gain: 6  #default gain
         gainvalues: [1, 2, 3, 4, 5, 6] #mapped to a 0-N array
-        description: "Voltage output of the first channel"
+        description: "Un-amplified Hall voltage"
       - name: "ch7"
         code: 7  #unique data-chan identifier
         gain: 6  #default gain
         gainvalues: [1, 2, 3, 4, 5, 6] #mapped to a 0-N array
-        description: "Voltage output of the first channel"
+        description: "Amplified Hall voltage"
 
   inputs :
       #- name: the name of the input
@@ -77,8 +76,7 @@ config:
       #  step: i think this is quite clear
       #  default: default value for the input
       #  hardware : boolean, if true the value must be sent to the device
-
-      - name: "set_heater_state"
+      - name: "Heater Power [W]"
         type: "slider"
         min: 0
         max: 1
@@ -86,7 +84,7 @@ config:
         default: 0
         pretty : true
         sendtohardware : true
-      - name: "set_current_output"
+      - name: "Sample Current [A]"
         type: "slider"
         min: -0.05
         max: 0.05
