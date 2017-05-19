@@ -5,6 +5,8 @@ const math = require('mathjs');
 const mathjaxHelper = require('mathjax-electron');
 const easytimer = require('easytimer');
 const codemirror = require('codemirror');
+require('codemirror/mode/javascript/javascript')
+require('codemirror/addon/edit/matchbrackets')
 const db = require('./logger');
 const fs = require('fs');
 /* End NodeJS Requires */
@@ -24,7 +26,7 @@ var timer = new easytimer();
 var tex = {};
 var mathsheet = "";
 var channels = {};
-var unit = {}
+var unit = {};
 /* End Variables */
 
 /**************************************************/
@@ -175,7 +177,6 @@ $('[data-action="editequation"]').click(function() {
     '</div>',
     title : 'Experiment equations',
     buttons : {
-
       import : {
         label:'Import',
         className : 'btn-default',
@@ -184,9 +185,11 @@ $('[data-action="editequation"]').click(function() {
           defaultPath : require('os').homedir()+'/.datalogger/math/mathsheet.txt',
         title: 'Import math file' }, function(path){
           console.log(path);
-          try { mathsheet=fs.readFileSync(path[0],'utf8'); console.log(mathsheet);}
+          try { mathsheet=fs.readFileSync(path[0],'utf8');  $('#latex').html(''); editor.setValue(mathsheet); console.log(mathsheet);}
           catch(e) { console.log(e); alert('Failed to read the file !'); }
         });
+        return false;
+
       }
       },
       export : {
@@ -201,6 +204,7 @@ $('[data-action="editequation"]').click(function() {
             try { fs.writeFileSync(path,mathsheet,'utf8'); }
             catch(e) { console.log(e); alert('Failed to save the file !'); }
           });
+          return false;
         }
       },
       cancel : {
@@ -238,7 +242,7 @@ $('[data-action="editequation"]').click(function() {
   modal.on('shown.bs.modal',function(){
     editor = codemirror.fromTextArea(document.getElementById('equations'),{
       mode: 'javascript',
-      theme : 'default',
+      theme : 'eclipse',
       lineNumbers: true,
       matchBrackets: true,
     });
@@ -257,7 +261,7 @@ $('[data-action="editequation"]').click(function() {
     for(var i in mm){
       try{
         var a  = math.parse(mm[i]).toTex();
-        console.log(a!=='undefined')
+        console.log(a!=='undefined');
         if(a!=='undefined'){
           $('#latex').append('<li class="list-group-item">$'+a+'$</li>');
         }
