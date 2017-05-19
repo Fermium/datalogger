@@ -1,7 +1,9 @@
 <template>
   <!-- row row-sortable 1 -->
   <div class='row row-sortable'>
-    <div class='col-sortable col-md-6 col-sm-6 col-xs-6'>
+    <div class='row  '>
+
+    <div class='col-md-6 col-sm-6 col-xs-6'>
       <!-- Current-->
       <div class='panel panel-flat' >
         <div class='panel-heading'>
@@ -23,7 +25,7 @@
 
     </div>
 
-    <div class='col-sortable col-md-6 col-sm-6 col-xs-6'>
+    <div class='col-md-6 col-sm-6 col-xs-6'>
 
       <!-- Vertical form -->
       <div class='panel panel-flat'>
@@ -47,10 +49,8 @@
       <!-- /vertical form -->
 
     </div>
-  </div>
-  <div class='row row-sortable'>
 
-    <div class='col-sortable col-md-6 col-sm-6 col-xs-6'>
+    <div class='col-md-6 col-sm-6 col-xs-6'>
 
     <!-- Horizontal form -->
       <div class='panel panel-flat'>
@@ -74,7 +74,7 @@
 
     </div>
 
-    <div class='col-sortable col-md-6 col-sm-6 col-xs-6'>
+    <div class='col-md-6 col-sm-6 col-xs-6'>
 
     <!-- Vertical form -->
     <div class='panel panel-flat'>
@@ -96,7 +96,7 @@
       </div>
     </div>
     <!-- /vertical form -->
-
+  </div>
     </div>
   </div>
 
@@ -118,24 +118,25 @@
         </div>
         <div class='panel-body big-text'>
           <div class='text-center'>
-            <div class='col-md-4 col-sm-4 col-xs-4'>
+            <div class='col-md-4 col-sm-4 col-xs-4 v-bottom'>
               <span data-measure='{ "val":"temp","format":"fixed","sig":1}'>Temperature</span>
             </div>
-            <div class='col-md-4 col-sm-4 col-xs-4'>
+            <div class='col-md-4 col-sm-4 col-xs-4 v-bottom'>
               <select class='selectpicker'  data-width='auto' data-unit='temp'>
                 <option value='K' >°K</option>
                 <option value='degC' >°C</option>
                 <option value='degF'>°F</option>
               </select>
             </div>
-            <div class='col-md-4 col-sm-4 col-xs-4'>
-              <i class='icon-fire ' data-toggle='tooltip' title='Safe to touch'></i>
+            <div class='col-md-offset-3 col-md-1 col-sm-1 col-xs-1 v-bottom'>
+              <i class='icon-heater ' data-toggle='tooltip' title='Safe to touch'></i>
             </div>
           </div>
         </div>
       </div>
     </div>
   </div>
+</div>
   <div class='row'>
     <div class='col-md-12 col-sm-12 col-xs-12'>
     <!-- Horizontal form -->

@@ -225,7 +225,7 @@ usb.handler.on('measure',(arg)=>{
 });
 ipcMain.on('update',(event,arg)=>{
   for(var name in plotWindow){
-    plotWindow[name].webContents.send('update',{'val':arg.scope[name].value});
+    plotWindow[name].webContents.send('update',{'val':arg.scope[name]});
   }
 
 });

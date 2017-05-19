@@ -23,7 +23,7 @@ var session = app.getGlobal('session');
 var scope = {};
 var timer = new easytimer();
 var tex = {};
-var mathsheet = {};
+var mathsheet = "";
 var channels = {};
 
 /* End Variables */
@@ -65,7 +65,12 @@ ipcRenderer.on('measure',function(event,args){
   math.format(math.eval(mathsheet,scope),2);
   evaluate();
   check_temp();
-  ipcRenderer.send('update',{'scope':scope});
+  var values={};
+  ui.blocks.forEach(function(x){
+    values[x.val]=math.number(scope[x.val],scope[x.val].units[0].unit.name)
+  });
+  console.log(values)
+  ipcRenderer.send('update',{'scope':values});
 });
 
 $('[data-unit]').change(function(){
@@ -81,13 +86,13 @@ $('[data-unit]').change(function(){
   updateTex();
 
 
-})
+});
 $('[data-action="handbook"]').click(function() {
   ipcRenderer.send('handbook');
 });
 $('[data-export]').click(function(){
   ipcRenderer.send('export',{ex:$(this).data('export'),math:mathsheet});
-})
+});
 $('[data-action="save-file"]').click(function(){
   var path = dialog.showSaveDialog({
     defaultPath : require('os').homedir()+'/.datalogger/sessions/'+session._name+"_"+session._date,
@@ -178,7 +183,7 @@ $('[data-action="editequation"]').click(function() {
           defaultPath : require('os').homedir()+'/.datalogger/math/mathsheet.txt',
         title: 'Import math file' }, function(path){
           console.log(path);
-          try { mathsheet=fs.readFileSync(path[0],'utf8'); console.log(mathsheet)}
+          try { mathsheet=fs.readFileSync(path[0],'utf8'); console.log(mathsheet);}
           catch(e) { console.log(e); alert('Failed to read the file !'); }
         });
       }
@@ -216,7 +221,7 @@ $('[data-action="editequation"]').click(function() {
               evaluate();
             }
             catch(err){
-              dialog.showMessageBox({type: 'error',title: 'Error in math', message : err.toString()})
+              dialog.showMessageBox({type: 'error',title: 'Error in math', message : err.toString()});
             }
 
           }
@@ -249,7 +254,7 @@ $('[data-action="editequation"]').click(function() {
         }
       }
       catch(err){
-        dialog.showMessageBox({type: 'error',title: 'Error in math', message : err.toString()})
+        dialog.showMessageBox({type: 'error',title: 'Error in math', message : err.toString()});
       }
     }
     mathjaxHelper.typesetMath(document.getElementById('latex'));
@@ -296,7 +301,9 @@ function init(){
   mathjaxHelper.loadMathJax(document);
   var tmp=ipcRenderer.sendSync('ready');
   channels = tmp.config.channels;
-  mathsheet = tmp.config.mathsheet.trim();
+  if(mathsheet===''){
+    mathsheet = tmp.config.mathsheet.trim();
+  }
   var inputs = tmp.config.inputs;
   inputs.forEach(function(input){
     if(!input.sendtohardware){
@@ -467,12 +474,12 @@ function pause(){
 }
 function check_temp(){
   if(math.eval('abs(temp)>=65 degC',scope)){
-    $('.icon-fire').addClass('hot');
-    $('.icon-fire').attr({'title': 'Not safe to touch'})
+    $('.icon-heater').addClass('hot');
+    $('.icon-heater').attr({'title': 'Not safe to touch'});
   }
   else{
-    $('.icon-fire').removeClass('hot');
-    $('.icon-fire').attr({'title': 'Safe to touch'})
+    $('.icon-heater').removeClass('hot');
+    $('.icon-heater').attr({'title': 'Safe to touch'});
   }
 }
 

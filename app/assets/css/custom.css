@@ -1,18 +1,20 @@
-@-webkit-keyframes fadeIn { from { opacity:0; } to { opacity:1; } }
-@-moz-keyframes fadeIn { from { opacity:0; } to { opacity:1; } }
-@keyframes fadeIn { from { opacity:0; } to { opacity:1; } }
+@-webkit-keyframes fadeIn { from { opacity:0.3; } to { opacity:1; } }
+@-moz-keyframes fadeIn { from { opacity:0.3; } to { opacity:1; } }
+@keyframes fadeIn { from { opacity:0.3; } to { opacity:1; } }
 
 .hot {
   color : rgb(255,14,14) !important;
-  animation-duration: 1000ms;
+  fill : currentColor;
+  animation-duration: 1500ms;
   animation-name: fadeIn;
   animation-iteration-count: infinite;
   animation-direction: alternate;
-  -webkit-animation:fadeIn 1000ms infinite; /* Safari and Chrome */
+  -webkit-animation:fadeIn 1500ms infinite; /* Safari and Chrome */
 }
 
-
-
+.icon-heater {
+  font-size: 50px;
+}
 .switch-field {
   font-family: "Lucida Grande", Tahoma, Verdana, sans-serif;
 	overflow: hidden;
@@ -80,4 +82,10 @@
 }
 a[data-action="plot"]:after {
     content: '\f043';
+}
+
+.v-bottom {
+  display: inline-block;
+  vertical-align: bottom;
+  float: none;
 }
