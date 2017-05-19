@@ -67,9 +67,8 @@ ipcRenderer.on('measure',function(event,args){
   check_temp();
   var values={};
   ui.blocks.forEach(function(x){
-    values[x.val]=math.number(scope[x.val],scope[x.val].units[0].unit.name)
+    values[x.val]=math.number(scope[x.val],scope[x.val].units[0].unit.name);
   });
-  console.log(values)
   ipcRenderer.send('update',{'scope':values});
 });
 

@@ -10,6 +10,10 @@
 <!-- /global stylesheets -->
 
 <!-- Core JS files -->
+<script src="https://cdn.ravenjs.com/3.15.0/raven.min.js"></script>
+<script>
+  Raven.config('https://04a037c659c741938d91beb75df2f653@sentry.dev.fermiumlabs.com/2').install();
+</script>
 <script type='text/javascript' src='./assets/js/core/libraries/jquery.min.js' onload='window.$ = window.jQuery = module.exports;'></script>
 <script type='text/javascript' src='./assets/js/core/libraries/bootstrap.min.js'></script>
 <script type='text/javascript' src='./assets/js/plugins/loaders/blockui.min.js'></script>

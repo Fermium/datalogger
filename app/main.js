@@ -9,6 +9,8 @@ var fs = require('fs');
 var path = require('path');
 var http = require('https');
 var logger = require('./logger');
+const Raven = require('raven');
+Raven.config('https://04a037c659c741938d91beb75df2f653:9c23348a48934d40a2d909b05c342139@sentry.dev.fermiumlabs.com/2').install();
 
 // Module to control application life.
 const app = electron.app;
