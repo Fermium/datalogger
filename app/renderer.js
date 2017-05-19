@@ -214,10 +214,10 @@ $('[data-action="editequation"]').click(function() {
         className: 'btn-primary',
         callback: function() {
           result = editor.getValue();
+          if(result !== null) mathsheet=result;
           var run = ipcRenderer.sendSync('isrunning');
           if(run){
             try{
-              if(result !== null) mathsheet=result;
               math.eval(mathsheet,scope);
               evaluate();
             }
@@ -244,13 +244,21 @@ $('[data-action="editequation"]').click(function() {
     });
     eq = $('#equations');
     editor.setValue(mathsheet);
-    var mm = editor.getValue().split('\n');
+    var mm = [];
+    editor.getValue().split('\n').forEach(function(x){
+      console.log(math.parse(x).toTex());
+      if(math.parse(x).toTex()!=='undefined'){
+        mm.push(x);
+      }
+    });
+
     $('#latex').html('');
     $('#latex').css('maxHeight',editor.getWrapperElement().offsetHeight);
     for(var i in mm){
       try{
         var a  = math.parse(mm[i]).toTex();
-        if(a!==undefined){
+        console.log(a!=='undefined')
+        if(a!=='undefined'){
           $('#latex').append('<li class="list-group-item">$'+a+'$</li>');
         }
       }
@@ -260,7 +268,12 @@ $('[data-action="editequation"]').click(function() {
     }
     mathjaxHelper.typesetMath(document.getElementById('latex'));
     editor.on('change',function(cm,chs){
-      var mm = editor.getValue().split('\n');
+      var mm = [];
+      editor.getValue().split('\n').forEach(function(x,i){
+        if(math.parse(x).toTex()!=='undefined'){
+          mm.push(x);
+        }
+      });
       var len = $('#latex').find('li').length;
       var i=0;
       var a;
@@ -269,7 +282,7 @@ $('[data-action="editequation"]').click(function() {
             a  = math.parse(mm[i]).toTex().trim();
             a = a=='undefined' ? '' : a;
             if($('#latex').find('li').eq(i).text().trim()!=a){
-              if(a!=='' && a!==undefined){
+              if(a!=='' && a!=='undefined'){
                 $('#latex').find('li').eq(i).text('$'+a+'$');
                 mathjaxHelper.typesetMath($('#latex').find('li').eq(i).get(0));
               }
