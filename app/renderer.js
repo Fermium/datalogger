@@ -8,7 +8,6 @@ const codemirror = require('codemirror');
 const db = require('./logger');
 const fs = require('fs');
 /* End NodeJS Requires */
-doSomethingElse()
 /* Electron requires */
 
 const app = require('electron').remote;
@@ -25,7 +24,7 @@ var timer = new easytimer();
 var tex = {};
 var mathsheet = "";
 var channels = {};
-
+var unit = {}
 /* End Variables */
 
 /**************************************************/
@@ -67,7 +66,7 @@ ipcRenderer.on('measure',function(event,args){
   check_temp();
   var values={};
   ui.blocks.forEach(function(x){
-    values[x.val]=math.number(scope[x.val],scope[x.val].units[0].unit.name);
+    values[x.val]=math.number(scope[x.val],unit[x.val]);
   });
   ipcRenderer.send('update',{'scope':values});
 });
@@ -105,6 +104,9 @@ $('[data-action="save-file"]').click(function(){
 });
 $('[data-action="plot"]').click(function(){
   var name=$(this).data('plot');
+  ui.blocks.forEach(function(x){
+    unit[x.val]=scope[x.val].units[0].unit.name;
+  });
   ipcRenderer.send('plot',{'name':name});
 });
 

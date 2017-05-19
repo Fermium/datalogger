@@ -59,15 +59,18 @@ module.exports = {
     on = true;
     debug=deb;
     usb=datachan.datachan_device_acquire();
-    if(usb.result === dc_search_results.success){
+    if(debug){
+      thread=setInterval(read,200);
+    }
+    else if(usb.result === dc_search_results.success){
       datachan.datachan_device_enable(usb.device);
       this.init();
       thread=setInterval(read,200);
     }
-    return usb.result === dc_search_results.success;
+    return usb.result === dc_search_results.success || debug ;
   },
   off : function(){
-    if(usb.result === dc_search_results.success){
+    if(usb.result === dc_search_results.success || debug){
       datachan.datachan_device_disable(usb.device);
       clearInterval(thread);
       on = false;
@@ -102,13 +105,14 @@ module.exports = {
 };
 
 function read(){
+  if(!debug){
   if(datachan.datachan_device_acquire().result===dc_search_results.not_found_or_inaccessible){
     handler.emit('usb-fail');
     return;
   }
   var measure;
   var mes;
-  if(datachan.datachan_device_is_enabled(usb.device)){
+  if(datachan.datachan_device_is_enabled(usb.device) && !debug){
     n_mes=datachan.datachan_device_enqueued_measures(usb.device);
     for(var i=0;i<n_mes;i++){
       mes = datachan.datachan_device_dequeue_measure(usb.device);
@@ -122,7 +126,8 @@ function read(){
       datachan.datachan_clean_measure(mes);
     }
   }
-  else if(debug){
+}
+  else{
       scope= {
         'time' : process.hrtime(),
         'ch1' : Math.floor(Math.random() * (-1 + 5 + 1)) + 1,

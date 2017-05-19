@@ -205,7 +205,7 @@ ipcMain.on('stop',(event,arg) => {
   logger.stop();
 });
 ipcMain.on('on',(event,arg) => {
-  event.returnValue=usb.on();
+  event.returnValue=usb.on(true);
 });
 ipcMain.on('off',(event,arg) => {
   usb.off();
