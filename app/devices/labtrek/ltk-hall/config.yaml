@@ -40,31 +40,37 @@ config:
         code: 1  #unique data-chan identifier
         gain: 6  #default gain
         gainvalues: [1, 2, 3, 4, 5, 6] #mapped to a 0-N array
+        gainlabels: [16, 8, 4, 2, 1, 2/3] #mapped to a 0-N array
         description: "Voltage at the sample top and bottom ends, to measure resistance"
       - name: "ch2"
         code: 2  #unique data-chan identifier
         gain: 6  #default gain
         gainvalues: [1, 2, 3, 4, 5, 6] #mapped to a 0-N array
+        gainlabels: [16, 8, 4, 2, 1, 2/3] #mapped to a 0-N array
         description: "Voltage on the thermocouple, to measure the sample Temperature"
       - name: "ch3"
         code: 3  #unique data-chan identifier
         gain: 6  #default gain
         gainvalues: [1, 2, 3, 4, 5, 6] #mapped to a 0-N array
+        gainlabels: [16, 8, 4, 2, 1, 2/3] #mapped to a 0-N array
         description: "Voltage on the 4ohm precision current-sensing resistor"
       - name: "ch5"
         code: 5  #unique data-chan identifier
         gain: 6  #default gain
         gainvalues: [1, 2, 3, 4, 5, 6] #mapped to a 0-N array
+        gainlabels: [16, 8, 4, 2, 1, 2/3] #mapped to a 0-N array
         description: "Voltage on the gaussmeter's Hall sensor. (not the sample)"
       - name: "ch6"
         code: 6  #unique data-chan identifier
         gain: 6  #default gain
         gainvalues: [1, 2, 3, 4, 5, 6] #mapped to a 0-N array
+        gainlabels: [16, 8, 4, 2, 1, 2/3] #mapped to a 0-N array
         description: "Un-amplified Hall voltage"
       - name: "ch7"
         code: 7  #unique data-chan identifier
         gain: 6  #default gain
         gainvalues: [1, 2, 3, 4, 5, 6] #mapped to a 0-N array
+        gainlabels: [16, 8, 4, 2, 1, 2/3] #mapped to a 0-N array
         description: "Amplified Hall voltage"
 
   inputs :

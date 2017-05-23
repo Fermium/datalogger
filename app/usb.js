@@ -70,7 +70,10 @@ module.exports = {
     return usb.result === dc_search_results.success || debug ;
   },
   off : function(){
-    if(usb.result === dc_search_results.success || debug){
+    if(debug){
+      clearInterval(thread);
+    }
+    else if(usb.result === dc_search_results.success){
       datachan.datachan_device_disable(usb.device);
       clearInterval(thread);
       on = false;

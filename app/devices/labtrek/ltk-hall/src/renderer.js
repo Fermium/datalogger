@@ -77,7 +77,7 @@ module.exports = {
               return (num * 100).toFixed(2);
           },
           postfix: ' %'
-        })
+        });
       }
       else{
         $(this).ionRangeSlider({
@@ -103,7 +103,7 @@ module.exports = {
     });
     $('input[id*="input-"]').each(function(i){
       $(this).change(_.debounce(function(){
-          handler.emit('input-change',{id:$(this).attr('name'),value:$(this).val(),hardware:$(this).data('hardware')});
+          handler.emit('input-change',{id:$(this).data('function'),value:$(this).val(),hardware:$(this).data('hardware')});
       },1000));
     });
 

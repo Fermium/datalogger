@@ -153,8 +153,8 @@ $('[data-action="inputs"]').click(function(){
         autoWidth: false,
         copyClasses : "container",
       });
-      channels[i].gainvalues.forEach((el)=>{
-        $(this).data("selectBox-selectBoxIt").add({value: el,text : 'x'+el});
+      channels[i].gainvalues.forEach((el,j)=>{
+        $(this).data("selectBox-selectBoxIt").add({value: el,text : 'x'+channels[i].gainlabels[j]});
       });
       $(this).find('option[value='+channels[i].gain+']').attr('selected','selected');
       $(this).data('selectBox-selectBoxIt').refresh();
@@ -220,16 +220,15 @@ $('[data-action="editequation"]').click(function() {
           result = editor.getValue();
           if(result !== null) mathsheet=result;
           var run = ipcRenderer.sendSync('isrunning');
-          if(run){
             try{
-              math.eval(mathsheet,scope);
-              evaluate();
+              if(run){
+                math.eval(mathsheet,scope);
+                evaluate();
+              }
             }
             catch(err){
               dialog.showMessageBox({type: 'error',title: 'Error in math', message : err.toString()});
             }
-
-          }
           updateTex();
           ui.blocks.forEach(updatePopover);
           }
@@ -274,9 +273,12 @@ $('[data-action="editequation"]').click(function() {
     editor.on('change',function(cm,chs){
       var mm = [];
       editor.getValue().split('\n').forEach(function(x,i){
+        try{
         if(math.parse(x).toTex()!=='undefined'){
           mm.push(x);
         }
+        }
+        catch(e){}
       });
       var len = $('#latex').find('li').length;
       var i=0;
@@ -316,6 +318,7 @@ $('[data-action="editequation"]').click(function() {
 /* End Events */
 
 function init(){
+  try{
   mathjaxHelper.loadMathJax(document);
   var tmp=ipcRenderer.sendSync('ready');
   channels = tmp.config.channels;
@@ -334,7 +337,13 @@ function init(){
   ui.init(inputs);
   ui.handler.on('input-change',inputhandler);
   updateTex();
+  shittyError();
   ui.blocks.forEach(initpopover);
+  }
+  catch(err){
+    Raven.captureException(err);
+    Raven.showReportDialog();
+  }
 }
 ipcRenderer.on('init',init);
 
