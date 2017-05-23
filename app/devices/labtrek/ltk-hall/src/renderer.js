@@ -17,15 +17,15 @@ module.exports = {
     $('[data-unit]').val('degC');
     $('[data-unit]').selectpicker('refresh');
     this.inputs.forEach(function(input){
-      form.append($('<div/>').addClass('form-group').attr('id',input.name));
-      $('#'+input.name).append($('<label/>').attr({
-        'for' : 'input-'+input.name,
+      form.append($('<div/>').addClass('form-group').attr('id',input.function));
+      $('#'+input.function).append($('<label/>').attr({
+        'for' : 'input-'+input.function,
         'class' : 'col-sm-3 col-md-3 col-xs-3 control-label'
       }).text(input.name));
-      $('#'+input.name).append($('<div/>').addClass('col-sm-9 col-md-9 col-xs-9 input'));
+      $('#'+input.function).append($('<div/>').addClass('col-sm-9 col-md-9 col-xs-9 input'));
       if(input.type=='slider'){
-        $('#'+input.name+" .input").append($('<input/>').attr({
-          'id' : 'input-'+input.name+"-t",
+        $('#'+input.function+" .input").append($('<input/>').attr({
+          'id' : 'input-'+input.function+"-t",
           'type' :  'number',
           'min' : input.min*(input.pretty)?100:1,
           'max': input.max*(input.pretty)?100:1,
@@ -33,8 +33,8 @@ module.exports = {
           'class' : 'form-control slider-value col-md-3',
           'value' : input.default
         }));
-        $('#'+input.name+" .input").append($('<input/>').attr({
-          'id' : 'input-'+input.name,
+        $('#'+input.function+" .input").append($('<input/>').attr({
+          'id' : 'input-'+input.function,
           'name' : input.name,
           'type' :  'text' ,
           'class' : 'form-control col-md-9',
@@ -44,13 +44,14 @@ module.exports = {
           'data-step':  input.step,
           'data-slider' : input.type=='slider',
           'data-pretty' : false | input.pretty,
+          'data-function' : input.function,
           'data-hardware' : input.sendtohardware
         }));
       }
 
       else {
-        $('#'+input.name+" .input").append($('<input/>').attr({
-          'id' : 'input-'+input.name,
+        $('#'+input.function+" .input").append($('<input/>').attr({
+          'id' : 'input-'+input.function,
           'name' : input.name,
           'type' : input.type,
           'class' : 'form-control',
@@ -58,6 +59,7 @@ module.exports = {
           'to' :  input.max ,
           'step': input.step,
           'value' : input.default ,
+          'data-function' : input.function,
           'data-hardware' : input.sendtohardware
         }));
       }

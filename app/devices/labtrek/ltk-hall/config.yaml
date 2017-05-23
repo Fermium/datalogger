@@ -77,6 +77,7 @@ config:
       #  default: default value for the input
       #  hardware : boolean, if true the value must be sent to the device
       - name: "Heater Power [W]"
+        function : 'set_heater_state'
         type: "slider"
         min: 0
         max: 1
@@ -85,6 +86,7 @@ config:
         pretty : true
         sendtohardware : true
       - name: "Sample Current [A]"
+        function : 'set_current_'
         type: "slider"
         min: -0.05
         max: 0.05
