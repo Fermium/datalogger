@@ -9,6 +9,7 @@ var fs = require('fs');
 var path = require('path');
 var http = require('https');
 var logger = require('./logger');
+var corr = {a:0,b:0};
 const Raven = require('raven');
 try{
   Raven.config('https://04a037c659c741938d91beb75df2f653:9c23348a48934d40a2d909b05c342139@sentry.dev.fermiumlabs.com/2').install();
@@ -210,7 +211,7 @@ ipcMain.on('stop',(event,arg) => {
   logger.stop();
 });
 ipcMain.on('on',(event,arg) => {
-  event.returnValue=usb.on(true);
+  event.returnValue=usb.on(config.config.calibration.a,config.config.calibration.b);
 });
 ipcMain.on('off',(event,arg) => {
   usb.off();

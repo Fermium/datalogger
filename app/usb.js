@@ -1,4 +1,3 @@
-var electron = require('./main.js');
 var datachan = require('data-chan').lib;
 var dc_search_results = require('data-chan').search_enum;
 var ref = require('ref');
@@ -18,7 +17,8 @@ var handler = new EventEmitter();
 var usb;
 var thread;
 var on=false;
-
+var a;
+var b;
 var scope = {
   'time' : 0,
   'ch1'  : 0,
@@ -32,7 +32,7 @@ var scope = {
 };
 var debug;
 module.exports = {
-  handler,
+  handler:handler,
   init : function(){
     datachan.datachan_send_async_command(usb.device,4,new Buffer(1),1);
     var buf = new Buffer(4);
@@ -54,8 +54,10 @@ module.exports = {
     datachan.datachan_send_async_command(usb.device,3,buf,buf.length);
     this.handler.emit('init');
   },
-  on : function(deb=false){
+  on : function(aa,bb,deb=false){
     datachan.datachan_init();
+    a=aa;
+    b=bb;
     on = true;
     debug=deb;
     usb=datachan.datachan_device_acquire();
@@ -86,19 +88,21 @@ module.exports = {
     return on;
   },
   send_command:function(command){
+    var buf;
     if(datachan.datachan_device_is_enabled(usb.device)){
       switch(command.id){
         case "set_current_output" :
-          var buf = new Buffer(4);
-          buf.writeFloatLE(command.value,0);
+          buf = new Buffer(8);
+          buf.writeFloatLE(a-command.value/b,0);
+          buf.writeFloatLE(a+command.value/b,4);
           datachan.datachan_send_async_command(usb.device,1,buf,buf.length);
         break;
         case "set_heater_state" :
-          var buf = new Buffer([parseInt(command.value*255)]);
+          buf = new Buffer([parseInt(command.value*255)]);
           datachan.datachan_send_async_command(usb.device,2,buf,buf.length);
         break;
         case "set_gain" :
-          var buf = new Buffer([parseInt(command.channel),parseInt(command.value)]);
+          buf = new Buffer([parseInt(command.channel),parseInt(command.value)]);
           datachan.datachan_send_async_command(usb.device,3,buf,buf.length);
         break;
       }

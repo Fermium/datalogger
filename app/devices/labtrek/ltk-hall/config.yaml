@@ -17,6 +17,9 @@ manual:
   #  tag: "latest"
   #  filename: "Hall_Handbook.pdf" #PDF is the only filetype supported
 config:
+  calibration:
+    a: 0.008019432
+    b: 0.9397528
   mathsheet: |
     # Temporarely used CH6 (not amplified) as ch7 appears to not work correctly
     Vh = ch6 V
@@ -92,9 +95,9 @@ config:
         pretty : true
         sendtohardware : true
       - name: "Sample Current [A]"
-        function : 'set_current_'
+        function : 'set_current_output'
         type: "slider"
-        min: -0.05
+        min: 0
         max: 0.05
         step: 0.001
         default: 0
