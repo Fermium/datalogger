@@ -1,7 +1,7 @@
 const electron = require('electron');
 var {dialog} = require('electron');
 const {spawn} = require('child_process');
-var usb = require('./usb');
+var usb;
 const math = require('mathjs');
 const dateFormat = require('dateformat'); //for date
 const _ = require('lodash');
@@ -48,9 +48,7 @@ function createWindow () {
       logger.close();
       logger.stop();
     }
-    if(usb.ison()){
-      usb.off();
-    }
+    usb.kill();
     // Dereference the window object, usually you would store windows
     // in an array if your app supports multi windows, this is the time
     // when you should delete the corresponding element.
@@ -152,7 +150,10 @@ function createPlotWindow (name) {
 // initialization and is ready to create browser windows.
 // Some APIs can only be used after this event occurs.
 app.on('ready', function(){
-
+  usb = spawn('node',['./app/usb.js'], { 
+  stdio: ["inherit", "inherit", "inherit", "inherit"]
+})
+  console.log(usb);
   createSelectDevice();
 });
 
@@ -211,14 +212,14 @@ ipcMain.on('stop',(event,arg) => {
   logger.stop();
 });
 ipcMain.on('on',(event,arg) => {
-  event.returnValue=usb.on(config.config.calibration.a,config.config.calibration.b);
+  usb.send({action:'on',message:{a:config.config.calibration.a,b:config.config.calibration.b}});
 });
 ipcMain.on('off',(event,arg) => {
-  usb.off();
+  usb.send({action:'off',message:''});
   if(logger.isrunning())
     logger.close();
 });
-usb.handler.on('usb-fail',(event,arg) => {
+/*usb.handler.on('usb-fail',(event,arg) => {
   mainWindow.webContents.send('usb-fail', {});
 });
 usb.handler.on('init',(event,arg) => {
@@ -230,7 +231,7 @@ usb.handler.on('measure',(arg)=>{
   }
   mainWindow.webContents.send('measure',  {'scope':arg});
 
-});
+});*/
 ipcMain.on('update',(event,arg)=>{
   for(var name in plotWindow){
     plotWindow[name].webContents.send('update',{'val':arg.scope[name]});
@@ -238,12 +239,10 @@ ipcMain.on('update',(event,arg)=>{
 
 });
 ipcMain.on('isrunning',(event,arg)=>{
-  event.returnValue = usb.ison();
+  usb.send({action:'ison',message:''});
 });
 ipcMain.on('send-to-hardware',(event,arg)=>{
-  if(usb.ison()){
-    usb.send_command(arg)
-  }
+  usb.send({action:'send_command',message:arg});
 });
 ipcMain.on('ready',(event,arg)=>{
   event.returnValue={'config':config.config,'product':config.product};
@@ -260,7 +259,7 @@ ipcMain.on('export',(event,args)=>{
   if(!logger.isrunning()){
     args['to_export']=['Vh','temp','Vr','I','R','B'];
     args['file']=logger.getdb();
-    spawn('node',[__dirname+'/exports.js',JSON.stringify(args)],{stdio: ['inherit', 'inherit', 'inherit']});
+  //  spawn('node',[__dirname+'/exports.js',JSON.stringify(args)],{stdio: ['inherit', 'inherit', 'inherit']});
     /*exprt.init_math(args.math,['Vh','temp','Vr','I','R','B']);
     if(args.ex=='scidavis')
       exprt.scidavis();

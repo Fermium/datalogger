@@ -41,3 +41,4 @@ data
 out
 .cache
 dist
+yarn.*
