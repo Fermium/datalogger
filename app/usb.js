@@ -49,25 +49,22 @@ function init(){
   datachan.datachan_send_async_command(usb.device,3,buf,buf.length);
   buf = new Buffer([7,6]);
   datachan.datachan_send_async_command(usb.device,3,buf,buf.length);
-  this.handler.emit('init');
+  process.send({action:'init'})
 }
 
 function on(){
   datachan.datachan_init();
-  a=aa;
-  b=bb;
-  onn = true;
-  debug=deb;
   usb=datachan.datachan_device_acquire();
   if(debug){
     thread=setInterval(read,200);
   }
   else if(usb.result === dc_search_results.success){
     datachan.datachan_device_enable(usb.device);
-    this.init();
+    init();
     thread=setInterval(read,200);
   }
-  return usb.result === dc_search_results.success || debug ;
+  onn = usb.result === dc_search_results.success || debug;
+  return onn;
 }
 
 function off(){
@@ -146,13 +143,14 @@ else{
       'ch8' : Math.floor(Math.random() * (-35 + 40 + 1)) + 35
     };
 }
- precess.send({action:'mes',message:scope});
+ process.send({action:'mes',message:scope});
 }
 
 
 process.on('message',(data)=>{
   switch(data.action){
     case 'on':
+      console.log('on');
       a=data.message.a;
       b=data.message.b;
       process.send({action:'on',message:on()});
@@ -164,7 +162,7 @@ process.on('message',(data)=>{
       process.send({action:'ison',message:ison()});
       break;
     case 'send_command':
-      if(on){
+      if(onn){
         send_command(data.message);
       }
       else{

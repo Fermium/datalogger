@@ -3,8 +3,8 @@ var db;
 var dbfile= '';
 const _ = require('lodash');
 var running=false;
-module.exports={
-  createdb: function(file){
+
+  function createdb (file){
     try{
       dbfile = (file.endsWith('.json')) ? file : file+'.json' ;
       db = low(dbfile);
@@ -12,39 +12,60 @@ module.exports={
     catch(e){
       console.log(e);
     }
-  },
-  existsdb : function(){
+  }
+   function existsdb (){
     return dbfile!=='';
-  },
-  initdb: function(name,date,model,manufacturer){
+  }
+  function initdb(name,date,model,manufacturer){
     db.defaults({ _data : [] , _session : '', _date : '',_model : '',_manufacturer : ''}).write();
     db.set('_session',name).write();
     db.set('_date',date).write();
     db.set('_model',model).write();
     db.set('_manufacturer',manufacturer).write();
-  },
-  write: function(data){
+  }
+  function write (data){
     dd = _.clone(data);
     db.get('_data').push(dd).write();
-  },
-  close: function(){
+  }
+  function close (){
     db=null;
     dbfile='';
-  },
-  start: function(){
+  }
+   function start(){
     running=true;
+    process.send({action:'start',message:running});
     return running;
-  },
-  stop: function(){
+  }
+   function stop(){
     running=false;
+    process.send({action:'stop',message:running});
     return !running;
-  },
-  isrunning: function(){
+  }
+   function isrunning(){
+     process.send({action:'isrunning',message:running});
     return running;
-  },
-  getdb : function(){
+  }
+  function getdb (){
     if(dbfile!==''){
-      return dbfile;
+      process.send({action:'getdb',message:running});
     }
   }
 };
+
+process.on('message',{data}=>{
+  switch (data.action) {
+    case 'createdb':
+      createdb(data.message)
+      break;
+    case 'createdb':
+      createdb(data.message)
+      break;
+    case 'createdb':
+      createdb(data.message)
+      break;
+    case 'createdb':
+      createdb(data.message)
+      break;
+
+  }
+})

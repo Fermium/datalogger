@@ -62,6 +62,7 @@ ipcRenderer.on('usb-fail',function(event,args){
 });
 
 ipcRenderer.on('measure',function(event,args){
+  console.log('measure');
   _.extend(scope,args.scope);
   math.format(math.eval(mathsheet,scope),2);
   evaluate();
@@ -342,7 +343,6 @@ function init(){
   ui.init(inputs);
   ui.handler.on('input-change',inputhandler);
   updateTex();
-  shittyError();
   ui.blocks.forEach(initpopover);
   }
   catch(err){
@@ -415,11 +415,8 @@ function updatePopover(block){
 /********************/
 
 
-
-/* Machine controls */
-
-function on(){
-  if(ipcRenderer.sendSync('on')){
+ipcRenderer.on('on',(event,args)=>{
+  if(args.state){
     bootbox.prompt({
       size: 'small',
       inputType: 'text',
@@ -440,7 +437,7 @@ function on(){
       }
     });
   }
-  else {
+  else{
     $("[name='on-off']").bootstrapSwitch('state',false);
     bootbox.confirm({
       size: 'small',
@@ -453,6 +450,12 @@ function on(){
       }
     });
   }
+});
+/* Machine controls */
+
+function on(){
+  ipcRenderer.send('on');
+
 }
 
 function off(){

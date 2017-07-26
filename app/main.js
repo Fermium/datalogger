@@ -1,6 +1,6 @@
 const electron = require('electron');
 var {dialog} = require('electron');
-const {spawn} = require('child_process');
+const {fork} = require('child_process');
 var usb;
 const math = require('mathjs');
 const dateFormat = require('dateformat'); //for date
@@ -150,11 +150,31 @@ function createPlotWindow (name) {
 // initialization and is ready to create browser windows.
 // Some APIs can only be used after this event occurs.
 app.on('ready', function(){
-  usb = spawn('node',[__dirname+'/usb.js'], {
-  env: { 'DISPLAY': process.env.DISPLAY },
-  stdio: ["inherit", "inherit", "inherit", "inherit"]
-}
-);
+  usb = fork(__dirname+'/usb.js', {
+    env: process.env,
+    stdio: ["ipc","inherit", "inherit", "inherit"]
+  }
+  );
+  usb.on('message',(data)=>{
+    switch(data.action){
+      case 'usb-fail':
+        console.log(data.action);
+        mainWindow.webContents.send('usb-fail', {});
+        break;
+      case 'init':
+        mainWindow.webContents.send('init', {});
+        break;
+      case 'mes':
+        if(logger.isrunning()){
+            logger.write(data.message);
+        }
+        mainWindow.webContents.send('measure',  {'scope':data.message});
+        break;
+      case 'on':
+        mainWindow.webContents.send('on',  {'state':data.message});
+        break;
+    }
+  });
   createSelectDevice();
 });
 
@@ -261,10 +281,10 @@ ipcMain.on('export',(event,args)=>{
     args['to_export']=['Vh','temp','Vr','I','R','B'];
     args['file']=logger.getdb();
   //  spawn('node',[__dirname+'/exports.js',JSON.stringify(args)],{stdio: ['inherit', 'inherit', 'inherit']});
-    /*exprt.init_math(args.math,['Vh','temp','Vr','I','R','B']);
+    exprt.init_math(args.math,['Vh','temp','Vr','I','R','B']);
     if(args.ex=='scidavis')
       exprt.scidavis();
-    exprt.export(args.ex.sep,args.ex.extension);*/
+    exprt.export(args.ex.sep,args.ex.extension);
   }
 
 });
