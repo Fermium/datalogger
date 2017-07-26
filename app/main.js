@@ -150,12 +150,11 @@ function createPlotWindow (name) {
 // initialization and is ready to create browser windows.
 // Some APIs can only be used after this event occurs.
 app.on('ready', function(){
-  usb = spawn('node',['./app/usb.js'], {
+  usb = spawn('node',[__dirname+'/usb.js'], {
   env: { 'DISPLAY': process.env.DISPLAY },
   stdio: ["inherit", "inherit", "inherit", "inherit"]
 }
 );
-  usb.start();
   createSelectDevice();
 });
 
