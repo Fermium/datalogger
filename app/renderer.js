@@ -7,7 +7,7 @@ const easytimer = require('easytimer');
 const codemirror = require('codemirror');
 require('codemirror/mode/javascript/javascript')
 require('codemirror/addon/edit/matchbrackets')
-const db = require('./logger');
+//const db = require('./logger');
 const fs = require('fs');
 /* End NodeJS Requires */
 /* Electron requires */
@@ -431,7 +431,7 @@ ipcRenderer.on('on',(event,args)=>{
         session._name = text;
         $('#session').text(text);
         $('#date').text(' - ' + session._date);
-        if(db.existsdb() && $("[name='start-stop']").prop("disabled")){
+        if($("[name='start-stop']").prop("disabled")){
           $("[name='start-stop']").bootstrapSwitch('toggleDisabled');
         }
       }

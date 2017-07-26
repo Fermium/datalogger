@@ -110,7 +110,7 @@ function send_command(command){
 function read(){
 if(!debug){
 if(datachan.datachan_device_acquire().result===dc_search_results.not_found_or_inaccessible){
-  process.send({action:'mes',message:'fail'});
+  process.send({action:'usb-fail',message:'fail'});
   return;
 }
 var measure=new Buffer(52);

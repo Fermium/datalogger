@@ -1,5 +1,5 @@
 " use strict";
-var logger = require('./logger.js');
+//var logger = require('./logger.js');
 var fs = require('fs');
 var path = require('path');
 var fsPath = require('fs-path');

@@ -4,6 +4,30 @@ var dbfile= '';
 const _ = require('lodash');
 var running=false;
 
+process.on('message',(data)=>{
+  switch (data.action) {
+    case 'createdb':
+      if(!existsdb()){
+        createdb(data.message.path);
+        initdb(data.message.name,data.message.date,data.message.model,data.message.manufacturer);
+      }
+      break;
+    case 'start':
+      start();
+      break;
+    case 'stop':
+      stop();
+      break;
+    case 'close':
+      close();
+      break;
+    case 'write':
+      if(existsdb())
+        write(data.message);
+      break;
+  }
+})
+
   function createdb (file){
     try{
       dbfile = (file.endsWith('.json')) ? file : file+'.json' ;
@@ -50,22 +74,3 @@ var running=false;
       process.send({action:'getdb',message:running});
     }
   }
-};
-
-process.on('message',{data}=>{
-  switch (data.action) {
-    case 'createdb':
-      createdb(data.message)
-      break;
-    case 'createdb':
-      createdb(data.message)
-      break;
-    case 'createdb':
-      createdb(data.message)
-      break;
-    case 'createdb':
-      createdb(data.message)
-      break;
-
-  }
-})

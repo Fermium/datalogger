@@ -8,7 +8,7 @@ const _ = require('lodash');
 var fs = require('fs');
 var path = require('path');
 var http = require('https');
-var logger = require('./logger');
+var logger;
 var corr = {a:0,b:0};
 const Raven = require('raven');
 try{
@@ -44,10 +44,11 @@ function createWindow () {
 
   // Emitted when the window is closed.
   mainWindow.on('closed', function () {
-    if(logger.isrunning()){
+    /*if(logger.isrunning()){
       logger.close();
       logger.stop();
-    }
+    }*/
+    logger.kill();
     usb.kill();
     // Dereference the window object, usually you would store windows
     // in an array if your app supports multi windows, this is the time
@@ -155,6 +156,11 @@ app.on('ready', function(){
     stdio: ["ipc","inherit", "inherit", "inherit"]
   }
   );
+  logger = fork(__dirname+'/logger.js', {
+    env: process.env,
+    stdio: ["ipc","inherit", "inherit", "inherit"]
+  }
+  );
   usb.on('message',(data)=>{
     switch(data.action){
       case 'usb-fail':
@@ -165,9 +171,10 @@ app.on('ready', function(){
         mainWindow.webContents.send('init', {});
         break;
       case 'mes':
-        if(logger.isrunning()){
+        /*if(logger.isrunning()){
             logger.write(data.message);
-        }
+        }*/
+        logger.send({action:'write',message:data.message});
         mainWindow.webContents.send('measure',  {'scope':data.message});
         break;
       case 'on':
@@ -218,27 +225,37 @@ ipcMain.on('handbook',(event,arg) => {
 });
 
 ipcMain.on('save-file',(event,arg)=>{
-    if(!logger.existsdb()){
+    /*if(!logger.existsdb()){
     logger.createdb(arg.path);
     logger.initdb(session._name,session._date,config.product.model,config.product.manufacturercode);
+  }*/
+  logger.send({
+    action:'createdb',
+    message:{
+      path: arg.path,
+      name:session._name,
+      date:session._date,
+      model:config.product.model,
+      manufacturer:config.product.manufacturercode
     }
+  });
 });
 
 ipcMain.on('start',(event,arg) => {
-logger.start();
-mainWindow.webContents.send('started',  {'return':logger.isrunning()});
+logger.send({action:'start'});
+mainWindow.webContents.send('started',  {'return':'a'});
 });
 
 ipcMain.on('stop',(event,arg) => {
-  logger.stop();
+  logger.send({action:'stop'});
 });
 ipcMain.on('on',(event,arg) => {
   usb.send({action:'on',message:{a:config.config.calibration.a,b:config.config.calibration.b}});
 });
 ipcMain.on('off',(event,arg) => {
   usb.send({action:'off',message:''});
-  if(logger.isrunning())
-    logger.close();
+  //if(logger.isrunning())
+    logger.send({action:'close'});
 });
 /*usb.handler.on('usb-fail',(event,arg) => {
   mainWindow.webContents.send('usb-fail', {});
@@ -276,7 +293,7 @@ ipcMain.on('device-select',(event,arg)=>{
   session._name=config.product.model;
   createWindow();
 });
-ipcMain.on('export',(event,args)=>{
+/*ipcMain.on('export',(event,args)=>{
   if(!logger.isrunning()){
     args['to_export']=['Vh','temp','Vr','I','R','B'];
     args['file']=logger.getdb();
@@ -287,4 +304,4 @@ ipcMain.on('export',(event,args)=>{
     exprt.export(args.ex.sep,args.ex.extension);
   }
 
-});
+});*/
