@@ -11,16 +11,17 @@ var path = require('path');
 var http = require('https');
 var logger;
 var corr = {a:0,b:0};
-const Raven = require('raven');
+/*const Raven = require('raven');
 try{
   Raven.config('https://04a037c659c741938d91beb75df2f653:9c23348a48934d40a2d909b05c342139@sentry.dev.fermiumlabs.com/2').install();
 }
 catch(err){
   console.log('Error connecting to sentry');
-}
+}*/
 var dbfile;
 // Module to control application life.
 const app = electron.app;
+const Menu = electron.Menu;
 // Module to create native browser window.
 const BrowserWindow = electron.BrowserWindow;
 const {ipcMain} = require('electron');

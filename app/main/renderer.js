@@ -28,6 +28,8 @@ var tex = {};
 var mathsheet = "";
 var channels = {};
 var unit = {};
+
+var modal;
 /* End Variables */
 
 /**************************************************/
@@ -120,7 +122,8 @@ $('[data-action="plot"]').click(function(){
 });
 
 $('[data-action="inputs"]').click(function(){
-  var modal=bootbox.dialog({
+  if(modal!== undefined)modal.modal('toggle');
+  modal=bootbox.dialog({
     message : '<div id="inputs-content"</div>',
     title : 'Gains',
     buttons : {
@@ -171,8 +174,9 @@ $('[data-action="inputs"]').click(function(){
 });
 
 $('[data-action="editequation"]').click(function() {
+  if(modal!== undefined)modal.modal('toggle');
   var editor;
-  var modal=bootbox.dialog({
+  modal=bootbox.dialog({
     message : ''+
     '<div class="row d-flex flex-column" style="position:relative">'+
         '<textarea class="form-control"  id="equations"></textarea>'+
@@ -226,19 +230,17 @@ $('[data-action="editequation"]').click(function() {
         callback: function() {
           result = editor.getValue();
           if(result !== null) mathsheet=result;
-          var run = ipcRenderer.sendSync('isrunning');
             try{
-              if(run){
                 math.eval(mathsheet,scope);
                 evaluate();
-              }
             }
             catch(err){
               dialog.showMessageBox({type: 'error',title: 'Error in math', message : err.toString()});
+
             }
           updateTex();
           ui.blocks.forEach(updatePopover);
-          }
+        }
         },
 
     },
@@ -347,8 +349,8 @@ function init(){
   ui.blocks.forEach(initpopover);
   }
   catch(err){
-    Raven.captureException(err);
-    Raven.showReportDialog();
+    /*Raven.captureException(err);
+    Raven.showReportDialog();*/
   }
 }
 ipcRenderer.on('init',init);
@@ -408,7 +410,7 @@ function initpopover(block){
 
 
 function updatePopover(block){
-  running = ipcRenderer.sendSync('isrunning');
+
   var popover=$('[data-measure*="'+block.val+'"]').attr('data-content','$$' + tex[block.val].trim() + '$$').data('bs.popover');
   popover.setContent();
   popover.$tip.addClass(popover.options.placement);
@@ -434,6 +436,9 @@ ipcRenderer.on('on',(event,args)=>{
         $('#date').text(' - ' + session._date);
         if(recording && $("[name='start-stop']").prop("disabled")){
           $("[name='start-stop']").bootstrapSwitch('toggleDisabled');
+          menu.items[2][0].enabled=true;
+          menu.items[2][1].enabled=true;
+          menu.items[2][2].enabled=true;
         }
       }
     });
@@ -525,6 +530,122 @@ ipcRenderer.on('rec',(event,data)=>{
 });
 /**********************************/
 
-Mousetrap.bind(['command+s','ctrl+s'],function(){$('[data-action="save-file"]').trigger('click');});
-Mousetrap.bind(['command+space','ctrl+space'],function(){  $("[name='on-off']").trigger('click');});
-Mousetrap.bind(['command+r','ctrl+r'],function(ev){ ev.preventDefault();$("[name='start-stop']").trigger('click'); });
+
+
+
+
+
+
+
+
+
+const Menu = app.Menu;
+
+const template = [
+  {
+    label: 'File',
+    submenu: [
+      {
+        label: 'New File',
+        accelerator : 'CmdOrCtrl+N',
+        click () { }
+      },
+      {
+        label: 'Change Experiment',
+        accelerator : 'CmdOrCtrl+S',
+        click () { $('[data-action="save-file"]').trigger('click'); }
+      }
+    ]
+  },
+  {
+    label: 'Experiment',
+    submenu: [
+      {
+        label: 'Start-Stop',
+        accelerator: 'CmdOrCtrl+Space',
+        click () {  $("[name='on-off']").trigger('click'); }
+      },
+      {
+        label: 'Record Data - Pause Recording',
+        accelerator: 'CmdOrCtrl+R',
+        enabled: false,
+        click () { $("[name='start-stop']").trigger('click');  }
+      },
+      {
+        label: 'Edit Experiment Math',
+        accelerator: 'CmdOrCtrl+M',
+        click () { $('[data-action="editequation"]').trigger('click');  }
+      },
+      {
+        label: 'Change Channel Gain',
+        accelerator: 'CmdOrCtrl+G',
+        click () { $('[data-action="inputs"]').trigger('click');}
+      }
+    ]
+  },
+  {
+    label: 'Export',
+    submenu: [
+      {
+        label: 'Export to CSV',
+        enabled: false,
+        click () {    ipcRenderer.send('export',{ex:{"extension": "csv","sep": ","},math:mathsheet});
+        }
+      },
+      {
+        label: 'Export to TSV',
+        enabled: false,
+        click () {    ipcRenderer.send('export',{ex:{"extension": "tsv","sep": "\t"},math:mathsheet});
+        }
+      },
+      {
+        label: 'Open in SciDAVis',
+        enabled: false,
+        click () {   ipcRenderer.send('export',{ex:{"extension": "scidavis"},math:mathsheet});
+        }
+      }
+    ]
+  },
+  {
+    label: 'Help',
+    submenu: [
+      {
+        label: 'Manual',
+        accelerator: 'CmdOrCtrl+H',
+        click () { $('[data-action="handbook"]').trigger('click');}
+      },
+      {
+        label: 'About Datalogger',
+        click () { }
+      }
+    ]
+  },
+  {
+    label: 'Debug',
+    submenu: [
+      {
+        role:'toggledevtools'
+      }
+    ]
+  }
+];
+
+if (process.platform === 'darwin') {
+  template.unshift({
+    label: app.getName(),
+    submenu: [
+      {role: 'about'},
+      {type: 'separator'},
+      {role: 'services', submenu: []},
+      {type: 'separator'},
+      {role: 'hide'},
+      {role: 'hideothers'},
+      {role: 'unhide'},
+      {type: 'separator'},
+      {role: 'quit'}
+    ]
+  });
+}
+
+const menu = Menu.buildFromTemplate(template);
+Menu.setApplicationMenu(menu);
