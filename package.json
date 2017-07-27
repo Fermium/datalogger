@@ -5,7 +5,7 @@
   "main": "app/main.js",
   "scripts": {
     "start": " electron .",
-    "postinstall": "electron-rebuild",
+    "postinstall": "electron-builder install-app-deps",
     "pack": "electron-builder --dir",
     "dist": "electron-builder",
     "dist:linux": "electron-builder --linux",
@@ -27,16 +27,14 @@
   },
   "license": "CC0-1.0",
   "devDependencies": {
-    "babel-plugin-transform-async-to-generator": "^6.22.0",
-    "babel-preset-env": "^1.2.2",
+    "babel-plugin-transform-async-to-generator": "^6.24.1",
+    "babel-preset-env": "^1.6.0",
     "babel-preset-react": "^6.23.0",
     "devtron": "^1.4.0",
     "electron": "^1.6.6",
-    "electron-builder": "^19.6.3",
+    "electron-builder": "^19.13.0",
     "electron-builder-squirrel-windows": "^16.6.0",
-    "electron-rebuild": "^1.5.7",
-    "gulp-concat": "^2.6.0",
-    "rebuild": "^0.1.2"
+    "gulp-concat": "^2.6.0"
   },
   "dependencies": {
     "bootstrap-slider": "^9.7.2",
