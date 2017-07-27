@@ -8,26 +8,27 @@
 
 	<!-- Global stylesheets -->
 
-	<link rel='import' href='./header.html'>
+	<link rel='import' href='../header.html'>
 
-	<link href='../node_modules/codemirror/lib/codemirror.css' rel='stylesheet' type='text/css'>
-	<link href='../node_modules/codemirror/theme/eclipse.css' rel='stylesheet' type='text/css'>
-	<link href='./assets/css/bootstrap-switch.min.css' rel='stylesheet' type='text/css'>
-	<script type="text/javascript" src="./assets/js/plugins/sliders/ion_rangeslider.min.js"></script>
-	<script type="text/javascript" src="./assets/js/plugins/loaders/blockui.min.js"></script>
-	<script type='text/javascript' src='./assets/js/plugins/forms/styling/switch.min.js'></script>
-	<script type="text/javascript" src="./assets/js/plugins/forms/selects/bootstrap_select.min.js"></script>
-	<script type="text/javascript" src="./assets/js/plugins/notifications/bootbox.min.js"></script>
-	<script type="text/javascript" src="./assets/js/plugins/notifications/pnotify.min.js"></script>
-	<script type='text/javascript' src='./assets/js/core/app.js'></script>
-	<script type='text/javascript' src='assets/js/plugins/forms/selects/selectboxit.min.js'></script>
+	<link href='../../node_modules/codemirror/lib/codemirror.css' rel='stylesheet' type='text/css'>
+	<link href='../../node_modules/codemirror/theme/eclipse.css' rel='stylesheet' type='text/css'>
+	<link href='../assets/css/bootstrap-switch.min.css' rel='stylesheet' type='text/css'>
+	<script type="text/javascript" src="../assets/js/plugins/sliders/ion_rangeslider.min.js"></script>
+	<script type="text/javascript" src="../assets/js/plugins/loaders/blockui.min.js"></script>
+	<script type='text/javascript' src='../assets/js/plugins/forms/styling/switch.min.js'></script>
+	<script type="text/javascript" src="../assets/js/plugins/forms/selects/bootstrap_select.min.js"></script>
+	<script type="text/javascript" src="../assets/js/plugins/notifications/bootbox.min.js"></script>
+	<script type="text/javascript" src="../assets/js/plugins/notifications/pnotify.min.js"></script>
+	<script type='text/javascript' src='../assets/js/core/app.js'></script>
+	<script type='text/javascript' src='../assets/js/plugins/forms/selects/selectboxit.min.js'></script>
 
 	<script>
 	var {ipcRenderer} = require('electron');
 	var tmp=ipcRenderer.sendSync('get-device');
+	console.log(tmp)
 	$('head').append($('<link/>').attr({
 		rel : 'import',
-		href : tmp+'src/ui.html'
+		href : '../'+tmp+'src/ui.html'
 	}));
 	</script>
 
@@ -40,7 +41,7 @@
 	<!-- Main navbar -->
 	<div class='navbar navbar-inverse '>
 		<div class='navbar-header'>
-			<div class='navbar-brand'><img src='assets/images/logo_light.png' alt=''></img></div>
+			<div class='navbar-brand'><img src='../assets/images/logo_light.png' alt=''></img></div>
 		</div>
 
 		<div class='not-collapsible'>
@@ -53,6 +54,7 @@
 					<ul class='dropdown-menu dropdown-menu-left'>
 						<li data-export='{"extension": "csv","sep": ","}'><a href='#'>Export to CSV</a></li>
 						<li data-export='{"extension": "tsv","sep": "\t"}'><a href='#'>Export to TSV (SciDAVis standard)</a></li>
+						<li data-export='{"extension": "scidavis","sep": "\t"}'><a href='#'>Open current data in SciDAVis</a></li>
 					</ul>
 				</li>
 				<li>

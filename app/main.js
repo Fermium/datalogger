@@ -40,7 +40,7 @@ function createWindow () {
   mainWindow = new BrowserWindow({width: 850, height: 950});
 
   // and load the index.html of the app.
-  mainWindow.loadURL(`file://${__dirname}/index.html`);
+  mainWindow.loadURL(`file://${__dirname}/main/index.html`);
 
 
   // Emitted when the window is closed.
@@ -64,7 +64,7 @@ function createSelectDevice () {
   selectDeviceWindow = new BrowserWindow({width: 850, height: 950});
 
   // and load the index.html of the app.
-  selectDeviceWindow.loadURL(`file://${__dirname}/selectdevice.html`);
+  selectDeviceWindow.loadURL(`file://${__dirname}/selectdevice/index.html`);
 
 
   // Emitted when the window is closed.
@@ -152,12 +152,12 @@ function createPlotWindow (name) {
 // initialization and is ready to create browser windows.
 // Some APIs can only be used after this event occurs.
 app.on('ready', function(){
-  usb = fork(__dirname+'/usb.js', {
+  usb = fork(__dirname+'/processes/usb.js', {
     env: process.env,
     stdio: ["ipc","inherit", "inherit", "inherit"]
   }
   );
-  logger = fork(__dirname+'/logger.js', {
+  logger = fork(__dirname+'/processes/logger.js', {
     env: process.env,
     stdio: ["ipc","inherit", "inherit", "inherit"]
   }
@@ -305,7 +305,7 @@ ipcMain.on('device-select',(event,arg)=>{
 ipcMain.on('export',(event,args)=>{
     args.to_export=['Vh','temp','Vr','I','R','B'];
     args.file=dbfile;
-    var exprt=fork(__dirname+'/exports.js',[JSON.stringify(args)],{env: process.env,stdio: ['ipc', 'inherit', 'inherit','inherit']});
+    var exprt=fork(__dirname+'/process/exports.js',[JSON.stringify(args)],{env: process.env,stdio: ['ipc', 'inherit', 'inherit','inherit']});
     exprt.on('message',(data)=>{
       switch (data.action) {
         case 'end':

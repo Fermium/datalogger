@@ -161,6 +161,6 @@
   <script>
   var {ipcRenderer} = require('electron');
   var device=ipcRenderer.sendSync('get-device');
-  var ui = require(device+'/src/renderer.js');
+  var ui = require('../'+device+'/src/renderer.js');
   </script>
 </template>
