@@ -45,10 +45,6 @@ function createWindow () {
 
   // Emitted when the window is closed.
   mainWindow.on('closed', function () {
-    /*if(logger.isrunning()){
-      logger.close();
-      logger.stop();
-    }*/
     logger.kill();
     usb.kill();
     // Dereference the window object, usually you would store windows
@@ -59,7 +55,6 @@ function createWindow () {
 }
 
 function createSelectDevice () {
-
   // Create the browser window.
   selectDeviceWindow = new BrowserWindow({width: 850, height: 950});
 
@@ -172,9 +167,6 @@ app.on('ready', function(){
         mainWindow.webContents.send('init', {});
         break;
       case 'mes':
-        /*if(logger.isrunning()){
-            logger.write(data.message);
-        }*/
         logger.send({action:'write',message:data.message});
         mainWindow.webContents.send('measure',  {'scope':data.message});
         break;
@@ -200,9 +192,6 @@ app.on('window-all-closed', function () {
   // On OS X it is common for applications and their menu bar
   // to stay active until the user quits explicitly with Cmd + Q
   if (process.platform !== 'darwin') {
-    /*if(usb.isrunning()){
-
-    }*/
     app.quit();
   }
 });
@@ -234,10 +223,7 @@ ipcMain.on('handbook',(event,arg) => {
 });
 
 ipcMain.on('save-file',(event,arg)=>{
-    /*if(!logger.existsdb()){
-    logger.createdb(arg.path);
-    logger.initdb(session._name,session._date,config.product.model,config.product.manufacturercode);
-  }*/
+
   logger.send({
     action:'createdb',
     message:{
@@ -263,27 +249,12 @@ ipcMain.on('on',(event,arg) => {
 });
 ipcMain.on('off',(event,arg) => {
   usb.send({action:'off',message:''});
-  //if(logger.isrunning())
     logger.send({action:'close'});
 });
-/*usb.handler.on('usb-fail',(event,arg) => {
-  mainWindow.webContents.send('usb-fail', {});
-});
-usb.handler.on('init',(event,arg) => {
-  mainWindow.webContents.send('init', {});
-});
-usb.handler.on('measure',(arg)=>{
-  if(logger.isrunning()){
-    logger.write(arg);
-  }
-  mainWindow.webContents.send('measure',  {'scope':arg});
-
-});*/
 ipcMain.on('update',(event,arg)=>{
   for(var name in plotWindow){
     plotWindow[name].webContents.send('update',{'val':arg.scope[name]});
   }
-
 });
 ipcMain.on('isrunning',(event,arg)=>{
   usb.send({action:'ison',message:''});
@@ -305,7 +276,7 @@ ipcMain.on('device-select',(event,arg)=>{
 ipcMain.on('export',(event,args)=>{
     args.to_export=['Vh','temp','Vr','I','R','B'];
     args.file=dbfile;
-    var exprt=fork(__dirname+'/process/exports.js',[JSON.stringify(args)],{env: process.env,stdio: ['ipc', 'inherit', 'inherit','inherit']});
+    var exprt=fork(__dirname+'/processes/exports.js',[JSON.stringify(args)],{env: process.env,stdio: ['ipc', 'inherit', 'inherit','inherit']});
     exprt.on('message',(data)=>{
       switch (data.action) {
         case 'end':
@@ -313,8 +284,4 @@ ipcMain.on('export',(event,args)=>{
           break;
       }
     });
-    //exprt.init_math(args.math,['Vh','temp','Vr','I','R','B']);
-    /*if(args.ex=='scidavis')
-      exprt.scidavis();*/
-    //exprt.export(args.ex.sep,args.ex.extension);
 });

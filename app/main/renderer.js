@@ -7,7 +7,6 @@ const easytimer = require('easytimer');
 const codemirror = require('codemirror');
 require('codemirror/mode/javascript/javascript');
 require('codemirror/addon/edit/matchbrackets');
-//const db = require('./logger');
 const fs = require('fs');
 var recording;
 /* End NodeJS Requires */
