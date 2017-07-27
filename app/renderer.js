@@ -432,7 +432,7 @@ ipcRenderer.on('on',(event,args)=>{
         session._name = text;
         $('#session').text(text);
         $('#date').text(' - ' + session._date);
-        if($("[name='start-stop']").prop("disabled")){
+        if(recording && $("[name='start-stop']").prop("disabled")){
           $("[name='start-stop']").bootstrapSwitch('toggleDisabled');
         }
       }

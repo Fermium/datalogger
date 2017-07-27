@@ -18,7 +18,7 @@ try{
 catch(err){
   console.log('Error connecting to sentry');
 }
-
+var dbfile;
 // Module to control application life.
 const app = electron.app;
 // Module to create native browser window.
@@ -183,6 +183,14 @@ app.on('ready', function(){
         break;
     }
   });
+  logger.on('message',(data)=>{
+    switch(data.action){
+      case 'createdb':
+        mainWindow.webContents.send('rec',  {'rec':data.message.state});
+        dbfile = data.message.file;
+        break;
+    }
+  });
   createSelectDevice();
 });
 
@@ -294,15 +302,12 @@ ipcMain.on('device-select',(event,arg)=>{
   session._name=config.product.model;
   createWindow();
 });
-/*ipcMain.on('export',(event,args)=>{
-  if(!logger.isrunning()){
-    args['to_export']=['Vh','temp','Vr','I','R','B'];
-    args['file']=logger.getdb();
-  //  spawn('node',[__dirname+'/exports.js',JSON.stringify(args)],{stdio: ['inherit', 'inherit', 'inherit']});
-    exprt.init_math(args.math,['Vh','temp','Vr','I','R','B']);
-    if(args.ex=='scidavis')
-      exprt.scidavis();
-    exprt.export(args.ex.sep,args.ex.extension);
-  }
-
-});*/
+ipcMain.on('export',(event,args)=>{
+    args.to_export=['Vh','temp','Vr','I','R','B'];
+    args.file=dbfile;
+    fork(__dirname+'/exports.js',[JSON.stringify(args)],{env: process.env,stdio: ['ipc', 'inherit', 'inherit','inherit']});
+    //exprt.init_math(args.math,['Vh','temp','Vr','I','R','B']);
+    /*if(args.ex=='scidavis')
+      exprt.scidavis();*/
+    //exprt.export(args.ex.sep,args.ex.extension);
+});

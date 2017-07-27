@@ -12,6 +12,7 @@ process.on('message',(data)=>{
         createdb(data.message.path);
         initdb(data.message.name,data.message.date,data.message.model,data.message.manufacturer);
       }
+      process.send({action:'createdb',message:{state:existsdb(),file:getdb()}});
       break;
     case 'start':
       start();
@@ -35,6 +36,7 @@ process.on('message',(data)=>{
       db = low(dbfile);
     }
     catch(e){
+      dbfile='';
       console.log(e);
     }
   }
@@ -71,7 +73,5 @@ process.on('message',(data)=>{
     return running;
   }
   function getdb (){
-    if(dbfile!==''){
-      process.send({action:'getdb',message:running});
-    }
+      return dbfile;
   }
