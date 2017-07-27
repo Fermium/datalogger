@@ -10,7 +10,6 @@ require('codemirror/mode/javascript/javascript');
 require('codemirror/addon/edit/matchbrackets');
 const fs = require('fs');
 var recording;
-var Mousetrap = require('mousetrap');
 /* End NodeJS Requires */
 /* Electron requires */
 
