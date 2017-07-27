@@ -99,6 +99,7 @@ function export_data(file,sep,extension){
   		if (err) console.log(err);
       fsPath.writeFile(name, csv, function(err) {
           if(err) console.log(err);
+          else process.send({action:'end'});
       });
 	});
 }

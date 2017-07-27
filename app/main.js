@@ -305,7 +305,14 @@ ipcMain.on('device-select',(event,arg)=>{
 ipcMain.on('export',(event,args)=>{
     args.to_export=['Vh','temp','Vr','I','R','B'];
     args.file=dbfile;
-    fork(__dirname+'/exports.js',[JSON.stringify(args)],{env: process.env,stdio: ['ipc', 'inherit', 'inherit','inherit']});
+    var exprt=fork(__dirname+'/exports.js',[JSON.stringify(args)],{env: process.env,stdio: ['ipc', 'inherit', 'inherit','inherit']});
+    exprt.on('message',(data)=>{
+      switch (data.action) {
+        case 'end':
+          exprt.kill();
+          break;
+      }
+    });
     //exprt.init_math(args.math,['Vh','temp','Vr','I','R','B']);
     /*if(args.ex=='scidavis')
       exprt.scidavis();*/
