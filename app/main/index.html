@@ -104,6 +104,11 @@
 				document.querySelector('.content-wrapper').appendChild(clone);
 			}
 		});
+		function myFunction(link) {
+    	var shell = require('electron').shell;
+    	event.preventDefault();
+     	shell.openExternal(link);
+   }
 		require('./renderer.js');
   </script>
 </body>

@@ -1,5 +1,6 @@
 /*  NodeJS Requires  */
 /*jshint esversion: 6*/
+var pjson = require('../../package.json');
 const _ = require('lodash');
 const math = require('mathjs');
 const mathjaxHelper = require('mathjax-electron');
@@ -436,9 +437,6 @@ ipcRenderer.on('on',(event,args)=>{
         $('#date').text(' - ' + session._date);
         if(recording && $("[name='start-stop']").prop("disabled")){
           $("[name='start-stop']").bootstrapSwitch('toggleDisabled');
-          menu.items[2][0].enabled=true;
-          menu.items[2][1].enabled=true;
-          menu.items[2][2].enabled=true;
         }
       }
     });
@@ -530,15 +528,6 @@ ipcRenderer.on('rec',(event,data)=>{
 });
 /**********************************/
 
-
-
-
-
-
-
-
-
-
 const Menu = app.Menu;
 
 const template = [
@@ -548,12 +537,15 @@ const template = [
       {
         label: 'New File',
         accelerator : 'CmdOrCtrl+N',
-        click () { }
+        click () { $('[data-action="save-file"]').trigger('click');}
       },
       {
         label: 'Change Experiment',
         accelerator : 'CmdOrCtrl+S',
-        click () { $('[data-action="save-file"]').trigger('click'); }
+        click () {  }
+      },
+      {
+        role: 'quit'
       }
     ]
   },
@@ -588,19 +580,16 @@ const template = [
     submenu: [
       {
         label: 'Export to CSV',
-        enabled: false,
         click () {    ipcRenderer.send('export',{ex:{"extension": "csv","sep": ","},math:mathsheet});
         }
       },
       {
         label: 'Export to TSV',
-        enabled: false,
         click () {    ipcRenderer.send('export',{ex:{"extension": "tsv","sep": "\t"},math:mathsheet});
         }
       },
       {
         label: 'Open in SciDAVis',
-        enabled: false,
         click () {   ipcRenderer.send('export',{ex:{"extension": "scidavis"},math:mathsheet});
         }
       }
@@ -616,7 +605,13 @@ const template = [
       },
       {
         label: 'About Datalogger',
-        click () { }
+        click () { bootbox.dialog({
+          message : ''+
+          '<p>'+pjson.name+' v'+ pjson.version+'</p><p>Copyright &#9400;	 2017-2018 Fermium LABS srl. All rights reserved</p><p>Website:<a href="https://www.fermiumlabs.com" onclick="myFunction(this.href)">https://www.fermiumlabs.com</a></p><p>Technical Support: <a href="mailto:support@fermiumlabs.com" onclick="myFunction(this.href)">support@fermiumlabs.com</a></p>',
+          title : 'About Datalogger',
+          show : true,
+          onEscape : true
+        });}
       }
     ]
   },
@@ -630,22 +625,6 @@ const template = [
   }
 ];
 
-if (process.platform === 'darwin') {
-  template.unshift({
-    label: app.getName(),
-    submenu: [
-      {role: 'about'},
-      {type: 'separator'},
-      {role: 'services', submenu: []},
-      {type: 'separator'},
-      {role: 'hide'},
-      {role: 'hideothers'},
-      {role: 'unhide'},
-      {type: 'separator'},
-      {role: 'quit'}
-    ]
-  });
-}
 
 const menu = Menu.buildFromTemplate(template);
-Menu.setApplicationMenu(menu);
+app.getCurrentWindow().setMenu(menu);
