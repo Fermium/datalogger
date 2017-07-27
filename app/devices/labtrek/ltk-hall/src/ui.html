@@ -3,7 +3,7 @@
   <div class='row row-sortable'>
     <div class='row  '>
 
-    <div class='col-md-6 col-sm-6 col-xs-6'>
+    <div class='col-md-6 col-sm-6 col-xs-6 col-sortable'>
       <!-- Current-->
       <div class='panel panel-flat' >
         <div class='panel-heading'>
@@ -22,10 +22,26 @@
         </div>
       </div>
       <!-- /horizotal form -->
+      <div class='panel panel-flat'>
+          <div class='panel-heading'>
+          <h5 class='panel-title'>Resistance</h5>
+          <div class='heading-elements'>
+            <ul class='icons-list'>
+              <li><a data-action='plot' data-plot='R'></a></li>
+              <li><a data-action='collapse'></a></li>
+              <li><a data-action='move'></a></li>
+            </ul>
+          </div>
+        </div>
 
+        <div class='panel-body big-text'>
+          <div class='col-md-6 text-center' data-measure='{"val":"Vr","format":"auto","sig":5}'>Vr</div>
+          <div class='col-md-6 text-center' data-measure='{"val":"R","format":"auto","sig":5}'>R</div>
+        </div>
+      </div>
     </div>
 
-    <div class='col-md-6 col-sm-6 col-xs-6'>
+    <div class='col-md-6 col-sm-6 col-xs-6 col-sortable'>
 
       <!-- Vertical form -->
       <div class='panel panel-flat'>
@@ -47,18 +63,12 @@
         </div>
       </div>
       <!-- /vertical form -->
-
-    </div>
-
-    <div class='col-md-6 col-sm-6 col-xs-6'>
-
-    <!-- Horizontal form -->
       <div class='panel panel-flat'>
-          <div class='panel-heading'>
-          <h5 class='panel-title'>Resistance</h5>
+        <div class='panel-heading'>
+          <h5 class='panel-title'>Magnetic Field</h5>
           <div class='heading-elements'>
             <ul class='icons-list'>
-              <li><a data-action='plot' data-plot='R'></a></li>
+              <li><a data-action='plot' data-plot='B'></a></li>
               <li><a data-action='collapse'></a></li>
               <li><a data-action='move'></a></li>
             </ul>
@@ -66,37 +76,15 @@
         </div>
 
         <div class='panel-body big-text'>
-          <div class='col-md-6 text-center' data-measure='{"val":"Vr","format":"auto","sig":5}'>Vr</div>
-          <div class='col-md-6 text-center' data-measure='{"val":"R","format":"auto","sig":5}'>R</div>
-        </div>
-      </div>
-    <!-- /horizotal form -->
-
-    </div>
-
-    <div class='col-md-6 col-sm-6 col-xs-6'>
-
-    <!-- Vertical form -->
-    <div class='panel panel-flat'>
-      <div class='panel-heading'>
-        <h5 class='panel-title'>Magnetic Field</h5>
-        <div class='heading-elements'>
-          <ul class='icons-list'>
-            <li><a data-action='plot' data-plot='B'></a></li>
-            <li><a data-action='collapse'></a></li>
-            <li><a data-action='move'></a></li>
-          </ul>
-        </div>
-      </div>
-
-      <div class='panel-body big-text'>
-        <div class='text-center'>
-          <div data-measure='{"val":"B","format":"auto","sig":5}'>Magnetic Field</div>
+          <div class='text-center'>
+            <div data-measure='{"val":"B","format":"auto","sig":5}'>Magnetic Field</div>
+          </div>
         </div>
       </div>
     </div>
-    <!-- /vertical form -->
-  </div>
+
+
+
     </div>
   </div>
 

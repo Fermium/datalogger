@@ -53,6 +53,7 @@
     "lowdb": "^0.16.0",
     "mathjax-electron": "^1.2.0",
     "mathjs": "^3.10.0",
+    "mousetrap": "^1.6.1",
     "node-json-db": "^0.7.3",
     "os": "^0.1.1",
     "raven": "^2.0.1",

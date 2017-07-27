@@ -9,6 +9,7 @@ require('codemirror/mode/javascript/javascript');
 require('codemirror/addon/edit/matchbrackets');
 const fs = require('fs');
 var recording;
+var Mousetrap = require('mousetrap');
 /* End NodeJS Requires */
 /* Electron requires */
 
@@ -121,7 +122,7 @@ $('[data-action="plot"]').click(function(){
 $('[data-action="inputs"]').click(function(){
   var modal=bootbox.dialog({
     message : '<div id="inputs-content"</div>',
-    title : 'Experiment equations',
+    title : 'Gains',
     buttons : {
       danger : {
         label : 'Cancel',
@@ -522,3 +523,8 @@ function check_temp(){
 ipcRenderer.on('rec',(event,data)=>{
   recording=data.rec;
 });
+/**********************************/
+
+Mousetrap.bind(['command+s','ctrl+s'],function(){$('[data-action="save-file"]').trigger('click');});
+Mousetrap.bind(['command+space','ctrl+space'],function(){  $("[name='on-off']").trigger('click');});
+Mousetrap.bind(['command+r','ctrl+r'],function(ev){ ev.preventDefault();$("[name='start-stop']").trigger('click'); });
