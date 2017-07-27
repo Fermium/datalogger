@@ -1,14 +1,15 @@
 /*  NodeJS Requires  */
-
+/*jshint esversion: 6*/
 const _ = require('lodash');
 const math = require('mathjs');
 const mathjaxHelper = require('mathjax-electron');
 const easytimer = require('easytimer');
 const codemirror = require('codemirror');
-require('codemirror/mode/javascript/javascript')
-require('codemirror/addon/edit/matchbrackets')
+require('codemirror/mode/javascript/javascript');
+require('codemirror/addon/edit/matchbrackets');
 //const db = require('./logger');
 const fs = require('fs');
+var recording;
 /* End NodeJS Requires */
 /* Electron requires */
 
@@ -519,3 +520,6 @@ function check_temp(){
 }
 
 /*****************************/
+ipcRenderer.on('rec',(event,data)=>{
+  recording=data.rec;
+});

@@ -1,3 +1,4 @@
+/*jshint esversion: 6*/
 var app = require('electron').remote;
 const fs = require('fs');
 const path = require('path');

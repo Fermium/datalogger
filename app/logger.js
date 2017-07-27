@@ -1,3 +1,4 @@
+/*jshint esversion: 6*/
 var low = require('lowdb'); //db .json
 var db;
 var dbfile= '';
@@ -26,7 +27,7 @@ process.on('message',(data)=>{
         write(data.message);
       break;
   }
-})
+});
 
   function createdb (file){
     try{

@@ -1,3 +1,4 @@
+/*jshint esversion: 6*/
 var datachan = require('data-chan').lib;
 var dc_search_results = require('data-chan').search_enum;
 var ref = require('ref');
@@ -49,7 +50,7 @@ function init(){
   datachan.datachan_send_async_command(usb.device,3,buf,buf.length);
   buf = new Buffer([7,6]);
   datachan.datachan_send_async_command(usb.device,3,buf,buf.length);
-  process.send({action:'init'})
+  process.send({action:'init'});
 }
 
 function on(){

@@ -1,3 +1,4 @@
+/*jshint esversion: 6*/
 " use strict";
 //var logger = require('./logger.js');
 var fs = require('fs');
@@ -100,11 +101,11 @@ function export_data(file,sep,extension){
           if(err) console.log(err);
       });
 	});
-};
+}
 function init_math(mathsh,to_export){
 
     cols.push('time');
-    for(i in to_export){
+    for(var i in to_export){
       cols.push(_.clone({
         label: to_export[i],
         value: function(row,field,data){
@@ -115,7 +116,7 @@ function init_math(mathsh,to_export){
         }
       }));
     }
-  };
+  }
   /*function scidavis(){
     var file = logger.getfile();
     var data = JSON.parse(fs.readFileSync(file, 'utf8'));

@@ -1,3 +1,4 @@
+/*jshint esversion: 6*/
 var remote = require('electron').remote;
 var _ = require('lodash');
 var config = remote.getGlobal('session');
@@ -38,7 +39,7 @@ graph.render();
 var xAxes = new Rickshaw.Graph.Axis.X( {
 	graph: graph,
 	tickFormat: function(x){
-		return new Date(x*1000).toLocaleTimeString()
+		return new Date(x*1000).toLocaleTimeString();
 	},
 	ticks: 4,
 } );

@@ -1,3 +1,4 @@
+/*jshint esversion: 6*/
 const electron = require('electron');
 var {dialog} = require('electron');
 const {fork} = require('child_process');
