@@ -53,7 +53,6 @@ yAxis.render();
 
 ipcRenderer.on('update',(event,data)=>{
   dataplot = {};
-	console.log(data.val);
   dataplot.val=data.val;
 	graph.series.addData(dataplot);
 	graph.update();

@@ -1,3 +1,4 @@
+
 /*jshint esversion: 6*/
 " use strict";
 var fs = require('fs');
@@ -29,8 +30,6 @@ function init_math(mathsh,to_export){
         label: to_export[i],
         value: function(row,field,data){
           values=math.eval(mathsh,row);
-          console.log(this.label);
-          console.log(row[this.label].value);
           return row[this.label].value;
         }
       }));

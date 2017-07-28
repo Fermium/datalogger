@@ -66,7 +66,6 @@ ipcRenderer.on('usb-fail',function(event,args){
 });
 
 ipcRenderer.on('measure',function(event,args){
-  console.log('measure');
   _.extend(scope,args.scope);
   math.format(math.eval(mathsheet,scope),2);
   evaluate();
@@ -77,7 +76,7 @@ ipcRenderer.on('measure',function(event,args){
     values[x.val]=math.number(scope[x.val],unit[x.val]);
     }
     catch(e){
-      console.log(scope[x.val]);
+
     }
   });
   ipcRenderer.send('update',{'scope':values});
@@ -110,6 +109,7 @@ $('[data-action="save-file"]').click(function(){
   if(path!==undefined){
     ipcRenderer.send('save-file',{'path' : path});
     if($("[name='start-stop']").prop("disabled") && $("[name='on-off']").bootstrapSwitch('state')){
+      menu.items[1].submenu.items[1].enabled=true;
       $("[name='start-stop']").bootstrapSwitch('toggleDisabled');
     }
   }
@@ -196,8 +196,7 @@ $('[data-action="editequation"]').click(function() {
           dialog.showOpenDialog({
           defaultPath : require('os').homedir()+'/.datalogger/math/mathsheet.txt',
         title: 'Import math file' }, function(path){
-          console.log(path);
-          try { mathsheet=fs.readFileSync(path[0],'utf8');  $('#latex').html(''); editor.setValue(mathsheet); console.log(mathsheet);}
+          try { mathsheet=fs.readFileSync(path[0],'utf8');  $('#latex').html(''); editor.setValue(mathsheet);}
           catch(e) { console.log(e); alert('Failed to read the file !'); }
         });
         return false;
@@ -259,7 +258,6 @@ $('[data-action="editequation"]').click(function() {
     editor.setValue(mathsheet);
     var mm = [];
     editor.getValue().split('\n').forEach(function(x){
-      console.log(math.parse(x).toTex());
       if(math.parse(x).toTex()!=='undefined'){
         mm.push(x);
       }
@@ -270,7 +268,6 @@ $('[data-action="editequation"]').click(function() {
     for(var i in mm){
       try{
         var a  = math.parse(mm[i]).toTex();
-        console.log(a!=='undefined');
         if(a!=='undefined'){
           $('#latex').append('<li class="list-group-item">$'+a+'$</li>');
         }
@@ -437,6 +434,7 @@ ipcRenderer.on('on',(event,args)=>{
         $('#date').text(' - ' + session._date);
         if(recording && $("[name='start-stop']").prop("disabled")){
           $("[name='start-stop']").bootstrapSwitch('toggleDisabled');
+          menu.items[1].submenu.items[1].enabled=true;
         }
       }
     });
@@ -459,7 +457,6 @@ ipcRenderer.on('on',(event,args)=>{
 
 function on(){
   ipcRenderer.send('on');
-
 }
 
 function off(){

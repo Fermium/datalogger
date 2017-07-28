@@ -160,7 +160,6 @@ app.on('ready', function(){
   usb.on('message',(data)=>{
     switch(data.action){
       case 'usb-fail':
-        console.log(data.action);
         mainWindow.webContents.send('usb-fail', {});
         break;
       case 'init':

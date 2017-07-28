@@ -27,7 +27,6 @@ function getDirectories (srcpath) {
 function updateList(producer){
   var products = getDirectories(  (__dirname+'/devices/'+producer).replace('app.asar','app.asar.unpacked').replace('/selectdevice',''));
   products.forEach(function(x){
-    console.log(producer+" - "+x);
     appendProduct(producer,x);
   });
 }
@@ -60,7 +59,6 @@ function appendProduct(producer,name){
 }
 $('#search').change(function(){
   var str = $(this).val().split(' ');
-  console.log(str);
   $('[data-product]').each(function(){
     $(this).parent().fadeIn(100);
   });

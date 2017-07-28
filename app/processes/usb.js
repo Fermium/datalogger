@@ -152,7 +152,6 @@ else{
 process.on('message',(data)=>{
   switch(data.action){
     case 'on':
-      console.log('on');
       a=data.message.a;
       b=data.message.b;
       process.send({action:'on',message:on()});
