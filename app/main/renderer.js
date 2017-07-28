@@ -466,12 +466,18 @@ function off(){
   $("[name='start-stop']").bootstrapSwitch('disabled',true);
   $('#experiment').text('');
   $('#date').text('');
+  menu.items[2].submenu.items.forEach((e)=>{
+    e.enabled=false;
+  });
   ui.init();
   ipcRenderer.send('off');
 }
 
 function rec(){
   $.blockUI();
+  menu.items[2].submenu.items.forEach((e)=>{
+    e.enabled=true;
+  });
   ipcRenderer.send('start');
   ipcRenderer.on('started',function(event,args){
     if(!args.return){
@@ -577,16 +583,19 @@ const template = [
     submenu: [
       {
         label: 'Export to CSV',
+        enabled: false,
         click () {    ipcRenderer.send('export',{ex:{"extension": "csv","sep": ","},math:mathsheet});
         }
       },
       {
         label: 'Export to TSV',
+        enabled: false,
         click () {    ipcRenderer.send('export',{ex:{"extension": "tsv","sep": "\t"},math:mathsheet});
         }
       },
       {
         label: 'Open in SciDAVis',
+        enabled: false,
         click () {   ipcRenderer.send('export',{ex:{"extension": "scidavis"},math:mathsheet});
         }
       }
