@@ -70,7 +70,6 @@
     "asarUnpack": [
       "./app/devices/**/**",
       "./node_modules/data-chan/libDataChan*"
-
     ],
     "mac": {
       "category": "public.app-category.utilities"
