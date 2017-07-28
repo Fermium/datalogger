@@ -633,4 +633,9 @@ const template = [
 
 
 const menu = Menu.buildFromTemplate(template);
-app.getCurrentWindow().setMenu(menu);
+if(process.platform === 'darwin'){
+  Menu.setApplicationMenu(menu);
+}
+else{
+  app.getCurrentWindow().setMenu(menu);
+}

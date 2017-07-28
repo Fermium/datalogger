@@ -148,12 +148,13 @@ function createPlotWindow (name) {
 // Some APIs can only be used after this event occurs.
 app.on('ready', function(){
   usb = fork(__dirname+'/processes/usb.js', {
-    env: process.env,
+    // see issue 1613 in electron regarding child process spawning
+    env: {'ATOM_SHELL_INTERNAL_RUN_AS_NODE':'0'},
     stdio: ["ipc","inherit", "inherit", "inherit"]
   }
   );
   logger = fork(__dirname+'/processes/logger.js', {
-    env: process.env,
+    env: {'ATOM_SHELL_INTERNAL_RUN_AS_NODE':'0'},
     stdio: ["ipc","inherit", "inherit", "inherit"]
   }
   );
@@ -275,7 +276,7 @@ ipcMain.on('device-select',(event,arg)=>{
 ipcMain.on('export',(event,args)=>{
     args.to_export=['Vh','temp','Vr','I','R','B'];
     args.file=dbfile;
-    var exprt=fork(__dirname+'/processes/exports.js',[JSON.stringify(args)],{env: process.env,stdio: ['ipc', 'inherit', 'inherit','inherit']});
+    var exprt=fork(__dirname+'/processes/exports.js',[JSON.stringify(args)],{env: {'ATOM_SHELL_INTERNAL_RUN_AS_NODE':'0'},stdio: ['ipc', 'inherit', 'inherit','inherit']});
     exprt.on('message',(data)=>{
       switch (data.action) {
         case 'end':
