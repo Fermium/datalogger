@@ -1,7 +1,7 @@
 /*jshint esversion: 6*/
 
-var datachan = require(/*(__dirname+'/node_modules/data-chan').replace('/app.asar/app/processes','/app.asar.unpacked')*/'data-chan').lib;
-var dc_search_results = require(/*(__dirname+'/node_modules/data-chan').replace('/app.asar/app/processes','/app.asar.unpacked')*/'data-chan').search_enum;
+var datachan = require('data-chan').lib;
+var dc_search_results = require('data-chan').search_enum;
 var ref = require('ref');
 var arr = require('ref-array');
 var f_arr = arr('float');
