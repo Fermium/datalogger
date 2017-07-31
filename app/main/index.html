@@ -23,12 +23,13 @@
 	<script type='text/javascript' src='../assets/js/plugins/forms/selects/selectboxit.min.js'></script>
 
 	<script>
+	var path = require('path');
 	var {ipcRenderer} = require('electron');
 	var tmp=ipcRenderer.sendSync('get-device');
 	console.log(tmp)
 	$('head').append($('<link/>').attr({
 		rel : 'import',
-		href : '../'+tmp+'src/ui.html'
+		href : path.normalize(path.join('..',tmp,'src','ui.html'))
 	}));
 	</script>
 

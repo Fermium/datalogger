@@ -55,19 +55,25 @@ function init(){
 }
 
 function on(){
-  datachan.datachan_init();
-  usb=datachan.datachan_device_acquire();
-  if(debug){
-    thread=setInterval(read,200);
+  try{
+    datachan.datachan_init();
+    usb=datachan.datachan_device_acquire();
+    if(debug){
+      thread=setInterval(read,200);
+    }
+    else if(usb.result === dc_search_results.success){
+      datachan.datachan_device_enable(usb.device);
+      init();
+      thread=setInterval(read,200);
+    }
+    onn = usb.result === dc_search_results.success || debug;
+    return onn;
   }
-  else if(usb.result === dc_search_results.success){
-    datachan.datachan_device_enable(usb.device);
-    init();
-    thread=setInterval(read,200);
+  catch(err){
+    console.log(err);
   }
-  onn = usb.result === dc_search_results.success || debug;
-  return onn;
 }
+
 
 function off(){
   if(debug){
@@ -85,7 +91,7 @@ function off(){
 
 
 function ison (){
-  return on;
+  return onn;
 }
 function send_command(command){
   var buf;

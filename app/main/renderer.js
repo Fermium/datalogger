@@ -1,14 +1,14 @@
 /*  NodeJS Requires  */
 /*jshint esversion: 6*/
-var pjson = require(path.normalize(path.join('..','..','package.json')));
 const _ = require('lodash');
 const math = require('mathjs');
 const mathjaxHelper = require('mathjax-electron');
 const easytimer = require('easytimer');
 const codemirror = require('codemirror');
+var fs = require('fs');
+var path = require('path');
 require('codemirror/mode/javascript/javascript');
 require('codemirror/addon/edit/matchbrackets');
-const fs = require('fs');
 var recording;
 /* End NodeJS Requires */
 /* Electron requires */
@@ -103,11 +103,13 @@ $('[data-export]').click(function(){
   ipcRenderer.send('export',{ex:$(this).data('export'),math:mathsheet});
 });
 $('[data-action="save-file"]').click(function(){
-  var path = dialog.showSaveDialog({
-    defaultPath : path.normalize(path.join(require('os').homedir(),'.datalogger','sessions',session._name+"_"+session._date+'.json')),
+  var p= path.join(require('os').homedir(),'.datalogger','sessions',session._name+"_"+session._date+'.json');
+  console.log(p)
+  var pp = dialog.showSaveDialog({
+    defaultPath : path.normalize(p),
     title: 'Experiment file save location' });
-  if(path!==undefined){
-    ipcRenderer.send('save-file',{'path' : path});
+  if(pp!==undefined){
+    ipcRenderer.send('save-file',{'path' : pp});
     if($("[name='start-stop']").prop("disabled") && $("[name='on-off']").bootstrapSwitch('state')){
       menu.items[1].submenu.items[1].enabled=true;
       $("[name='start-stop']").bootstrapSwitch('toggleDisabled');
@@ -150,6 +152,7 @@ $('[data-action="inputs"]').click(function(){
   });
   modal.on('show.bs.modal',function(){
     var i;
+    $('#inputs-content').empty();
     for(i=0;i<channels.length;i++){
       $('#inputs-content').append($('<div/>').addClass('row').append(
         '<div class="col-md-3 col-sm-3 col-xs-3">'+
@@ -417,7 +420,7 @@ function updatePopover(block){
 
 
 ipcRenderer.on('on',(event,args)=>{
-  if(args.state){
+  if(args.st){
     bootbox.prompt({
       size: 'small',
       inputType: 'text',
