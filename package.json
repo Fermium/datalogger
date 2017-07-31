@@ -96,6 +96,7 @@
     "win": {
       "target": [
         "nsis",
+        "squirrel",
         "zip"
       ]
     }
