@@ -1,6 +1,6 @@
 /*  NodeJS Requires  */
 /*jshint esversion: 6*/
-var pjson = require('../../package.json');
+var pjson = require(path.normalize(path.join('..','..','package.json')));
 const _ = require('lodash');
 const math = require('mathjs');
 const mathjaxHelper = require('mathjax-electron');
@@ -104,7 +104,7 @@ $('[data-export]').click(function(){
 });
 $('[data-action="save-file"]').click(function(){
   var path = dialog.showSaveDialog({
-    defaultPath : require('os').homedir()+'/.datalogger/sessions/'+session._name+"_"+session._date,
+    defaultPath : path.normalize(path.join(require('os').homedir(),'.datalogger'.'sessions',session._name+"_"+session._date+'.json')),
     title: 'Experiment file save location' });
   if(path!==undefined){
     ipcRenderer.send('save-file',{'path' : path});
@@ -194,7 +194,7 @@ $('[data-action="editequation"]').click(function() {
         className : 'btn-default',
         callback: function() {
           dialog.showOpenDialog({
-          defaultPath : require('os').homedir()+'/.datalogger/math/mathsheet.txt',
+          defaultPath : path.normalize(path.join(require('os').homedir(),'.datalogger','math','mathsheet.txt')),
         title: 'Import math file' }, function(path){
           try { mathsheet=fs.readFileSync(path[0],'utf8');  $('#latex').html(''); editor.setValue(mathsheet);}
           catch(e) { console.log(e); alert('Failed to read the file !'); }
@@ -208,7 +208,7 @@ $('[data-action="editequation"]').click(function() {
         className : 'btn-default',
         callback: function(){
           dialog.showSaveDialog({
-          defaultPath : require('os').homedir()+'/.datalogger/math/mathsheet.txt',
+          defaultPath : path.normalize(path.join(require('os').homedir(),'.datalogger','math','mathsheet.txt')),
           title: 'Export math file' }, function(path){
             var result = editor.getValue();
             if(result !== null) mathsheet=result;
