@@ -104,7 +104,7 @@ $('[data-export]').click(function(){
 });
 $('[data-action="save-file"]').click(function(){
   var path = dialog.showSaveDialog({
-    defaultPath : path.normalize(path.join(require('os').homedir(),'.datalogger'.'sessions',session._name+"_"+session._date+'.json')),
+    defaultPath : path.normalize(path.join(require('os').homedir(),'.datalogger','sessions',session._name+"_"+session._date+'.json')),
     title: 'Experiment file save location' });
   if(path!==undefined){
     ipcRenderer.send('save-file',{'path' : path});
