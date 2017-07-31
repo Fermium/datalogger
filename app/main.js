@@ -147,13 +147,13 @@ function createPlotWindow (name) {
 // initialization and is ready to create browser windows.
 // Some APIs can only be used after this event occurs.
 app.on('ready', function(){
-  usb = fork(__dirname+'/processes/usb.js', {
+  usb = fork(path.normalize(path.join(__dirname,'processes','usb.js')), {
     // see issue 1613 in electron regarding child process spawning
     env: {'ATOM_SHELL_INTERNAL_RUN_AS_NODE':'0'},
     stdio: ["ipc","inherit", "inherit", "inherit"]
   }
   );
-  logger = fork(__dirname+'/processes/logger.js', {
+  logger = fork(path.normalize(path.join(__dirname,'processes','logger.js')), {
     env: {'ATOM_SHELL_INTERNAL_RUN_AS_NODE':'0'},
     stdio: ["ipc","inherit", "inherit", "inherit"]
   }
@@ -266,7 +266,7 @@ ipcMain.on('ready',(event,arg)=>{
   event.returnValue={'config':config.config,'product':config.product};
 });
 ipcMain.on('get-device',(event,arg)=>{
-  event.returnValue='./devices/'+config.product.manufacturercode+'/'+config.product.model+'/';
+  event.returnValue=path.normalize(path.join('.','devices',config.product.manufacturercode,config.product.model));
 });
 ipcMain.on('device-select',(event,arg)=>{
   config=jsyaml.safeLoad(fs.readFileSync(arg.device+'config.yaml'));
@@ -276,7 +276,7 @@ ipcMain.on('device-select',(event,arg)=>{
 ipcMain.on('export',(event,args)=>{
     args.to_export=['Vh','temp','Vr','I','R','B'];
     args.file=dbfile;
-    var exprt=fork(__dirname+'/processes/exports.js',[JSON.stringify(args)],{env: {'ATOM_SHELL_INTERNAL_RUN_AS_NODE':'0'},stdio: ['ipc', 'inherit', 'inherit','inherit']});
+    var exprt=fork(path.normalize(path.join(__dirname,'processes','exports.js')),[JSON.stringify(args)],{env: {'ATOM_SHELL_INTERNAL_RUN_AS_NODE':'0'},stdio: ['ipc', 'inherit', 'inherit','inherit']});
     exprt.on('message',(data)=>{
       switch (data.action) {
         case 'end':

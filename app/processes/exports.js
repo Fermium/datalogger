@@ -12,7 +12,7 @@ var values={};
 var cols = [];
 function export_data(file,sep,extension){
   var data = JSON.parse(fs.readFileSync(file, 'utf8'));
-  var name = path.dirname(file)+'/'+path.basename(file,'.json')+'/experiment_data.'+extension;
+  var name = path.normalize(path.join(path.dirname(file),path.basename(file,'.json'),'experiment_data.'+extension));
 
 	json2csv({ data: data._data , fields:cols,del: sep}, (err,csv) => {
   		if (err) console.log(err);
@@ -37,7 +37,7 @@ function init_math(mathsh,to_export){
   }
   function scidavis(file){
     var data = JSON.parse(fs.readFileSync(file, 'utf8'));
-    var name = path.dirname(file)+path.basename(file,'.json')+'/tmp.tsv';
+    var name = path.normalize(path.join(path.dirname(file),path.basename(file,'.json'),'tmp.tsv'));
   	json2csv({ data: data._data ,fields:cols,del: '\t'}, (err,csv) => {
     		if (err) throw err;
         fsPath.writeFile(name, csv, function(err) {
