@@ -34,6 +34,7 @@
     "electron": "^1.6.6",
     "electron-builder": "^19.13.0",
     "electron-builder-squirrel-windows": "^16.6.0",
+    "electron-debug": "^1.3.0",
     "gulp-concat": "^2.6.0"
   },
   "dependencies": {

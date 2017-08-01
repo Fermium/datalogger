@@ -34,7 +34,6 @@ var modal;
 
 /**************************************************/
 $(document).ready(function(){
-  app.getCurrentWindow().toggleDevTools();
   init();
   $("[name='start-stop']").bootstrapSwitch({
       onText: 'REC',
