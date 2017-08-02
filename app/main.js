@@ -10,6 +10,7 @@ var fs = require('fs');
 var path = require('path');
 var http = require('https');
 var logger;
+var usb_on=false;
 var corr = {a:0,b:0};
 /*const Raven = require('raven');
 try{
@@ -34,7 +35,7 @@ let mainWindow;
 let plotWindow = {};
 let handbookWindow;
 let selectDeviceWindow;
-global.session = {'_date':dateFormat(Date.now(), 'yyyy_mm_dd')};
+global.session = {'_name':'','_date':dateFormat(Date.now(), 'yyyy_mm_dd')};
 function createWindow () {
 
   // Create the browser window.
@@ -171,7 +172,8 @@ app.on('ready', function(){
         mainWindow.webContents.send('measure',  {'scope':data.message});
         break;
       case 'on':
-        mainWindow.webContents.send('on',  {'state':data.message});
+        mainWindow.webContents.send('on',  {'st':data.message});
+        usb_on=data.message;
         break;
     }
   });
@@ -257,8 +259,10 @@ ipcMain.on('on',(event,arg) => {
     });
 });
 ipcMain.on('off',(event,arg) => {
+  if(usb_on){
   usb.send({action:'off',message:''});
     logger.send({action:'close'});
+  }
 });
 ipcMain.on('update',(event,arg)=>{
   for(var name in plotWindow){
@@ -269,7 +273,9 @@ ipcMain.on('isrunning',(event,arg)=>{
   usb.send({action:'ison',message:''});
 });
 ipcMain.on('send-to-hardware',(event,arg)=>{
-  usb.send({action:'send_command',message:arg});
+  if(usb_on){
+    usb.send({action:'send_command',message:arg});
+  }
 });
 ipcMain.on('ready',(event,arg)=>{
   event.returnValue={'config':config.config,'product':config.product};
