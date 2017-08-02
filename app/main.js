@@ -245,7 +245,16 @@ ipcMain.on('stop',(event,arg) => {
   logger.send({action:'stop'});
 });
 ipcMain.on('on',(event,arg) => {
-  usb.send({action:'on',message:{a:config.config.calibration.a,b:config.config.calibration.b}});
+  usb.send({
+    action:'on',
+    message:
+      {
+        a:config.config.calibration.a,
+        b:config.config.calibration.b,
+        vid:config.product.usb.vid,
+        pid:config.product.usb.pid
+      }
+    });
 });
 ipcMain.on('off',(event,arg) => {
   usb.send({action:'off',message:''});

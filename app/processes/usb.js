@@ -1,5 +1,6 @@
 /*jshint esversion: 6*/
-
+var vid;
+var pid;
 var datachan = require('data-chan').lib;
 var dc_search_results = require('data-chan').search_enum;
 var ref = require('ref');
@@ -54,9 +55,11 @@ function init(){
   process.send({action:'init'});
 }
 
-function on(){
+function on(vi,pi){
   datachan.datachan_init();
-  usb=datachan.datachan_device_acquire();
+  vid = vi;
+  pid = pi;
+  usb=datachan.datachan_device_acquire(vid,pid);
   if(debug){
     thread=setInterval(read,200);
   }
@@ -111,7 +114,7 @@ function send_command(command){
 
 function read(){
 if(!debug){
-if(datachan.datachan_device_acquire().result===dc_search_results.not_found_or_inaccessible){
+if(datachan.datachan_device_acquire(vid,pid).result===dc_search_results.not_found_or_inaccessible){
   process.send({action:'usb-fail',message:'fail'});
   return;
 }
@@ -154,7 +157,7 @@ process.on('message',(data)=>{
     case 'on':
       a=data.message.a;
       b=data.message.b;
-      process.send({action:'on',message:on()});
+      process.send({action:'on',message:on(data.message.vid,data.message.pid)});
       break;
     case 'off':
       off();
