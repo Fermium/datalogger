@@ -284,7 +284,7 @@ ipcMain.on('get-device',(event,arg)=>{
   event.returnValue=path.normalize(path.join('.','devices',config.product.manufacturercode,config.product.model));
 });
 ipcMain.on('device-select',(event,arg)=>{
-  config=jsyaml.safeLoad(fs.readFileSync(arg.device+'config.yaml'));
+  config=jsyaml.safeLoad(fs.readFileSync(path.normalize(path.join(arg.device,'config.yaml'))));
   session._name=config.product.model;
   createWindow();
 });

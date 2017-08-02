@@ -63,11 +63,14 @@ function on(vi,pi){
   if(debug){
     thread=setInterval(read,200);
   }
-  catch(err){
-    console.log(err);
+  else if(usb.result === dc_search_results.success){
+    datachan.datachan_device_enable(usb.device);
+    init();
+    thread=setInterval(read,200);
   }
+  onn = usb.result === dc_search_results.success || debug;
+  return onn;
 }
-
 
 function off(){
   if(debug){
@@ -85,7 +88,7 @@ function off(){
 
 
 function ison (){
-  return onn;
+  return on;
 }
 function send_command(command){
   var buf;
@@ -99,11 +102,11 @@ function send_command(command){
       break;
       case "set_heater_state" :
         buf = new Buffer([parseInt(command.value*255)]);
-        datachan.datachan_send_async_command(usb.device,2,buf,buf.length);
+        datachan.datachan_send_async_command(usb.device,4,buf,buf.length);
       break;
       case "set_gain" :
         buf = new Buffer([parseInt(command.channel),parseInt(command.value)]);
-        datachan.datachan_send_async_command(usb.device,3,buf,buf.length);
+        datachan.datachan_send_async_command(usb.device,5,buf,buf.length);
       break;
     }
   }
