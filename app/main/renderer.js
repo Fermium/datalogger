@@ -1,15 +1,17 @@
 /*  NodeJS Requires  */
 /*jshint esversion: 6*/
+var path = require('path');
 const _ = require('lodash');
 const math = require('mathjs');
 const mathjaxHelper = require('mathjax-electron');
 const easytimer = require('easytimer');
 const codemirror = require('codemirror');
 var fs = require('fs');
-var path = require('path');
+var pjson = require(path.normalize(path.join('..','..','package.json')));
 require('codemirror/mode/javascript/javascript');
 require('codemirror/addon/edit/matchbrackets');
 var recording;
+
 /* End NodeJS Requires */
 /* Electron requires */
 
@@ -104,7 +106,6 @@ $('[data-export]').click(function(){
 });
 $('[data-action="save-file"]').click(function(){
   var p= path.join(require('os').homedir(),'.datalogger','sessions',session._name+"_"+session._date+'.json');
-  console.log(p)
   var pp = dialog.showSaveDialog({
     defaultPath : path.normalize(p),
     title: 'Experiment file save location' });
