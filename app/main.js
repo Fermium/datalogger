@@ -152,14 +152,12 @@ app.on('ready', function(){
   usb = fork(/*"/home/s/Desktop/datalogger/node_modules/electron/dist/electron",*/ path.normalize(path.join(__dirname,'processes','usb.js')), {    // see issue 1613 in electron regarding child process spawning
     // env: process.env,
     //stdio: ["ipc","inherit", "inherit", "inherit"]
-    detached : true,
-    silent:true
+
 
   }
   );
   logger = fork(/*"/home/s/Desktop/datalogger/node_modules/electron/dist/electron",[*/path.normalize(path.join(__dirname,'processes','logger.js')), {
     //env: process.evn
-    silent : true
   }
   );
   usb.on('message',(data)=>{
@@ -180,7 +178,9 @@ app.on('ready', function(){
         break;
     }
   });
-
+usb.on('exit',(code,n)=>{
+  console.log('usb exited with code '+code);
+});
   logger.on('message',(data)=>{
     switch(data.action){
       case 'createdb':

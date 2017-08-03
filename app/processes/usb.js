@@ -3,10 +3,10 @@ var vid;
 var pid;
 var datachan = require('data-chan').lib;
 var dc_search_results = require('data-chan').search_enum;
-var ref = require('ref');
+/*var ref = require('ref');
 var arr = require('ref-array');
 var f_arr = arr('float');
-var struct = require('ref-struct');
+var struct = require('ref-struct');*/
 var measure_t = struct({
   'type' : ref.types.uint8,
   'mu' : ref.types.uint8,
@@ -155,9 +155,10 @@ else{
 process.on('message',(data)=>{
   switch(data.action){
     case 'on':
-      a=data.message.a;
+    /*  a=data.message.a;
       b=data.message.b;
-      process.send({action:'on',message:on(data.message.vid,data.message.pid)});
+      process.send({action:'on',message:on(data.message.vid,data.message.pid)});*/
+      console.log('qualcosa');
       break;
     case 'off':
       off();
