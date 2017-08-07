@@ -4,7 +4,6 @@ const fs = require('fs');
 const path = require('path');
 const {ipcRenderer} = require('electron');
 const jsyaml = require('js-yaml');
-app.getCurrentWindow().toggleDevTools();
 $(document).keydown(function(e) {
     // ESCAPE key pressed
     if (e.keyCode == 27) {

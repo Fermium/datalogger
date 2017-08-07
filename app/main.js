@@ -2,14 +2,14 @@
 const electron = require('electron');
 var {dialog} = require('electron');
 const {fork} = require('child_process');
-var usb;
+var usb=null;
 const math = require('mathjs');
 const dateFormat = require('dateformat'); //for date
 const _ = require('lodash');
 var fs = require('fs');
 var path = require('path');
 var http = require('https');
-var logger;
+var logger=null;
 var usb_on=false;
 var corr = {a:0,b:0};
 /*const Raven = require('raven');
@@ -148,47 +148,6 @@ function createPlotWindow (name) {
 // initialization and is ready to create browser windows.
 // Some APIs can only be used after this event occurs.
 app.on('ready', function(){
-  console.log(process.argv[0]);
-  usb = fork(/*"/home/s/Desktop/datalogger/node_modules/electron/dist/electron",*/ path.normalize(path.join(__dirname,'processes','usb.js')), {    // see issue 1613 in electron regarding child process spawning
-    // env: process.env,
-    //stdio: ["ipc","inherit", "inherit", "inherit"]
-
-
-  }
-  );
-  logger = fork(/*"/home/s/Desktop/datalogger/node_modules/electron/dist/electron",[*/path.normalize(path.join(__dirname,'processes','logger.js')), {
-    //env: process.evn
-  }
-  );
-  usb.on('message',(data)=>{
-    switch(data.action){
-      case 'usb-fail':
-        mainWindow.webContents.send('usb-fail', {});
-        break;
-      case 'init':
-        mainWindow.webContents.send('init', {});
-        break;
-      case 'mes':
-        logger.send({action:'write',message:data.message});
-        mainWindow.webContents.send('measure',  {'scope':data.message});
-        break;
-      case 'on':
-        mainWindow.webContents.send('on',  {'st':data.message});
-        usb_on=data.message;
-        break;
-    }
-  });
-usb.on('exit',(code,n)=>{
-  console.log('usb exited with code '+code);
-});
-  logger.on('message',(data)=>{
-    switch(data.action){
-      case 'createdb':
-        mainWindow.webContents.send('rec',  {'rec':data.message.state});
-        dbfile = data.message.file;
-        break;
-    }
-  });
   createSelectDevice();
 });
 
@@ -205,9 +164,11 @@ app.on('window-all-closed', function () {
 app.on('activate', function () {
   // On OS X it's common to re-create a window in the app when the
   // dock icon is clicked and there are no other windows open.
-  if (mainWindow === null) {
+
+    if (mainWindow === null) {
     createWindow();
   }
+
 });
 app.on('web-contents-created',function(ev,wc){
   wc.on('will-navigate',ev=>{
@@ -290,6 +251,52 @@ ipcMain.on('get-device',(event,arg)=>{
 ipcMain.on('device-select',(event,arg)=>{
   config=jsyaml.safeLoad(fs.readFileSync(path.normalize(path.join(arg.device,'config.yaml'))));
   session._name=config.product.model;
+    if(usb == null){
+    console.log('usb');
+      usb = fork(/*"/home/s/Desktop/datalogger/node_modules/electron/dist/electron",*/ path.normalize(path.join(__dirname,'processes','usb.js')), {    // see issue 1613 in electron regarding child process spawning
+    // env: process.env,
+    //stdio: ["ipc","inherit", "inherit", "inherit"]
+
+
+  }
+  );
+  usb.on('message',(data)=>{
+    switch(data.action){
+      case 'usb-fail':
+        mainWindow.webContents.send('usb-fail', {});
+        break;
+      case 'init':
+        mainWindow.webContents.send('init', {});
+        break;
+      case 'mes':
+        logger.send({action:'write',message:data.message});
+        mainWindow.webContents.send('measure',  {'scope':data.message});
+        break;
+      case 'on':
+        mainWindow.webContents.send('on',  {'st':data.message});
+        usb_on=data.message;
+        break;
+    }
+  });
+usb.on('exit',(code,n)=>{
+  console.log('usb exited with code '+code);
+});
+  }
+if(logger == null){
+  
+  logger = fork(/*"/home/s/Desktop/datalogger/node_modules/electron/dist/electron",[*/path.normalize(path.join(__dirname,'processes','logger.js')), {
+    //env: process.evn
+  }
+  );
+    logger.on('message',(data)=>{
+    switch(data.action){
+      case 'createdb':
+        mainWindow.webContents.send('rec',  {'rec':data.message.state});
+        dbfile = data.message.file;
+        break;
+    }
+  });
+}
   createWindow();
 });
 ipcMain.on('export',(event,args)=>{
