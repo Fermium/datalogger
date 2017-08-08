@@ -31,7 +31,8 @@ var mathsheet = "";
 var channels = {};
 var unit = {};
 
-var modal;
+var modaleq;
+var modalgain;
 /* End Variables */
 
 /**************************************************/
@@ -125,62 +126,72 @@ $('[data-action="plot"]').click(function(){
 });
 
 $('[data-action="inputs"]').click(function(){
-  if(modal!== undefined)modal.modal('toggle');
-  modal=bootbox.dialog({
-    message : '<div id="inputs-content"</div>',
-    title : 'Gains',
-    buttons : {
-      danger : {
-        label : 'Cancel',
-        className : 'btn-default',
-        callback : function(){
+  if(modaleq !== undefined && modaleq.hasOwnProperty('showing') && modaleq.showing) modaleq.modal('hide');
+  if(modalgain===undefined){
+    modalgain=bootbox.dialog({
+      message : '<div id="inputs-content"</div>',
+      title : 'Gains',
+      buttons : {
+        danger : {
+          label : 'Cancel',
+          className : 'btn-default',
+          callback : function(){
+            console.log('input');
+          }
+        },
+        success : {
+          label:'Confirm',
+          className: 'btn-primary',
+          callback: function() {
+            $('select.gain').each(function(i){
+              channels[i].gain = $(this).val();
+              ipcRenderer.send('send-to-hardware',{id:'set_gain',channel: channels[i].code,value:channels[i].gain});
+            });
+          }
         }
       },
-      success : {
-        label:'Confirm',
-        className: 'btn-primary',
-        callback: function() {
-          $('select.gain').each(function(i){
-            channels[i].gain = $(this).val();
-            ipcRenderer.send('send-to-hardware',{id:'set_gain',channel: channels[i].code,value:channels[i].gain});
-          });
-        }
-      }
-    },
-    show : false,
-    onEscape : true
-  });
-  modal.on('show.bs.modal',function(){
-    var i;
-    $('#inputs-content').empty();
-    for(i=0;i<channels.length;i++){
-      $('#inputs-content').append($('<div/>').addClass('row').append(
-        '<div class="col-md-3 col-sm-3 col-xs-3">'+
-        channels[i].name+
-        '</div><div class="col-md-3 col-sm-3 col-xs-3">'+
-        '<select class="gain"></select></div><div class="col-md-6 col-sm-6 col-xs-6">'+
-        channels[i].description+
-        '</div>'));
-    }
-    $('.gain').each(function(i){
-      $(this).selectBoxIt({
-        autoWidth: false,
-        copyClasses : "container",
-      });
-      channels[i].gainvalues.forEach((el,j)=>{
-        $(this).data("selectBox-selectBoxIt").add({value: el,text : 'x'+channels[i].gainlabels[j]});
-      });
-      $(this).find('option[value='+channels[i].gain+']').attr('selected','selected');
-      $(this).data('selectBox-selectBoxIt').refresh();
+      show : false,
+      onEscape : true
     });
+    
+  }
+  modalgain.on('show.bs.modal',function(){      
+      var i;
+      $('#inputs-content').empty();
+      for(i=0;i<channels.length;i++){
+        $('#inputs-content').append($('<div/>').addClass('row').append(
+          '<div class="col-md-3 col-sm-3 col-xs-3">'+
+          channels[i].name+
+          '</div><div class="col-md-3 col-sm-3 col-xs-3">'+
+          '<select class="gain"></select></div><div class="col-md-6 col-sm-6 col-xs-6">'+
+          channels[i].description+
+          '</div>'));
+      }
+      $('.gain').each(function(i){
+        $(this).selectBoxIt({
+          autoWidth: false,
+          copyClasses : "container",
+        });
+        channels[i].gainvalues.forEach((el,j)=>{
+          $(this).data("selectBox-selectBoxIt").add({value: el,text : 'x'+channels[i].gainlabels[j]});
+        });
+        $(this).find('option[value='+channels[i].gain+']').attr('selected','selected');
+        $(this).data('selectBox-selectBoxIt').refresh();
+      });
+    modalgain.showing=true;
+    });
+  modalgain.on('hidden.bs.modal',()=>{
+    modalgain.showing=false;
   });
-  modal.modal('show');
+  if(!modalgain.showing)
+    modalgain.modal('show');
 });
 
 $('[data-action="editequation"]').click(function() {
-  if(modal!== undefined)modal.modal('toggle');
+  if(modalgain !== undefined && modalgain.hasOwnProperty('showing') && modalgain.showing) modalgain.modal('hide');
   var editor;
-  modal=bootbox.dialog({
+    if(modaleq===undefined){
+  modaleq=bootbox.dialog({
     message : ''+
     '<div class="row d-flex flex-column" style="position:relative">'+
         '<textarea class="form-control"  id="equations"></textarea>'+
@@ -225,6 +236,7 @@ $('[data-action="editequation"]').click(function() {
         label : 'Cancel',
         className : 'btn-default',
         callback : function(){
+          console.log('input');
         }
       },
       confirm : {
@@ -250,7 +262,9 @@ $('[data-action="editequation"]').click(function() {
     show : false,
     onEscape : true
   });
-  modal.on('shown.bs.modal',function(){
+ 
+    }
+ modaleq.on('shown.bs.modal',function(){
     editor = codemirror.fromTextArea(document.getElementById('equations'),{
       mode: 'javascript',
       theme : 'eclipse',
@@ -320,8 +334,13 @@ $('[data-action="editequation"]').click(function() {
         }
       }
     });
+    modaleq.showing=true;
   });
-  modal.modal('show');
+    modaeq.on('hidden.bs.modal',()=>{
+    modaleq.showing=false;
+  });
+if(!modaleq.showing)
+    modaleq.modal('show');
 });
 
 
