@@ -1,6 +1,7 @@
 {
   "version": "0.2.0",
   "configurations": [
+
     {
       "name": "Debug Main Process",
       "type": "node",
@@ -11,7 +12,7 @@
         "runtimeExecutable": "${workspaceRoot}/node_modules/.bin/electron.cmd"
       },
       "program": "${workspaceRoot}/app/main.js",
-      "protocol": "legacy"
+      "protocol": "inspector"
     },
     {
       "name": "Debug Renderer Process",
@@ -25,7 +26,7 @@
         "${workspaceRoot}/app/main.js",
         "--remote-debugging-port=9222"
       ],
-      "webRoot": "${workspaceRoot}"
+      "webRoot": "${workspaceRoot}/app"
     }
   ]
 }

@@ -190,7 +190,15 @@ ipcMain.on('handbook',(event,arg) => {
 });
 
 ipcMain.on('save-file',(event,arg)=>{
-
+  logger = fork(path.normalize(path.join(__dirname,'processes','logger.js')));
+    logger.on('message',(data)=>{
+    switch(data.action){
+      case 'createdb':
+        mainWindow.webContents.send('rec',  {'rec':data.message.state});
+        dbfile = data.message.file;
+        break;
+    }
+  });
   logger.send({
     action:'createdb',
     message:{
@@ -212,6 +220,35 @@ ipcMain.on('stop',(event,arg) => {
   logger.send({action:'stop'});
 });
 ipcMain.on('on',(event,arg) => {
+        usb = fork(/*"/home/s/Desktop/datalogger/node_modules/electron/dist/electron",*/ path.normalize(path.join(__dirname,'processes','usb.js')), {    // see issue 1613 in electron regarding child process spawning
+    // env: process.env,
+    //stdio: ["ipc","inherit", "inherit", "inherit"]
+
+
+  }
+  );
+  usb.on('message',(data)=>{
+    switch(data.action){
+      case 'usb-fail':
+        mainWindow.webContents.send('usb-fail', {});
+        break;
+      case 'init':
+        mainWindow.webContents.send('init', {});
+        break;
+      case 'mes':
+        logger.send({action:'write',message:data.message});
+        mainWindow.webContents.send('measure',  {'scope':data.message});
+        break;
+      case 'on':
+        mainWindow.webContents.send('on',  {'st':data.message});
+        usb_on=data.message;
+        break;
+    }
+  });
+usb.on('exit',(code,n)=>{
+  console.log('usb exited with code '+code);
+});
+  
   usb.send({
     action:'on',
     message:
@@ -251,52 +288,6 @@ ipcMain.on('get-device',(event,arg)=>{
 ipcMain.on('device-select',(event,arg)=>{
   config=jsyaml.safeLoad(fs.readFileSync(path.normalize(path.join(arg.device,'config.yaml'))));
   session._name=config.product.model;
-    if(usb == null){
-    console.log('usb');
-      usb = fork(/*"/home/s/Desktop/datalogger/node_modules/electron/dist/electron",*/ path.normalize(path.join(__dirname,'processes','usb.js')), {    // see issue 1613 in electron regarding child process spawning
-    // env: process.env,
-    //stdio: ["ipc","inherit", "inherit", "inherit"]
-
-
-  }
-  );
-  usb.on('message',(data)=>{
-    switch(data.action){
-      case 'usb-fail':
-        mainWindow.webContents.send('usb-fail', {});
-        break;
-      case 'init':
-        mainWindow.webContents.send('init', {});
-        break;
-      case 'mes':
-        logger.send({action:'write',message:data.message});
-        mainWindow.webContents.send('measure',  {'scope':data.message});
-        break;
-      case 'on':
-        mainWindow.webContents.send('on',  {'st':data.message});
-        usb_on=data.message;
-        break;
-    }
-  });
-usb.on('exit',(code,n)=>{
-  console.log('usb exited with code '+code);
-});
-  }
-if(logger == null){
-  
-  logger = fork(/*"/home/s/Desktop/datalogger/node_modules/electron/dist/electron",[*/path.normalize(path.join(__dirname,'processes','logger.js')), {
-    //env: process.evn
-  }
-  );
-    logger.on('message',(data)=>{
-    switch(data.action){
-      case 'createdb':
-        mainWindow.webContents.send('rec',  {'rec':data.message.state});
-        dbfile = data.message.file;
-        break;
-    }
-  });
-}
   createWindow();
 });
 ipcMain.on('export',(event,args)=>{
