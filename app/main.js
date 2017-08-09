@@ -1,6 +1,8 @@
 /*jshint esversion: 6*/
 const electron = require('electron');
 var {dialog} = require('electron');
+const electron_debug = require('electron-debug')({enabled: true});
+
 const {fork} = require('child_process');
 var usb;
 const math = require('mathjs');
@@ -10,6 +12,7 @@ var fs = require('fs');
 var path = require('path');
 var http = require('https');
 var logger;
+var usb_on=false;
 var corr = {a:0,b:0};
 /*const Raven = require('raven');
 try{
@@ -34,7 +37,7 @@ let mainWindow;
 let plotWindow = {};
 let handbookWindow;
 let selectDeviceWindow;
-global.session = {'_date':dateFormat(Date.now(), 'yyyy_mm_dd')};
+global.session = {'_name':'','_date':dateFormat(Date.now(), 'yyyy_mm_dd')};
 function createWindow () {
 
   // Create the browser window.
@@ -71,6 +74,7 @@ function createSelectDevice () {
   });
 
 }
+
 function createHandbookWindow(){
   var manual = config.manual;
   handbookWindow = new PDFWindow({width: 800, height: 600});
@@ -147,20 +151,20 @@ function createPlotWindow (name) {
 // initialization and is ready to create browser windows.
 // Some APIs can only be used after this event occurs.
 app.on('ready', function(){
-  usb = fork(__dirname+'/processes/usb.js', {
-    env: process.env,
+  usb = fork(path.normalize(path.join(__dirname,'processes','usb.js')), {
+    // see issue 1613 in electron regarding child process spawning
+    env: {'ATOM_SHELL_INTERNAL_RUN_AS_NODE':'0'},
     stdio: ["ipc","inherit", "inherit", "inherit"]
   }
   );
-  logger = fork(__dirname+'/processes/logger.js', {
-    env: process.env,
+  logger = fork(path.normalize(path.join(__dirname,'processes','logger.js')), {
+    env: {'ATOM_SHELL_INTERNAL_RUN_AS_NODE':'0'},
     stdio: ["ipc","inherit", "inherit", "inherit"]
   }
   );
   usb.on('message',(data)=>{
     switch(data.action){
       case 'usb-fail':
-        console.log(data.action);
         mainWindow.webContents.send('usb-fail', {});
         break;
       case 'init':
@@ -171,7 +175,8 @@ app.on('ready', function(){
         mainWindow.webContents.send('measure',  {'scope':data.message});
         break;
       case 'on':
-        mainWindow.webContents.send('on',  {'state':data.message});
+        mainWindow.webContents.send('on',  {'st':data.message});
+        usb_on=data.message;
         break;
     }
   });
@@ -245,11 +250,14 @@ ipcMain.on('stop',(event,arg) => {
   logger.send({action:'stop'});
 });
 ipcMain.on('on',(event,arg) => {
+  if(usb_on)
   usb.send({action:'on',message:{a:config.config.calibration.a,b:config.config.calibration.b}});
 });
 ipcMain.on('off',(event,arg) => {
+  if(usb_on){
   usb.send({action:'off',message:''});
     logger.send({action:'close'});
+  }
 });
 ipcMain.on('update',(event,arg)=>{
   for(var name in plotWindow){
@@ -260,23 +268,25 @@ ipcMain.on('isrunning',(event,arg)=>{
   usb.send({action:'ison',message:''});
 });
 ipcMain.on('send-to-hardware',(event,arg)=>{
-  usb.send({action:'send_command',message:arg});
+  if(usb_on){
+    usb.send({action:'send_command',message:arg});
+  }
 });
 ipcMain.on('ready',(event,arg)=>{
   event.returnValue={'config':config.config,'product':config.product};
 });
 ipcMain.on('get-device',(event,arg)=>{
-  event.returnValue='./devices/'+config.product.manufacturercode+'/'+config.product.model+'/';
+  event.returnValue=path.normalize(path.join('.','devices',config.product.manufacturercode,config.product.model));
 });
 ipcMain.on('device-select',(event,arg)=>{
-  config=jsyaml.safeLoad(fs.readFileSync(arg.device+'config.yaml'));
+  config=jsyaml.safeLoad(fs.readFileSync(path.normalize(path.join(arg.device,'config.yaml'))));
   session._name=config.product.model;
   createWindow();
 });
 ipcMain.on('export',(event,args)=>{
     args.to_export=['Vh','temp','Vr','I','R','B'];
     args.file=dbfile;
-    var exprt=fork(__dirname+'/processes/exports.js',[JSON.stringify(args)],{env: process.env,stdio: ['ipc', 'inherit', 'inherit','inherit']});
+    var exprt=fork(path.normalize(path.join(__dirname,'processes','exports.js')),[JSON.stringify(args)],{env: {'ATOM_SHELL_INTERNAL_RUN_AS_NODE':'0'},stdio: ['ipc', 'inherit', 'inherit','inherit']});
     exprt.on('message',(data)=>{
       switch (data.action) {
         case 'end':

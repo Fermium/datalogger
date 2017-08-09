@@ -4,7 +4,6 @@ const fs = require('fs');
 const path = require('path');
 const {ipcRenderer} = require('electron');
 const jsyaml = require('js-yaml');
-
 $(document).keydown(function(e) {
     // ESCAPE key pressed
     if (e.keyCode == 27) {
@@ -12,7 +11,7 @@ $(document).keydown(function(e) {
     }
 });
 $(document).ready(function(){
-  var producers = getDirectories( (__dirname+'/../devices/').replace('app.asar','app.asar.unpacked'));
+  var producers = getDirectories(path.normalize(path.join(__dirname,'devices').replace('app.asar','app.asar.unpacked').replace('selectdevice','')));
   producers.forEach(function(pr){
     updateList(pr);
   });
@@ -25,21 +24,20 @@ function getDirectories (srcpath) {
 }
 
 function updateList(producer){
-  var products = getDirectories(  (__dirname+'/../devices/'+producer).replace('app.asar','app.asar.unpacked'));
+  var products = getDirectories(path.normalize(path.join(__dirname,'devices',producer).replace('app.asar','app.asar.unpacked').replace('selectdevice','')));
   products.forEach(function(x){
-    console.log(producer+" - "+x);
     appendProduct(producer,x);
   });
 }
 function appendProduct(producer,name){
-  var product=jsyaml.safeLoad(fs.readFileSync( ( __dirname+'/../devices/'+producer+'/'+name+'/config.yaml').replace('app.asar','app.asar.unpacked'))).product;
+  var product=jsyaml.safeLoad(fs.readFileSync(path.normalize(path.join(__dirname,'devices',producer,name,'config.yaml').replace('app.asar','app.asar.unpacked').replace('selectdevice','')))).product;
   $('.content-wrapper').append($('<div/>').addClass('col-xs-6').append($('<div/>').addClass('panel panel-default product').attr({
     'style':"-webkit-app-region: no-drag",
     'data-product':name,
     'data-producer':producer,
   })));
   $('[data-product='+name+'][data-producer='+producer+']').append($('<img/>').addClass('panel-heading').attr({
-    src :  (__dirname+'/../devices/'+producer+'/'+name+'/'+product.image).replace('app.asar','app.asar.unpacked'),
+    src :  path.normalize(path.join(__dirname,'devices',producer,name,product.image).replace('app.asar','app.asar.unpacked').replace('selectdevice','')),
     alt : product.name
   }));
   $('[data-product='+name+'][data-producer='+producer+']').append($('<div/>').addClass('panel-body'));
@@ -48,7 +46,7 @@ function appendProduct(producer,name){
   $('[data-product='+name+'][data-producer='+producer+']'+" .panel-body").append($('<p/>').text(product.description));
   $('[data-product='+name+'][data-producer='+producer+']'+" .panel-body").append($('<a/>').addClass('btn btn-primary select-device').attr({
     href : '#',
-    'data-device' :   (__dirname+'/../devices/'+producer+'/'+name+'/').replace('app.asar','app.asar.unpacked')
+    'data-device' :   path.normalize(path.join(__dirname,'devices',producer,name).replace('app.asar','app.asar.unpacked').replace('selectdevice',''))
   }).text('Next'));
   $('.select-device').each(function(x){
 
@@ -60,7 +58,6 @@ function appendProduct(producer,name){
 }
 $('#search').change(function(){
   var str = $(this).val().split(' ');
-  console.log(str);
   $('[data-product]').each(function(){
     $(this).parent().fadeIn(100);
   });

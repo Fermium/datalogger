@@ -1,16 +1,15 @@
 /*  NodeJS Requires  */
 /*jshint esversion: 6*/
-var pjson = require('../../package.json');
 const _ = require('lodash');
 const math = require('mathjs');
 const mathjaxHelper = require('mathjax-electron');
 const easytimer = require('easytimer');
 const codemirror = require('codemirror');
+var fs = require('fs');
+var path = require('path');
 require('codemirror/mode/javascript/javascript');
 require('codemirror/addon/edit/matchbrackets');
-const fs = require('fs');
 var recording;
-var Mousetrap = require('mousetrap');
 /* End NodeJS Requires */
 /* Electron requires */
 
@@ -66,7 +65,6 @@ ipcRenderer.on('usb-fail',function(event,args){
 });
 
 ipcRenderer.on('measure',function(event,args){
-  console.log('measure');
   _.extend(scope,args.scope);
   math.format(math.eval(mathsheet,scope),2);
   evaluate();
@@ -77,7 +75,7 @@ ipcRenderer.on('measure',function(event,args){
     values[x.val]=math.number(scope[x.val],unit[x.val]);
     }
     catch(e){
-      console.log(scope[x.val]);
+
     }
   });
   ipcRenderer.send('update',{'scope':values});
@@ -104,12 +102,15 @@ $('[data-export]').click(function(){
   ipcRenderer.send('export',{ex:$(this).data('export'),math:mathsheet});
 });
 $('[data-action="save-file"]').click(function(){
-  var path = dialog.showSaveDialog({
-    defaultPath : require('os').homedir()+'/.datalogger/sessions/'+session._name+"_"+session._date,
+  var p= path.join(require('os').homedir(),'.datalogger','sessions',session._name+"_"+session._date+'.json');
+  console.log(p)
+  var pp = dialog.showSaveDialog({
+    defaultPath : path.normalize(p),
     title: 'Experiment file save location' });
-  if(path!==undefined){
-    ipcRenderer.send('save-file',{'path' : path});
+  if(pp!==undefined){
+    ipcRenderer.send('save-file',{'path' : pp});
     if($("[name='start-stop']").prop("disabled") && $("[name='on-off']").bootstrapSwitch('state')){
+      menu.items[1].submenu.items[1].enabled=true;
       $("[name='start-stop']").bootstrapSwitch('toggleDisabled');
     }
   }
@@ -150,6 +151,7 @@ $('[data-action="inputs"]').click(function(){
   });
   modal.on('show.bs.modal',function(){
     var i;
+    $('#inputs-content').empty();
     for(i=0;i<channels.length;i++){
       $('#inputs-content').append($('<div/>').addClass('row').append(
         '<div class="col-md-3 col-sm-3 col-xs-3">'+
@@ -194,10 +196,9 @@ $('[data-action="editequation"]').click(function() {
         className : 'btn-default',
         callback: function() {
           dialog.showOpenDialog({
-          defaultPath : require('os').homedir()+'/.datalogger/math/mathsheet.txt',
+          defaultPath : path.normalize(path.join(require('os').homedir(),'.datalogger','math','mathsheet.txt')),
         title: 'Import math file' }, function(path){
-          console.log(path);
-          try { mathsheet=fs.readFileSync(path[0],'utf8');  $('#latex').html(''); editor.setValue(mathsheet); console.log(mathsheet);}
+          try { mathsheet=fs.readFileSync(path[0],'utf8');  $('#latex').html(''); editor.setValue(mathsheet);}
           catch(e) { console.log(e); alert('Failed to read the file !'); }
         });
         return false;
@@ -209,7 +210,7 @@ $('[data-action="editequation"]').click(function() {
         className : 'btn-default',
         callback: function(){
           dialog.showSaveDialog({
-          defaultPath : require('os').homedir()+'/.datalogger/math/mathsheet.txt',
+          defaultPath : path.normalize(path.join(require('os').homedir(),'.datalogger','math','mathsheet.txt')),
           title: 'Export math file' }, function(path){
             var result = editor.getValue();
             if(result !== null) mathsheet=result;
@@ -259,7 +260,6 @@ $('[data-action="editequation"]').click(function() {
     editor.setValue(mathsheet);
     var mm = [];
     editor.getValue().split('\n').forEach(function(x){
-      console.log(math.parse(x).toTex());
       if(math.parse(x).toTex()!=='undefined'){
         mm.push(x);
       }
@@ -270,7 +270,6 @@ $('[data-action="editequation"]').click(function() {
     for(var i in mm){
       try{
         var a  = math.parse(mm[i]).toTex();
-        console.log(a!=='undefined');
         if(a!=='undefined'){
           $('#latex').append('<li class="list-group-item">$'+a+'$</li>');
         }
@@ -420,7 +419,7 @@ function updatePopover(block){
 
 
 ipcRenderer.on('on',(event,args)=>{
-  if(args.state){
+  if(args.st){
     bootbox.prompt({
       size: 'small',
       inputType: 'text',
@@ -437,6 +436,7 @@ ipcRenderer.on('on',(event,args)=>{
         $('#date').text(' - ' + session._date);
         if(recording && $("[name='start-stop']").prop("disabled")){
           $("[name='start-stop']").bootstrapSwitch('toggleDisabled');
+          menu.items[1].submenu.items[1].enabled=true;
         }
       }
     });
@@ -459,7 +459,6 @@ ipcRenderer.on('on',(event,args)=>{
 
 function on(){
   ipcRenderer.send('on');
-
 }
 
 function off(){
@@ -469,12 +468,18 @@ function off(){
   $("[name='start-stop']").bootstrapSwitch('disabled',true);
   $('#experiment').text('');
   $('#date').text('');
+  menu.items[2].submenu.items.forEach((e)=>{
+    e.enabled=false;
+  });
   ui.init();
   ipcRenderer.send('off');
 }
 
 function rec(){
   $.blockUI();
+  menu.items[2].submenu.items.forEach((e)=>{
+    e.enabled=true;
+  });
   ipcRenderer.send('start');
   ipcRenderer.on('started',function(event,args){
     if(!args.return){
@@ -580,16 +585,19 @@ const template = [
     submenu: [
       {
         label: 'Export to CSV',
+        enabled: false,
         click () {    ipcRenderer.send('export',{ex:{"extension": "csv","sep": ","},math:mathsheet});
         }
       },
       {
         label: 'Export to TSV',
+        enabled: false,
         click () {    ipcRenderer.send('export',{ex:{"extension": "tsv","sep": "\t"},math:mathsheet});
         }
       },
       {
         label: 'Open in SciDAVis',
+        enabled: false,
         click () {   ipcRenderer.send('export',{ex:{"extension": "scidavis"},math:mathsheet});
         }
       }
