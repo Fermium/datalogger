@@ -125,7 +125,7 @@ $('[data-action="plot"]').click(function(){
 });
 
 $('[data-action="inputs"]').click(function(){
-  if(modal!== undefined)modal.modal('toggle');
+  if(modal!==undefined)modal.modal('hide');
   modal=bootbox.dialog({
     message : '<div id="inputs-content"</div>',
     title : 'Gains',
@@ -150,7 +150,7 @@ $('[data-action="inputs"]').click(function(){
     show : false,
     onEscape : true
   });
-  modal.on('show.bs.modal',function(){
+  modal.on('shown.bs.modal',function(){
     var i;
     $('#inputs-content').empty();
     for(i=0;i<channels.length;i++){
@@ -174,15 +174,18 @@ $('[data-action="inputs"]').click(function(){
       $(this).data('selectBox-selectBoxIt').refresh();
     });
   });
+  $(".modal").on("hidden.bs.modal", function(){
+    $(".modal-body1").html("");
+  });
   modal.modal('show');
 });
 
 $('[data-action="editequation"]').click(function() {
-  if(modal!== undefined)modal.modal('toggle');
+  if(modal!==undefined)modal.modal('hide');
   var editor;
   modal=bootbox.dialog({
-    message : ''+
-    '<div class="row d-flex flex-column" style="position:relative">'+
+    message : '<div id=\'eqmodal\'>'+
+    '<div class="row d-flex flex-column " style="position:relative">'+
         '<textarea class="form-control"  id="equations"></textarea>'+
       '</div>'+
       '<div class="row d-flex flex-column" style="position:relative">'+
@@ -225,6 +228,7 @@ $('[data-action="editequation"]').click(function() {
         label : 'Cancel',
         className : 'btn-default',
         callback : function(){
+          modal.showing=undefined;
         }
       },
       confirm : {
@@ -543,7 +547,7 @@ const template = [
       {
         label: 'New File',
         accelerator : 'CmdOrCtrl+N',
-        click () { $('[data-action="save-file"]').trigger('click');}
+        click () { _.debounce(()=>{$('[data-action="save-file"]').trigger('click');});}
       },
       {
         label: 'Change Experiment',
@@ -572,12 +576,12 @@ const template = [
       {
         label: 'Edit Experiment Math',
         accelerator: 'CmdOrCtrl+M',
-        click () { $('[data-action="editequation"]').trigger('click');  }
+        click () { _.debounce(()=>{$('[data-action="editequation"]').trigger('click');});  }
       },
       {
         label: 'Change Channel Gain',
         accelerator: 'CmdOrCtrl+G',
-        click () { $('[data-action="inputs"]').trigger('click');}
+        click () {_.debounce(()=>{ $('[data-action="inputs"]').trigger('click');});}
       }
     ]
   },
