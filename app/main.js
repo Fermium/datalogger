@@ -2,14 +2,14 @@
 const electron = require('electron');
 var {dialog} = require('electron');
 const {fork} = require('child_process');
-var usb;
+var usb=null;
 const math = require('mathjs');
 const dateFormat = require('dateformat'); //for date
 const _ = require('lodash');
 var fs = require('fs');
 var path = require('path');
 var http = require('https');
-var logger;
+var logger=null;
 var usb_on=false;
 var corr = {a:0,b:0};
 /*const Raven = require('raven');
@@ -46,8 +46,8 @@ function createWindow () {
 
   // Emitted when the window is closed.
   mainWindow.on('closed', function () {
-    if(logger !== undefined && logger !== null) logger.kill();
-    if(usb    !== undefined && usb    !== null) usb.kill();
+    logger.kill();
+    usb.kill();
     // Dereference the window object, usually you would store windows
     // in an array if your app supports multi windows, this is the time
     // when you should delete the corresponding element.
@@ -199,7 +199,7 @@ ipcMain.on('save-file',(event,arg)=>{
         break;
     }
   });
-  if(logger!==undefined && logger !== null) logger.send({
+  logger.send({
     action:'createdb',
     message:{
       path: arg.path,
@@ -212,18 +212,21 @@ ipcMain.on('save-file',(event,arg)=>{
 });
 
 ipcMain.on('start',(event,arg) => {
-if(logger!==undefined && logger !== null) logger.send({action:'start'});
+logger.send({action:'start'});
 mainWindow.webContents.send('started',  {'return':'a'});
 });
 
 ipcMain.on('stop',(event,arg) => {
-  if(logger!==undefined && logger !== null) logger.send({action:'stop'});
+  logger.send({action:'stop'});
 });
 ipcMain.on('on',(event,arg) => {
-  usb = fork(path.normalize(path.join(__dirname,'processes','usb.js')),options={
-    env: {},
-    stdio: ["ipc","inherit", "inherit", "inherit"]
-  });
+        usb = fork(/*"/home/s/Desktop/datalogger/node_modules/electron/dist/electron",*/ path.normalize(path.join(__dirname,'processes','usb.js')), {    // see issue 1613 in electron regarding child process spawning
+    // env: process.env,
+    //stdio: ["ipc","inherit", "inherit", "inherit"]
+
+
+  }
+  );
   usb.on('message',(data)=>{
     switch(data.action){
       case 'usb-fail':
@@ -233,22 +236,19 @@ ipcMain.on('on',(event,arg) => {
         mainWindow.webContents.send('init', {});
         break;
       case 'mes':
-        if(logger!==undefined && logger!==null)logger.send({action:'write',message:data.message});
+        logger.send({action:'write',message:data.message});
         mainWindow.webContents.send('measure',  {'scope':data.message});
         break;
       case 'on':
         mainWindow.webContents.send('on',  {'st':data.message});
         usb_on=data.message;
-        
         break;
     }
   });
 usb.on('exit',(code,n)=>{
   console.log('usb exited with code '+code);
 });
- usb.on('disconnect',(code,n)=>{
-  console.log('usb disconnected with code '+code);
-}); 
+  
   usb.send({
     action:'on',
     message:
@@ -263,7 +263,7 @@ usb.on('exit',(code,n)=>{
 ipcMain.on('off',(event,arg) => {
   if(usb_on){
   usb.send({action:'off',message:''});
-  if(logger!==undefined && logger !== null) logger.send({action:'close'});
+    logger.send({action:'close'});
   }
 });
 ipcMain.on('update',(event,arg)=>{
