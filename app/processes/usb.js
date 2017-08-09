@@ -60,14 +60,18 @@ function init(){
 }
 
 function on(){
-  datachan.datachan_init();
-  usb=datachan.datachan_device_acquire(vid,pid);
-  if(debug){
-    thread=setInterval(read,200);
-  }
-  catch(err){
-    console.log(err);
-  }
+   datachan.datachan_init();
+   usb=datachan.datachan_device_acquire(vid,pid);
+   if(debug){
+     thread=setInterval(read,200);
+   }
+   else if(usb.result === dc_search_results.success){
+     datachan.datachan_device_enable(usb.device);
+     init();
+     thread=setInterval(read,200);
+   }
+   onn = usb.result === dc_search_results.success || debug;
+   return onn;
 }
 
 
@@ -113,12 +117,12 @@ function send_command(command){
 
 function read(){
 if(!debug){
- 
+
 if(datachan.datachan_device_is_enabled(usb.device) && !debug){
   n_mes=datachan.datachan_device_enqueued_measures(usb.device);
   if(!n_mes){
      process.send({action:'usb-fail',message:'fail'});
-      return; 
+      return;
   }
   while(n_mes){
     try{
@@ -134,7 +138,7 @@ if(datachan.datachan_device_is_enabled(usb.device) && !debug){
     }
     catch(e){
       process.send({action:'usb-fail',message:'fail'});
-      return;    
+      return;
     }
     n_mes--;
     datachan.datachan_clean_measure(mes);
