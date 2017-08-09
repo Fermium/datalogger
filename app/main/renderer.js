@@ -547,7 +547,7 @@ const template = [
       {
         label: 'New File',
         accelerator : 'CmdOrCtrl+N',
-        click () { _.debounce(()=>{$('[data-action="save-file"]').trigger('click');});}
+        click () { _.debounce(()=>{$('[data-action="save-file"]').trigger('click');},1000);}
       },
       {
         label: 'Change Experiment',
@@ -576,12 +576,12 @@ const template = [
       {
         label: 'Edit Experiment Math',
         accelerator: 'CmdOrCtrl+M',
-        click () { _.debounce(()=>{$('[data-action="editequation"]').trigger('click');});  }
+        click () { _.debounce(()=>{$('[data-action="editequation"]').trigger('click');},1000);  }
       },
       {
         label: 'Change Channel Gain',
         accelerator: 'CmdOrCtrl+G',
-        click () {_.debounce(()=>{ $('[data-action="inputs"]').trigger('click');});}
+        click () {_.debounce(()=>{ $('[data-action="inputs"]').trigger('click');},1000);}
       }
     ]
   },
