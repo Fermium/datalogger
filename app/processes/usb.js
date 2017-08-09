@@ -7,11 +7,13 @@ var ref = require('ref');
 var arr = require('ref-array');
 var f_arr = arr('float');
 var struct = require('ref-struct');
+const MAX_MEASURE_NUM = require('data-chan').MAX_MEASURE_NUM;
 var measure_t = struct({
   'type' : ref.types.uint8,
   'mu' : ref.types.uint8,
-  'channel' : ref.types.uint8,
-  'value' : ref.types.float,
+  'measureNum' : ref.types.uint8,
+  'channels' : arr(ref.types.uint8,MAX_MEASURE_NUM),
+  'values' :  arr(ref.types.float,MAX_MEASURE_NUM),
   'time' : ref.types.uint32,
   'millis' : ref.types.uint16
 });
@@ -21,6 +23,8 @@ var onn=false;
 var a;
 var b;
 var debug = false;
+var measure=new Buffer(52);
+var mes;
 var scope = {
   'time' : 0,
   'ch1'  : 0,
@@ -55,10 +59,8 @@ function init(){
   process.send({action:'init'});
 }
 
-function on(vi,pi){
+function on(){
   datachan.datachan_init();
-  vid = vi;
-  pid = pi;
   usb=datachan.datachan_device_acquire(vid,pid);
   if(debug){
     thread=setInterval(read,200);
@@ -114,26 +116,34 @@ function send_command(command){
 
 function read(){
 if(!debug){
-if(datachan.datachan_device_acquire(vid,pid).result===dc_search_results.not_found_or_inaccessible){
-  process.send({action:'usb-fail',message:'fail'});
-  return;
-}
-var measure=new Buffer(52);
-var mes;
+ 
 if(datachan.datachan_device_is_enabled(usb.device) && !debug){
   n_mes=datachan.datachan_device_enqueued_measures(usb.device);
-  for(var i=0;i<n_mes;i++){
+  if(!n_mes){
+     process.send({action:'usb-fail',message:'fail'});
+      return; 
+  }
+  while(n_mes){
+    try{
     mes = datachan.datachan_device_dequeue_measure(usb.device);
+    mes.type= measure_t;
     measure =ref.deref(mes);
-    if(i==n_mes-1){
+    if(n_mes===1){
       scope.time=measure.time*1000+measure.millis;
       for(i=0;i<measure.measureNum;i++){
         scope['ch'+measure.channels[i]]=measure.values[i];
       }
     }
+    }
+    catch(e){
+      process.send({action:'usb-fail',message:'fail'});
+      return;    
+    }
+    n_mes--;
     datachan.datachan_clean_measure(mes);
-  }
 }
+
+  }
 }
 else{
     scope= {
@@ -157,8 +167,9 @@ process.on('message',(data)=>{
     case 'on':
       a=data.message.a;
       b=data.message.b;
-      process.send({action:'on',message:on(data.message.vid,data.message.pid)});
-      console.log('qualcosa');
+      vid = data.message.vid;
+      pid = data.message.pid;
+      process.send({action:'on',message:on()});
       break;
     case 'off':
       off();
