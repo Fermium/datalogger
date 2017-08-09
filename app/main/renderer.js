@@ -124,7 +124,7 @@ $('[data-action="plot"]').click(function(){
   ipcRenderer.send('plot',{'name':name});
 });
 
-$('[data-action="inputs"]').click(function(){
+$('[data-action="inputs"]').click(_.debounce(function(){
   if(modal!==undefined)modal.modal('hide');
   modal=bootbox.dialog({
     message : '<div id="inputs-content"</div>',
@@ -174,13 +174,16 @@ $('[data-action="inputs"]').click(function(){
       $(this).data('selectBox-selectBoxIt').refresh();
     });
   });
-  $(".modal").on("hidden.bs.modal", function(){
-    $(".modal-body1").html("");
+  modal.on('hide.bs.modal',()=>{
+    if(parseFloat($('body').css('padding-right'))>0){
+      
+      $('body').css('padding-right',0);
+    }
   });
   modal.modal('show');
-});
+},200));
 
-$('[data-action="editequation"]').click(function() {
+$('[data-action="editequation"]').click(_.debounce(function() {
   if(modal!==undefined)modal.modal('hide');
   var editor;
   modal=bootbox.dialog({
@@ -325,8 +328,14 @@ $('[data-action="editequation"]').click(function() {
       }
     });
   });
+  modal.on('hide.bs.modal',()=>{
+    if(parseFloat($('body').css('padding-right'))>0){
+      console.log('padding');
+      $('body').css('padding-right',0);
+    }
+  });
   modal.modal('show');
-});
+},200));
 
 
 /* End Events */
@@ -576,12 +585,12 @@ const template = [
       {
         label: 'Edit Experiment Math',
         accelerator: 'CmdOrCtrl+M',
-        click () { _.debounce(()=>{$('[data-action="editequation"]').trigger('click');});  }
+        click () {$('[data-action="editequation"]').trigger('click');}
       },
       {
         label: 'Change Channel Gain',
         accelerator: 'CmdOrCtrl+G',
-        click () {_.debounce(()=>{ $('[data-action="inputs"]').trigger('click');});}
+        click () { $('[data-action="inputs"]').trigger('click');}
       }
     ]
   },
