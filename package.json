@@ -67,7 +67,7 @@
     "riot": "^2.3.15"
   },
   "build": {
-    "asar": false,
+    "asar": true,
     "appId": "org.fermiumlabs.datalogger",
     "asarUnpack": [
       "./app/devices/**/**",
@@ -97,6 +97,7 @@
     },
     "win": {
       "target": [
+	"nsis",
         "zip"
       ]
     }
