@@ -1,6 +1,8 @@
 /*jshint esversion: 6*/
 const electron = require('electron');
 var {dialog} = require('electron');
+const electron_debug = require('electron-debug')({enabled: true});
+
 const {fork} = require('child_process');
 var usb;
 const math = require('mathjs');
@@ -72,6 +74,7 @@ function createSelectDevice () {
   });
 
 }
+
 function createHandbookWindow(){
   var manual = config.manual;
   handbookWindow = new PDFWindow({width: 800, height: 600});
