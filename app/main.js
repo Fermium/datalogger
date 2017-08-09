@@ -180,6 +180,10 @@ app.on('web-contents-created',function(ev,wc){
 ipcMain.on('plot',(event,arg) => {
   createPlotWindow(arg.name);
 });
+ipcMain.on('relaunch',(event,arg) => {
+  app.relaunch();
+  app.exit();
+});
 ipcMain.on('handbook',(event,arg) => {
   createHandbookWindow();
 
@@ -239,7 +243,7 @@ ipcMain.on('on',(event,arg) => {
       case 'on':
         mainWindow.webContents.send('on',  {'st':data.message});
         usb_on=data.message;
-        
+
         break;
     }
   });
@@ -248,7 +252,7 @@ usb.on('exit',(code,n)=>{
 });
  usb.on('disconnect',(code,n)=>{
   console.log('usb disconnected with code '+code);
-}); 
+});
   usb.send({
     action:'on',
     message:

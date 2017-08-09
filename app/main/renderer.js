@@ -176,7 +176,7 @@ $('[data-action="inputs"]').click(_.debounce(function(){
   });
   modal.on('hide.bs.modal',()=>{
     if(parseFloat($('body').css('padding-right'))>0){
-      
+
       $('body').css('padding-right',0);
     }
   });
@@ -561,7 +561,7 @@ const template = [
       {
         label: 'Change Experiment',
         accelerator : 'CmdOrCtrl+S',
-        click () {  }
+        click () {  ipcRenderer.send('relaunch') }
       },
       {
         role: 'quit'
