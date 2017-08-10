@@ -38,6 +38,7 @@ let plotWindow = {};
 let handbookWindow;
 let selectDeviceWindow;
 global.session = {'_name':'','_date':dateFormat(Date.now(), 'yyyy_mm_dd')};
+
 function createWindow () {
 
   // Create the browser window.

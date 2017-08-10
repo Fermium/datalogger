@@ -32,7 +32,7 @@
     "babel-preset-env": "^1.6.0",
     "babel-preset-react": "^6.23.0",
     "electron": "^1.6.6",
-    "electron-builder": "^19.13.0",
+    "electron-builder": "^19.19.1",
     "electron-builder-squirrel-windows": "^16.6.0",
     "gulp-concat": "^2.6.0"
   },
@@ -77,6 +77,10 @@
     "mac": {
       "category": "public.app-category.utilities"
     },
+    "nsis": {
+      "oneClick": false,
+      "allowElevation": true
+    },
     "dmg": {
       "contents": [
         {
@@ -98,8 +102,7 @@
     },
     "win": {
       "target": [
-	"nsis",
-        "zip"
+        "nsis"
       ]
     }
   }
