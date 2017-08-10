@@ -1,10 +1,9 @@
 cinst -y nodejs-lts
-#cinst -y nodist
-#nodist + 6
-#nodist global 6
 refreshenv
 node -v
-cinst -y yarn
-cinst -y python2
-choco install vcbuildtools -y
+cinst -y yarn --ignore-dependencies
+#cinst -y python2
+#cinst -y visualstudiocode
+#choco install vcbuildtools -y
+#npm install -g windows-build-tools
 refreshenv
