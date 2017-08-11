@@ -18,7 +18,7 @@
         </div>
 
         <div class='panel-body big-text text-center'>
-            <div class='col-md-4 col-sm-12 col-xs-12  ' data-measure='{"val":"Vh","format":"auto","sig":5}'>Vh</div>
+            <div class='col-md-4 col-sm-12 col-xs-12  ' data-measure='{"val":"Vh","format":"auto","sig":5}'></div>
         </div>
       </div>
       <!-- /horizotal form -->
@@ -35,8 +35,8 @@
         </div>
 
         <div class='panel-body big-text'>
-          <div class='col-md-6 text-center' data-measure='{"val":"Vr","format":"auto","sig":5}'>Vr</div>
-          <div class='col-md-6 text-center' data-measure='{"val":"R","format":"auto","sig":5}'>R</div>
+          <div class='col-md-6 text-center' data-measure='{"val":"Vr","format":"auto","sig":5}'></div>
+          <div class='col-md-6 text-center' data-measure='{"val":"R","format":"auto","sig":5}'></div>
         </div>
       </div>
     </div>
@@ -58,7 +58,7 @@
 
         <div class='panel-body big-text'>
           <div class='text-center'>
-            <div  data-measure='{"val":"I","format":"auto","sig":5}'>Current</div>
+            <div  data-measure='{"val":"I","format":"auto","sig":5}'></div>
           </div>
         </div>
       </div>
@@ -77,7 +77,7 @@
 
         <div class='panel-body big-text'>
           <div class='text-center'>
-            <div data-measure='{"val":"B","format":"auto","sig":5}'>Magnetic Field</div>
+            <div data-measure='{"val":"B","format":"auto","sig":5}'></div>
           </div>
         </div>
       </div>
@@ -107,7 +107,7 @@
         <div class='panel-body big-text'>
           <div class='text-center'>
             <div class='col-md-4 col-sm-4 col-xs-4 v-bottom'>
-              <span data-measure='{ "val":"temp","format":"fixed","sig":1}'>Temperature</span>
+              <span data-measure='{ "val":"temp","format":"fixed","sig":1}'></span>
             </div>
             <div class='col-md-4 col-sm-4 col-xs-4 v-bottom'>
               <select class='selectpicker'  data-width='auto' data-unit='temp'>
@@ -148,7 +148,8 @@
 
   <script>
   var {ipcRenderer} = require('electron');
+  var path = require('path');
   var device=ipcRenderer.sendSync('get-device');
-  var ui = require('../'+device+'/src/renderer.js');
+  var ui = require(path.normalize(path.join('..',device,'src','renderer.js')));
   </script>
 </template>

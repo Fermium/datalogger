@@ -11,6 +11,9 @@ module.exports = {
   handler,
   inputs : [],
   init : function(n_inputs=this.inputs){
+    $('[data-measure]').each(()=>{
+      this.text(this.data('measure').val);
+    });
     _.merge(this.inputs,n_inputs);
     var form = $('#input-form');
     form.empty();
