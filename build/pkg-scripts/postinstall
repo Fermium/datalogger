@@ -1,6 +1,7 @@
 #!/bin/sh
 #This is a sample preinstall or postinstall script.
 #Your logic goes here.
+
 version=$(sw_vers -productVersion)
 echo "Os Version: ${version%.*}"
 case ${version%.*} in
@@ -15,8 +16,10 @@ case ${version%.*} in
 		;;
   esac
 echo "Version name: $name"
-curl -o ./archive.tar.gz https://mirrors.ustc.edu.cn/homebrew-bottles/bottles/libusb-1.0.21.$name.bottle.tar.gz
-tar xzf archive.tar.gz -C "$0/libusb"
+curl -o "$INSTALLER_TEMP/archive.tar.gz" https://mirrors.ustc.edu.cn/homebrew-bottles/bottles/libusb-1.0.21.$name.bottle.tar.gz
+cd "$INSTALLER_TEMP"
+tar xzf archive.tar.gz
+mv libusb/1.0.21/lib/libusb* /usr/local/lib/
 if false
 then
      exit -1
