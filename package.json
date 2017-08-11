@@ -75,6 +75,7 @@
       "./node_modules/data-chan/libDataChan*"
     ],
     "mac": {
+	  "target" : "pkg",
       "category": "public.app-category.utilities"
     },
     "nsis": {
