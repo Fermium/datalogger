@@ -78,6 +78,9 @@
 	  "target" : "pkg",
       "category": "public.app-category.utilities"
     },
+  	"pkg": {
+  	  "scripts" : "pkg-scripts"
+  	},
     "nsis": {
       "oneClick": false,
       "allowElevation": true
@@ -98,7 +101,20 @@
     },
     "linux": {
       "target": [
+        "rpm",
+        "deb",
         "AppImage"
+      ]
+    },
+    "deb": {
+      "depends" : [
+        "libusb-1.0-0-dev"
+      ]
+    },
+    "rpm": {
+      "depends" : [
+        "libXScrnSaver",
+        "libusb-1.0-0-dev"
       ]
     },
     "win": {
