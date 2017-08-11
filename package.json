@@ -102,7 +102,10 @@
         "rpm",
         "deb",
         "AppImage"
-      ]
+      ],
+      "desktop": {
+        "Category":"Science;Education;"
+      }
     },
     "deb": {
       "depends" : [
@@ -124,8 +127,7 @@
       "oneClick": false,
       "allowElevation": true,
       "artifactName": "${productName}-Setup.${ext}",
-      "deleteAppDataOnUninstall": true,
-      "installerSidebar":
+      "deleteAppDataOnUninstall": true
     }
   }
 }
