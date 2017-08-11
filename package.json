@@ -69,7 +69,7 @@
   },
   "build": {
     "asar": true,
-    "appId": "org.fermiumlabs.datalogger",
+    "appId": "com.fermiumlabs.datalogger",
     "asarUnpack": [
       "./app/devices/**/**",
       "./node_modules/data-chan/libDataChan*"
@@ -78,23 +78,12 @@
 	  "target" : "pkg",
       "category": "public.app-category.utilities"
     },
+    "pkg": {
+      "allowCurrentUserHome": false
+    },
     "nsis": {
       "oneClick": false,
       "allowElevation": true
-    },
-    "dmg": {
-      "contents": [
-        {
-          "x": 110,
-          "y": 150
-        },
-        {
-          "x": 240,
-          "y": 150,
-          "type": "link",
-          "path": "/Applications"
-        }
-      ]
     },
     "linux": {
       "target": [
