@@ -1,25 +1,30 @@
+/*jshint esversion: 6*/
 const electron = require('electron');
 var {dialog} = require('electron');
-const {spawn} = require('child_process');
-var usb = require('./usb');
+const electron_debug = require('electron-debug')({enabled: true});
+
+const {fork} = require('child_process');
+var usb;
 const math = require('mathjs');
 const dateFormat = require('dateformat'); //for date
 const _ = require('lodash');
 var fs = require('fs');
 var path = require('path');
 var http = require('https');
-var logger = require('./logger');
+var logger;
+var usb_on=false;
 var corr = {a:0,b:0};
-const Raven = require('raven');
+/*const Raven = require('raven');
 try{
   Raven.config('https://04a037c659c741938d91beb75df2f653:9c23348a48934d40a2d909b05c342139@sentry.dev.fermiumlabs.com/2').install();
 }
 catch(err){
   console.log('Error connecting to sentry');
-}
-
+}*/
+var dbfile;
 // Module to control application life.
 const app = electron.app;
+const Menu = electron.Menu;
 // Module to create native browser window.
 const BrowserWindow = electron.BrowserWindow;
 const {ipcMain} = require('electron');
@@ -32,25 +37,20 @@ let mainWindow;
 let plotWindow = {};
 let handbookWindow;
 let selectDeviceWindow;
-global.session = {'_date':dateFormat(Date.now(), 'yyyy_mm_dd')};
+global.session = {'_name':'','_date':dateFormat(Date.now(), 'yyyy_mm_dd')};
+
 function createWindow () {
 
   // Create the browser window.
   mainWindow = new BrowserWindow({width: 850, height: 950});
 
   // and load the index.html of the app.
-  mainWindow.loadURL(`file://${__dirname}/index.html`);
-
+  mainWindow.loadURL(`file://${__dirname}/main/index.html`);
 
   // Emitted when the window is closed.
   mainWindow.on('closed', function () {
-    if(logger.isrunning()){
-      logger.close();
-      logger.stop();
-    }
-    if(usb.ison()){
-      usb.off();
-    }
+    if(logger !== undefined && logger !== null) logger.kill();
+    if(usb    !== undefined && usb    !== null) usb.kill();
     // Dereference the window object, usually you would store windows
     // in an array if your app supports multi windows, this is the time
     // when you should delete the corresponding element.
@@ -59,12 +59,11 @@ function createWindow () {
 }
 
 function createSelectDevice () {
-
   // Create the browser window.
   selectDeviceWindow = new BrowserWindow({width: 850, height: 950});
 
   // and load the index.html of the app.
-  selectDeviceWindow.loadURL(`file://${__dirname}/selectdevice.html`);
+  selectDeviceWindow.loadURL(`file://${__dirname}/selectdevice/index.html`);
 
 
   // Emitted when the window is closed.
@@ -76,6 +75,7 @@ function createSelectDevice () {
   });
 
 }
+
 function createHandbookWindow(){
   var manual = config.manual;
   handbookWindow = new PDFWindow({width: 800, height: 600});
@@ -152,7 +152,6 @@ function createPlotWindow (name) {
 // initialization and is ready to create browser windows.
 // Some APIs can only be used after this event occurs.
 app.on('ready', function(){
-
   createSelectDevice();
 });
 
@@ -162,9 +161,6 @@ app.on('window-all-closed', function () {
   // On OS X it is common for applications and their menu bar
   // to stay active until the user quits explicitly with Cmd + Q
   if (process.platform !== 'darwin') {
-    /*if(usb.isrunning()){
-
-    }*/
     app.quit();
   }
 });
@@ -172,9 +168,11 @@ app.on('window-all-closed', function () {
 app.on('activate', function () {
   // On OS X it's common to re-create a window in the app when the
   // dock icon is clicked and there are no other windows open.
-  if (mainWindow === null) {
+
+    if (mainWindow === null) {
     createWindow();
   }
+
 });
 app.on('web-contents-created',function(ev,wc){
   wc.on('will-navigate',ev=>{
@@ -186,6 +184,10 @@ app.on('web-contents-created',function(ev,wc){
 ipcMain.on('plot',(event,arg) => {
   createPlotWindow(arg.name);
 });
+ipcMain.on('relaunch',(event,arg) => {
+  app.relaunch();
+  app.exit();
+});
 ipcMain.on('handbook',(event,arg) => {
   createHandbookWindow();
 
@@ -196,75 +198,115 @@ ipcMain.on('handbook',(event,arg) => {
 });
 
 ipcMain.on('save-file',(event,arg)=>{
-    if(!logger.existsdb()){
-    logger.createdb(arg.path);
-    logger.initdb(session._name,session._date,config.product.model,config.product.manufacturercode);
+  logger = fork(path.normalize(path.join(__dirname,'processes','logger.js')));
+    logger.on('message',(data)=>{
+    switch(data.action){
+      case 'createdb':
+        mainWindow.webContents.send('rec',  {'rec':data.message.state});
+        dbfile = data.message.file;
+        break;
     }
+  });
+  if(logger!==undefined && logger !== null) logger.send({
+    action:'createdb',
+    message:{
+      path: arg.path,
+      name:session._name,
+      date:session._date,
+      model:config.product.model,
+      manufacturer:config.product.manufacturercode
+    }
+  });
 });
 
 ipcMain.on('start',(event,arg) => {
-logger.start();
-mainWindow.webContents.send('started',  {'return':logger.isrunning()});
+if(logger!==undefined && logger !== null) logger.send({action:'start'});
+mainWindow.webContents.send('started',  {'return':'a'});
 });
 
 ipcMain.on('stop',(event,arg) => {
-  logger.stop();
+  if(logger!==undefined && logger !== null) logger.send({action:'stop'});
 });
 ipcMain.on('on',(event,arg) => {
-  event.returnValue=usb.on(config.config.calibration.a,config.config.calibration.b);
+  usb = fork(path.normalize(path.join(__dirname,'processes','usb.js')),options={
+    env: {},
+    stdio: ["ipc","inherit", "inherit", "inherit"]
+  });
+  usb.on('message',(data)=>{
+    switch(data.action){
+      case 'usb-fail':
+        mainWindow.webContents.send('usb-fail', {});
+        break;
+      case 'init':
+        mainWindow.webContents.send('init', {});
+        break;
+      case 'mes':
+        if(logger!==undefined && logger!==null)logger.send({action:'write',message:data.message});
+        mainWindow.webContents.send('measure',  {'scope':data.message});
+        break;
+      case 'on':
+        mainWindow.webContents.send('on',  {'st':data.message});
+        usb_on=data.message;
+
+        break;
+    }
+  });
+usb.on('exit',(code,n)=>{
+  console.log('usb exited with code '+code);
+});
+ usb.on('disconnect',(code,n)=>{
+  console.log('usb disconnected with code '+code);
+});
+  usb.send({
+    action:'on',
+    message:
+      {
+        a:config.config.calibration.a,
+        b:config.config.calibration.b,
+        vid:config.product.usb.vid,
+        pid:config.product.usb.pid
+      }
+    });
 });
 ipcMain.on('off',(event,arg) => {
-  usb.off();
-  if(logger.isrunning())
-    logger.close();
-});
-usb.handler.on('usb-fail',(event,arg) => {
-  mainWindow.webContents.send('usb-fail', {});
-});
-usb.handler.on('init',(event,arg) => {
-  mainWindow.webContents.send('init', {});
-});
-usb.handler.on('measure',(arg)=>{
-  if(logger.isrunning()){
-    logger.write(arg);
+  if(usb_on){
+  usb.send({action:'off',message:''});
+  if(logger!==undefined && logger !== null) logger.send({action:'close'});
   }
-  mainWindow.webContents.send('measure',  {'scope':arg});
-
 });
 ipcMain.on('update',(event,arg)=>{
   for(var name in plotWindow){
     plotWindow[name].webContents.send('update',{'val':arg.scope[name]});
   }
-
 });
 ipcMain.on('isrunning',(event,arg)=>{
-  event.returnValue = usb.ison();
+  usb.send({action:'ison',message:''});
 });
 ipcMain.on('send-to-hardware',(event,arg)=>{
-  if(usb.ison()){
-    usb.send_command(arg)
+  if(usb_on){
+    usb.send({action:'send_command',message:arg});
   }
 });
 ipcMain.on('ready',(event,arg)=>{
   event.returnValue={'config':config.config,'product':config.product};
 });
 ipcMain.on('get-device',(event,arg)=>{
-  event.returnValue='./devices/'+config.product.manufacturercode+'/'+config.product.model+'/';
+  event.returnValue=path.normalize(path.join('.','devices',config.product.manufacturercode,config.product.model));
 });
 ipcMain.on('device-select',(event,arg)=>{
-  config=jsyaml.safeLoad(fs.readFileSync(arg.device+'config.yaml'));
+  config=jsyaml.safeLoad(fs.readFileSync(path.normalize(path.join(arg.device,'config.yaml'))));
   session._name=config.product.model;
   createWindow();
 });
 ipcMain.on('export',(event,args)=>{
-  if(!logger.isrunning()){
-    args['to_export']=['Vh','temp','Vr','I','R','B'];
-    args['file']=logger.getdb();
-    spawn('node',[__dirname+'/exports.js',JSON.stringify(args)],{stdio: ['inherit', 'inherit', 'inherit']});
-    /*exprt.init_math(args.math,['Vh','temp','Vr','I','R','B']);
-    if(args.ex=='scidavis')
-      exprt.scidavis();
-    exprt.export(args.ex.sep,args.ex.extension);*/
-  }
-
+    args.to_export=['Vh','temp','Vr','I','R','B'];
+    args.file=dbfile;
+    var exprt=fork(path.normalize(path.join(__dirname,'processes','exports.js')),[JSON.stringify(args)],{env: {'ATOM_SHELL_INTERNAL_RUN_AS_NODE':'0'},stdio: ['ipc', 'inherit', 'inherit','inherit']});
+    exprt.on('message',(data)=>{
+      switch (data.action) {
+        case 'end':
+          exprt.kill();
+          break;
+      }
+    });
 });

@@ -1,14 +1,17 @@
 /*  NodeJS Requires  */
-
+/*jshint esversion: 6*/
+var path = require('path');
 const _ = require('lodash');
 const math = require('mathjs');
 const mathjaxHelper = require('mathjax-electron');
 const easytimer = require('easytimer');
 const codemirror = require('codemirror');
-require('codemirror/mode/javascript/javascript')
-require('codemirror/addon/edit/matchbrackets')
-const db = require('./logger');
-const fs = require('fs');
+var fs = require('fs');
+var pjson = require(path.normalize(path.join('..','..','package.json')));
+require('codemirror/mode/javascript/javascript');
+require('codemirror/addon/edit/matchbrackets');
+var recording;
+
 /* End NodeJS Requires */
 /* Electron requires */
 
@@ -27,6 +30,8 @@ var tex = {};
 var mathsheet = "";
 var channels = {};
 var unit = {};
+
+var modal;
 /* End Variables */
 
 /**************************************************/
@@ -72,7 +77,7 @@ ipcRenderer.on('measure',function(event,args){
     values[x.val]=math.number(scope[x.val],unit[x.val]);
     }
     catch(e){
-      console.log(scope[x.val]);
+
     }
   });
   ipcRenderer.send('update',{'scope':values});
@@ -99,12 +104,14 @@ $('[data-export]').click(function(){
   ipcRenderer.send('export',{ex:$(this).data('export'),math:mathsheet});
 });
 $('[data-action="save-file"]').click(function(){
-  var path = dialog.showSaveDialog({
-    defaultPath : require('os').homedir()+'/.datalogger/sessions/'+session._name+"_"+session._date,
+  var p= path.join(require('os').homedir(),'.datalogger','sessions',session._name+"_"+session._date+'.json');
+  var pp = dialog.showSaveDialog({
+    defaultPath : path.normalize(p),
     title: 'Experiment file save location' });
-  if(path!==undefined){
-    ipcRenderer.send('save-file',{'path' : path});
+  if(pp!==undefined){
+    ipcRenderer.send('save-file',{'path' : pp});
     if($("[name='start-stop']").prop("disabled") && $("[name='on-off']").bootstrapSwitch('state')){
+      menu.items[1].submenu.items[1].enabled=true;
       $("[name='start-stop']").bootstrapSwitch('toggleDisabled');
     }
   }
@@ -117,10 +124,11 @@ $('[data-action="plot"]').click(function(){
   ipcRenderer.send('plot',{'name':name});
 });
 
-$('[data-action="inputs"]').click(function(){
-  var modal=bootbox.dialog({
+$('[data-action="inputs"]').click(_.debounce(function(){
+  if(modal!==undefined)modal.modal('hide');
+  modal=bootbox.dialog({
     message : '<div id="inputs-content"</div>',
-    title : 'Experiment equations',
+    title : 'Gains',
     buttons : {
       danger : {
         label : 'Cancel',
@@ -142,8 +150,9 @@ $('[data-action="inputs"]').click(function(){
     show : false,
     onEscape : true
   });
-  modal.on('show.bs.modal',function(){
+  modal.on('shown.bs.modal',function(){
     var i;
+    $('#inputs-content').empty();
     for(i=0;i<channels.length;i++){
       $('#inputs-content').append($('<div/>').addClass('row').append(
         '<div class="col-md-3 col-sm-3 col-xs-3">'+
@@ -165,14 +174,21 @@ $('[data-action="inputs"]').click(function(){
       $(this).data('selectBox-selectBoxIt').refresh();
     });
   });
-  modal.modal('show');
-});
+  modal.on('hide.bs.modal',()=>{
+    if(parseFloat($('body').css('padding-right'))>0){
 
-$('[data-action="editequation"]').click(function() {
+      $('body').css('padding-right',0);
+    }
+  });
+  modal.modal('show');
+},200));
+
+$('[data-action="editequation"]').click(_.debounce(function() {
+  if(modal!==undefined)modal.modal('hide');
   var editor;
-  var modal=bootbox.dialog({
-    message : ''+
-    '<div class="row d-flex flex-column" style="position:relative">'+
+  modal=bootbox.dialog({
+    message : '<div id=\'eqmodal\'>'+
+    '<div class="row d-flex flex-column " style="position:relative">'+
         '<textarea class="form-control"  id="equations"></textarea>'+
       '</div>'+
       '<div class="row d-flex flex-column" style="position:relative">'+
@@ -187,10 +203,9 @@ $('[data-action="editequation"]').click(function() {
         className : 'btn-default',
         callback: function() {
           dialog.showOpenDialog({
-          defaultPath : require('os').homedir()+'/.datalogger/math/mathsheet.txt',
+          defaultPath : path.normalize(path.join(require('os').homedir(),'.datalogger','math','mathsheet.txt')),
         title: 'Import math file' }, function(path){
-          console.log(path);
-          try { mathsheet=fs.readFileSync(path[0],'utf8');  $('#latex').html(''); editor.setValue(mathsheet); console.log(mathsheet);}
+          try { mathsheet=fs.readFileSync(path[0],'utf8');  $('#latex').html(''); editor.setValue(mathsheet);}
           catch(e) { console.log(e); alert('Failed to read the file !'); }
         });
         return false;
@@ -202,7 +217,7 @@ $('[data-action="editequation"]').click(function() {
         className : 'btn-default',
         callback: function(){
           dialog.showSaveDialog({
-          defaultPath : require('os').homedir()+'/.datalogger/math/mathsheet.txt',
+          defaultPath : path.normalize(path.join(require('os').homedir(),'.datalogger','math','mathsheet.txt')),
           title: 'Export math file' }, function(path){
             var result = editor.getValue();
             if(result !== null) mathsheet=result;
@@ -216,6 +231,7 @@ $('[data-action="editequation"]').click(function() {
         label : 'Cancel',
         className : 'btn-default',
         callback : function(){
+          modal.showing=undefined;
         }
       },
       confirm : {
@@ -224,19 +240,17 @@ $('[data-action="editequation"]').click(function() {
         callback: function() {
           result = editor.getValue();
           if(result !== null) mathsheet=result;
-          var run = ipcRenderer.sendSync('isrunning');
             try{
-              if(run){
                 math.eval(mathsheet,scope);
                 evaluate();
-              }
             }
             catch(err){
               dialog.showMessageBox({type: 'error',title: 'Error in math', message : err.toString()});
+
             }
           updateTex();
           ui.blocks.forEach(updatePopover);
-          }
+        }
         },
 
     },
@@ -254,7 +268,6 @@ $('[data-action="editequation"]').click(function() {
     editor.setValue(mathsheet);
     var mm = [];
     editor.getValue().split('\n').forEach(function(x){
-      console.log(math.parse(x).toTex());
       if(math.parse(x).toTex()!=='undefined'){
         mm.push(x);
       }
@@ -265,7 +278,6 @@ $('[data-action="editequation"]').click(function() {
     for(var i in mm){
       try{
         var a  = math.parse(mm[i]).toTex();
-        console.log(a!=='undefined');
         if(a!=='undefined'){
           $('#latex').append('<li class="list-group-item">$'+a+'$</li>');
         }
@@ -316,8 +328,14 @@ $('[data-action="editequation"]').click(function() {
       }
     });
   });
+  modal.on('hide.bs.modal',()=>{
+    if(parseFloat($('body').css('padding-right'))>0){
+      console.log('padding');
+      $('body').css('padding-right',0);
+    }
+  });
   modal.modal('show');
-});
+},200));
 
 
 /* End Events */
@@ -342,12 +360,11 @@ function init(){
   ui.init(inputs);
   ui.handler.on('input-change',inputhandler);
   updateTex();
-  shittyError();
   ui.blocks.forEach(initpopover);
   }
   catch(err){
-    Raven.captureException(err);
-    Raven.showReportDialog();
+    /*Raven.captureException(err);
+    Raven.showReportDialog();*/
   }
 }
 ipcRenderer.on('init',init);
@@ -407,7 +424,7 @@ function initpopover(block){
 
 
 function updatePopover(block){
-  running = ipcRenderer.sendSync('isrunning');
+
   var popover=$('[data-measure*="'+block.val+'"]').attr('data-content','$$' + tex[block.val].trim() + '$$').data('bs.popover');
   popover.setContent();
   popover.$tip.addClass(popover.options.placement);
@@ -415,11 +432,8 @@ function updatePopover(block){
 /********************/
 
 
-
-/* Machine controls */
-
-function on(){
-  if(ipcRenderer.sendSync('on')){
+ipcRenderer.on('on',(event,args)=>{
+  if(args.st){
     bootbox.prompt({
       size: 'small',
       inputType: 'text',
@@ -434,13 +448,14 @@ function on(){
         session._name = text;
         $('#session').text(text);
         $('#date').text(' - ' + session._date);
-        if(db.existsdb() && $("[name='start-stop']").prop("disabled")){
+        if(recording && $("[name='start-stop']").prop("disabled")){
           $("[name='start-stop']").bootstrapSwitch('toggleDisabled');
+          menu.items[1].submenu.items[1].enabled=true;
         }
       }
     });
   }
-  else {
+  else{
     $("[name='on-off']").bootstrapSwitch('state',false);
     bootbox.confirm({
       size: 'small',
@@ -453,6 +468,11 @@ function on(){
       }
     });
   }
+});
+/* Machine controls */
+
+function on(){
+  ipcRenderer.send('on');
 }
 
 function off(){
@@ -462,12 +482,18 @@ function off(){
   $("[name='start-stop']").bootstrapSwitch('disabled',true);
   $('#experiment').text('');
   $('#date').text('');
+  menu.items[2].submenu.items.forEach((e)=>{
+    e.enabled=false;
+  });
   ui.init();
   ipcRenderer.send('off');
 }
 
 function rec(){
   $.blockUI();
+  menu.items[2].submenu.items.forEach((e)=>{
+    e.enabled=true;
+  });
   ipcRenderer.send('start');
   ipcRenderer.on('started',function(event,args){
     if(!args.return){
@@ -516,3 +542,111 @@ function check_temp(){
 }
 
 /*****************************/
+ipcRenderer.on('rec',(event,data)=>{
+  recording=data.rec;
+});
+/**********************************/
+
+const Menu = app.Menu;
+
+const template = [
+  {
+    label: 'File',
+    submenu: [
+      {
+        label: 'New File',
+        accelerator : 'CmdOrCtrl+N',
+        click () { _.debounce(()=>{$('[data-action="save-file"]').trigger('click');},1000);}
+      },
+      {
+        label: 'Change Experiment',
+        accelerator : 'CmdOrCtrl+S',
+        click () {  ipcRenderer.send('relaunch') }
+      },
+      {
+        role: 'quit'
+      }
+    ]
+  },
+  {
+    label: 'Experiment',
+    submenu: [
+      {
+        label: 'Start-Stop',
+        accelerator: 'CmdOrCtrl+Space',
+        click () {  $("[name='on-off']").trigger('click'); }
+      },
+      {
+        label: 'Record Data - Pause Recording',
+        accelerator: 'CmdOrCtrl+R',
+        enabled: false,
+        click () { $("[name='start-stop']").trigger('click');  }
+      },
+      {
+        label: 'Edit Experiment Math',
+        accelerator: 'CmdOrCtrl+M',
+        click () {$('[data-action="editequation"]').trigger('click');}
+      },
+      {
+        label: 'Change Channel Gain',
+        accelerator: 'CmdOrCtrl+G',
+        click () { $('[data-action="inputs"]').trigger('click');}
+      }
+    ]
+  },
+  {
+    label: 'Export',
+    submenu: [
+      {
+        label: 'Export to CSV',
+        enabled: false,
+        click () {    ipcRenderer.send('export',{ex:{"extension": "csv","sep": ","},math:mathsheet});
+        }
+      },
+      {
+        label: 'Export to TSV',
+        enabled: false,
+        click () {    ipcRenderer.send('export',{ex:{"extension": "tsv","sep": "\t"},math:mathsheet});
+        }
+      },
+      {
+        label: 'Open in SciDAVis',
+        enabled: false,
+        click () {   ipcRenderer.send('export',{ex:{"extension": "scidavis"},math:mathsheet});
+        }
+      }
+    ]
+  },
+  {
+    label: 'Help',
+    submenu: [
+      {
+        label: 'Manual',
+        accelerator: 'CmdOrCtrl+H',
+        click () { $('[data-action="handbook"]').trigger('click');}
+      },
+      {
+        label: 'About Datalogger',
+        click () { bootbox.dialog({
+          message : ''+
+          '<p>'+pjson.name+' v'+ pjson.version+'</p><p>Copyright &#9400;	 2017-2018 Fermium LABS srl. All rights reserved</p><p>Website:<a href="https://www.fermiumlabs.com" onclick="myFunction(this.href)">https://www.fermiumlabs.com</a></p><p>Technical Support: <a href="mailto:support@fermiumlabs.com" onclick="myFunction(this.href)">support@fermiumlabs.com</a></p>',
+          title : 'About Datalogger',
+          show : true,
+          onEscape : true
+        });}
+      }
+    ]
+  },
+  {
+    label: 'Debug',
+    submenu: [
+      {
+        role:'toggledevtools'
+      }
+    ]
+  }
+];
+
+
+const menu = Menu.buildFromTemplate(template);
+app.getCurrentWindow().setMenu(menu);

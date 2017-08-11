@@ -41,3 +41,7 @@ data
 out
 .cache
 dist
+yarn.*
+
+# Vagrant
+.vagrant
