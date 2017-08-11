@@ -70,16 +70,14 @@
   "build": {
     "asar": true,
     "appId": "com.fermiumlabs.datalogger",
+    "extraFiles": ["build/lib/macos/"],
     "asarUnpack": [
       "./app/devices/**/**",
       "./node_modules/data-chan/libDataChan*"
     ],
     "mac": {
-	  "target" : "pkg",
+      "target": "dmg",
       "category": "public.app-category.utilities"
-    },
-    "pkg": {
-      "allowCurrentUserHome": false
     },
     "nsis": {
       "oneClick": false,
