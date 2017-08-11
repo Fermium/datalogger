@@ -70,7 +70,11 @@
   "build": {
     "asar": true,
     "appId": "com.fermiumlabs.datalogger",
-    "extraFiles": ["build/lib/macos/"],
+    "extraFiles": [{
+      "from": "build/lib/macos/",
+      "to": "Frameworks",
+      "filter": ["**/*.dylib"]
+    }],
     "asarUnpack": [
       "./app/devices/**/**",
       "./node_modules/data-chan/libDataChan*"
