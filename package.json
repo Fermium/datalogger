@@ -68,6 +68,8 @@
     "riot": "^2.3.15"
   },
   "build": {
+    "productName": "Datalogger",
+    "artifactName": "${productName}.${ext}",
     "asar": true,
     "appId": "org.fermiumlabs.datalogger",
     "asarUnpack": [
@@ -75,16 +77,12 @@
       "./node_modules/data-chan/libDataChan*"
     ],
     "mac": {
-	  "target" : "pkg",
+	    "target" : "pkg",
       "category": "public.app-category.utilities"
     },
   	"pkg": {
   	  "scripts" : "pkg-scripts"
   	},
-    "nsis": {
-      "oneClick": false,
-      "allowElevation": true
-    },
     "dmg": {
       "contents": [
         {
@@ -121,6 +119,13 @@
       "target": [
         "nsis"
       ]
+    },
+    "nsis": {
+      "oneClick": false,
+      "allowElevation": true,
+      "artifactName": "${productName}-Setup.${ext}",
+      "deleteAppDataOnUninstall": true,
+      "installerSidebar":
     }
   }
 }
