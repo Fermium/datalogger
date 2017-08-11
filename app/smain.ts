@@ -37,7 +37,7 @@ let mainWindow;
 let plotWindow = {};
 let handbookWindow;
 let selectDeviceWindow;
-global.session = {'_name':'','_date':dateFormat(Date.now(), 'yyyy_mm_dd')};
+declare var session : {'_name':string,'_date':Date};
 
 function createWindow () {
 
@@ -228,7 +228,7 @@ ipcMain.on('stop',(event,arg) => {
   if(logger!==undefined && logger !== null) logger.send({action:'stop'});
 });
 ipcMain.on('on',(event,arg) => {
-  usb = fork(path.normalize(path.join(__dirname,'processes','usb.js')),options={
+  usb = fork(path.normalize(path.join(__dirname,'processes','usb.js')),{
     env: {},
     stdio: ["ipc","inherit", "inherit", "inherit"]
   });

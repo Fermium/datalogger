@@ -2,7 +2,7 @@
   "name": "Datalogger",
   "version": "1.0.0",
   "description": "A datalogger application",
-  "main": "app/main.js",
+  "main": "app/src/init.js",
   "scripts": {
     "start": " electron .",
     "debug": " electron --debug=5858 .",
@@ -34,6 +34,7 @@
     "electron": "^1.6.6",
     "electron-builder": "^19.19.1",
     "electron-builder-squirrel-windows": "^16.6.0",
+    "electron-compilers": "^5.9.0",
     "gulp-concat": "^2.6.0"
   },
   "dependencies": {
@@ -46,6 +47,7 @@
     "devtron": "^1.4.0",
     "easytimer": "^1.1.1",
     "echarts": "^3.4.0",
+    "electron-compile": "^6.4.1",
     "electron-debug": "^1.3.0",
     "electron-pdf-window": "^1.0.10",
     "electron-titlebar": "0.0.3",
@@ -77,12 +79,12 @@
       "./node_modules/data-chan/libDataChan*"
     ],
     "mac": {
-	    "target" : "pkg",
+      "target": "pkg",
       "category": "public.app-category.utilities"
     },
-  	"pkg": {
-  	  "scripts" : "pkg-scripts"
-  	},
+    "pkg": {
+      "scripts": "pkg-scripts"
+    },
     "dmg": {
       "contents": [
         {
@@ -104,16 +106,16 @@
         "AppImage"
       ],
       "desktop": {
-        "Category":"Science;Education;"
+        "Category": "Science;Education;"
       }
     },
     "deb": {
-      "depends" : [
+      "depends": [
         "libusb-1.0-0-dev"
       ]
     },
     "rpm": {
-      "depends" : [
+      "depends": [
         "libXScrnSaver",
         "libusb-1.0-0-dev"
       ]
