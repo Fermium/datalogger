@@ -155,7 +155,7 @@ Vagrant.configure(2) do |config|
     # backing providers for Vagrant. These expose provider-specific options.
     ubuntu_desktop.vm.provider 'virtualbox' do |vb|
       # Display the VirtualBox GUI when booting the machine
-      vb.gui = false
+      vb.gui = true
 
       vb.name = 'datalogger-ubuntu-desktops'
       # Customize the amount of memory on the VM:
@@ -195,8 +195,8 @@ Vagrant.configure(2) do |config|
 
        sudo apt-get update 
        sudo apt-get -y install wget python python-dev curl build-essential 
-       sudo apt-get -y install ubuntu-desktop
-       
+       sudo apt-get -y install mate-desktop-environment
+
        # Electron Builder requirements https://github.com/electron-userland/electron-builder/wiki/Multi-Platform-Build
        sudo apt-get -y install icnsutils rpm graphicsmagick xz-utils
 
@@ -286,6 +286,6 @@ Vagrant.configure(2) do |config|
     windows.vm.provision :shell, path: "scripts/desktopShortcut.ps1"   
     windows.vm.provision :shell, path: "scripts/InstallChocolatey.ps1"
     windows.vm.provision :shell, path: "scripts/install.ps1"
-    windows.vm.provision :shell, path: "scripts/npm-install.ps1"
+    windows.vm.provision :shell, path: "scripts/windows-build-toolssl.ps1"
   end
 end
