@@ -18,7 +18,7 @@ Vagrant.configure(2) do |config|
       # Display the VirtualBox GUI when booting the machine
       vb.gui = false
 
-      vb.name = 'data-chan-arch'
+      vb.name = 'datalogger-arch'
       # Customize the amount of memory on the VM:
       vb.memory = '1024'
 
@@ -47,7 +47,7 @@ Vagrant.configure(2) do |config|
     
 
       # link volume to home user folder
-      ln -s /vagrant /home/vagrant/data-chan
+      ln -s /vagrant /home/vagrant/datalogger
 
       echo "WARNING! still can't build on arch!!!!"
     SHELL
@@ -69,7 +69,7 @@ Vagrant.configure(2) do |config|
       # Display the VirtualBox GUI when booting the machine
       vb.gui = false
 
-      vb.name = 'data-chan-ubuntu'
+      vb.name = 'datalogger-ubuntu'
       # Customize the amount of memory on the VM:
       vb.memory = '1024'
 
@@ -134,7 +134,97 @@ Vagrant.configure(2) do |config|
        sudo apt-get update && sudo apt-get install yarn
        
        # link volume to home user folder
-       ln -s /vagrant data-chan
+       ln -s /vagrant datalogger
+
+
+       printf "\n\n\n\nThe box is ready. Now simply run \"vagrant ssh\" to connect! \n"
+
+     SHELL
+  end
+  config.vm.define 'ubuntu_desktop' do |ubuntu_desktop|
+    # Every Vagrant development environment requires a box. You can search for
+    # boxes at https://atlas.hashicorp.com/search.
+    ubuntu_desktop.vm.box = 'ubuntu/xenial64'
+
+    # Create a public network, which generally matched to bridged network.
+    # Bridged networks make the machine appear as another physical device on
+    # your network.
+    ubuntu_desktop.vm.network 'private_network', type: 'dhcp'
+
+    # Provider-specific configuration so you can fine-tune various
+    # backing providers for Vagrant. These expose provider-specific options.
+    ubuntu_desktop.vm.provider 'virtualbox' do |vb|
+      # Display the VirtualBox GUI when booting the machine
+      vb.gui = false
+
+      vb.name = 'datalogger-ubuntu-desktops'
+      # Customize the amount of memory on the VM:
+      vb.memory = '1024'
+
+      # Limit CPU usage
+      vb.customize ['modifyvm', :id, '--cpuexecutioncap', '65']
+    end
+
+    ## Enable USB Controller on VirtualBox
+    # ubuntu.vm.provider 'virtualbox' do |vb|
+    #  vb.customize ['modifyvm', :id, '--usb', 'on']
+    #  vb.customize ['modifyvm', :id, '--usbehci', 'on']
+    # end
+
+    ## Implement determined configuration attributes
+    # ubuntu.vm.provider 'virtualbox' do |vb|
+    #  vb.customize ['usbfilter', 'add', '0',
+    #                '--target', :id,
+    #                '--name', 'datachan tester',
+    #                '--product', 'datachan tester']
+    # end
+
+    # ubuntu.vm.provider 'virtualbox' do |vb|
+    #  vb.customize ['usbfilter', 'add', '0',
+    #                '--target', :id,
+    #                '--name', 'USBasp',
+    #                '--product', 'USBasp']
+    # end
+
+    ###############################################################
+    ubuntu_desktop.vm.provision 'shell', privileged: false, inline: <<-SHELL
+       export DEBIAN_FRONTEND=noninteractive
+       
+
+       printf "\n\nInstalling software\n"
+
+       sudo apt-get update 
+       sudo apt-get -y install wget python python-dev curl build-essential 
+       sudo apt-get -y install ubuntu-desktop
+       
+       # Electron Builder requirements https://github.com/electron-userland/electron-builder/wiki/Multi-Platform-Build
+       sudo apt-get -y install icnsutils rpm graphicsmagick xz-utils
+
+       # Wine
+       sudo add-apt-repository ppa:ubuntu-wine/ppa -y
+       sudo apt-get update
+       sudo apt-get install --no-install-recommends -y wine1.8
+       
+       # Mono
+       sudo apt-key adv --keyserver hkp://keyserver.ubuntu.com:80 --recv-keys 3FA7E0328081BFF6A14DA29AA6A19B38D3D831EF
+       echo "deb http://download.mono-project.com/repo/debian wheezy main" | sudo tee /etc/apt/sources.list.d/mono-xamarin.list
+       sudo apt-get update
+       sudo apt-get install --no-install-recommends -y mono-devel ca-certificates-mono
+       
+       # Build 32 bit app from 64 bit image
+       sudo apt-get install --no-install-recommends -y gcc-multilib g++-multilib
+
+       # NodeJS
+       curl -sL https://deb.nodesource.com/setup_6.x | sudo -E bash -
+       sudo apt-get install -y nodejs
+       
+       # Yarn
+       curl -sS https://dl.yarnpkg.com/debian/pubkey.gpg | sudo apt-key add -
+       echo "deb https://dl.yarnpkg.com/debian/ stable main" | sudo tee /etc/apt/sources.list.d/yarn.list
+       sudo apt-get update && sudo apt-get install yarn
+       
+       # link volume to home user folder
+       ln -s /vagrant datalogger
 
 
        printf "\n\n\n\nThe box is ready. Now simply run \"vagrant ssh\" to connect! \n"
