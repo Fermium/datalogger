@@ -1,3 +1,4 @@
+/*jshint esversion: 6*/
 var _ = require('lodash');
 var blocks = [];
 const EventEmitter = require('events');
@@ -11,6 +12,9 @@ module.exports = {
   handler,
   inputs : [],
   init : function(n_inputs=this.inputs){
+    $('[data-measure]').each((i)=>{
+      $('[data-measure]:eq('+i+')').text($('[data-measure]:eq('+i+')').data('measure').val);
+    });
     _.merge(this.inputs,n_inputs);
     var form = $('#input-form');
     form.empty();

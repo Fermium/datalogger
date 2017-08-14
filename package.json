@@ -68,6 +68,8 @@
     "riot": "^2.3.15"
   },
   "build": {
+    "productName": "Datalogger",
+    "artifactName": "${productName}.${ext}",
     "asar": true,
     "appId": "com.fermiumlabs.datalogger",
     "extraFiles": [{
@@ -89,13 +91,35 @@
     },
     "linux": {
       "target": [
+        "rpm",
+        "deb",
         "AppImage"
+      ],
+      "desktop": {
+        "Category":"Science;Education;"
+      }
+    },
+    "deb": {
+      "depends" : [
+        "libusb-1.0-0-dev"
+      ]
+    },
+    "rpm": {
+      "depends" : [
+        "libXScrnSaver",
+        "libusb-1.0-0-dev"
       ]
     },
     "win": {
       "target": [
         "nsis"
       ]
+    },
+    "nsis": {
+      "oneClick": false,
+      "allowElevation": true,
+      "artifactName": "${productName}-Setup.${ext}",
+      "deleteAppDataOnUninstall": true
     }
   }
 }
