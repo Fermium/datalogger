@@ -5,11 +5,11 @@
       "type": "node",
       "request": "launch",
       "name": "Electron Main",
-      "runtimeExecutable": "${workspaceRoot}\\node_modules\\.bin\\electron",
+      "runtimeExecutable": "${workspaceRoot}/node_modules/.bin/electron",
       "windows": {
         "runtimeExecutable": "${workspaceRoot}\\node_modules\\.bin\\electron.cmd"
       },
-      "program": "${workspaceRoot}\\app\\src\\init.js",
+      "program": "${workspaceRoot}/app/init.js",
       "protocol": "legacy",
       "timeout": 10000000000000000000000
     }
