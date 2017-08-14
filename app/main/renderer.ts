@@ -1,37 +1,40 @@
 /*  NodeJS Requires  */
 /*jshint esversion: 6*/
-var path = require('path');
-const _ = require('lodash');
-const math = require('mathjs');
-const mathjaxHelper = require('mathjax-electron');
-const easytimer = require('easytimer');
-const codemirror = require('codemirror');
-var fs = require('fs');
-var pjson = require(path.normalize(path.join('..','..','package.json')));
+import * as path from 'path';
+let _ = require('lodash');
+import * as math from 'mathjs';
+import * as mathjaxHelper from 'mathjax-electron';
+import * as easytimer from 'easytimer';
+import * as codemirror from 'codemirror';
+import * as fs from 'fs';
+let pjson = require(path.normalize(path.join('..','..','package.json'))); 
 require('codemirror/mode/javascript/javascript');
 require('codemirror/addon/edit/matchbrackets');
-var recording;
+let recording;
 
 /* End NodeJS Requires */
 /* Electron requires */
 
 const app = require('electron').remote;
 const {ipcRenderer} = require('electron');
-var dialog = app.dialog;
-var session = app.getGlobal('session');
+let dialog = app.dialog;
+let session = app.getGlobal('session');
 
 /* End Electron requires */
 
 /* Variables */
 
-var scope = {};
-var timer = new easytimer();
-var tex = {};
-var mathsheet = "";
-var channels = {};
-var unit = {};
+let scope = {};
+let timer = new easytimer();
+let tex = {};
+let mathsheet = "";
+interface Obj {
+  [k:string]:any
+}
+let channels : Obj;
+let unit = {};
 
-var modal;
+let modal;
 /* End Variables */
 
 /**************************************************/
@@ -71,7 +74,7 @@ ipcRenderer.on('measure',function(event,args){
   math.format(math.eval(mathsheet,scope),2);
   evaluate();
   check_temp();
-  var values={};
+  let values={};
   ui.blocks.forEach(function(x){
     try{
     values[x.val]=math.number(scope[x.val],unit[x.val]);
@@ -84,8 +87,8 @@ ipcRenderer.on('measure',function(event,args){
 });
 
 $('[data-unit]').change(function(){
-  mm = mathsheet.split('\n');
-  for(var i in mm){
+  let mm = mathsheet.split('\n');
+  for(let i in mm){
     if(mm[i].indexOf('temp') != -1){
       mm[i] = mm[i].split(' to ')[0]+ ' to '+$(this).val();
     }
@@ -104,8 +107,8 @@ $('[data-export]').click(function(){
   ipcRenderer.send('export',{ex:$(this).data('export'),math:mathsheet});
 });
 $('[data-action="save-file"]').click(function(){
-  var p= path.join(require('os').homedir(),'.datalogger','sessions',session._name+"_"+session._date+'.json');
-  var pp = dialog.showSaveDialog({
+  let p= path.join(require('os').homedir(),'.datalogger','sessions',session._name+"_"+session._date+'.json');
+  let pp = dialog.showSaveDialog({
     defaultPath : path.normalize(p),
     title: 'Experiment file save location' });
   if(pp!==undefined){
@@ -117,7 +120,7 @@ $('[data-action="save-file"]').click(function(){
   }
 });
 $('[data-action="plot"]').click(function(){
-  var name=$(this).data('plot');
+  let name=$(this).data('plot');
   ui.blocks.forEach(function(x){
     unit[x.val]=scope[x.val].units[0].unit.name;
   });
@@ -151,7 +154,7 @@ $('[data-action="inputs"]').click(_.debounce(function(){
     onEscape : true
   });
   modal.on('shown.bs.modal',function(){
-    var i;
+    let i;
     $('#inputs-content').empty();
     for(i=0;i<channels.length;i++){
       $('#inputs-content').append($('<div/>').addClass('row').append(
@@ -185,7 +188,7 @@ $('[data-action="inputs"]').click(_.debounce(function(){
 
 $('[data-action="editequation"]').click(_.debounce(function() {
   if(modal!==undefined)modal.modal('hide');
-  var editor;
+  let editor;
   modal=bootbox.dialog({
     message : '<div id=\'eqmodal\'>'+
     '<div class="row d-flex flex-column " style="position:relative">'+
@@ -219,7 +222,7 @@ $('[data-action="editequation"]').click(_.debounce(function() {
           dialog.showSaveDialog({
           defaultPath : path.normalize(path.join(require('os').homedir(),'.datalogger','math','mathsheet.txt')),
           title: 'Export math file' }, function(path){
-            var result = editor.getValue();
+            let result = editor.getValue();
             if(result !== null) mathsheet=result;
             try { fs.writeFileSync(path,mathsheet,'utf8'); }
             catch(e) { console.log(e); alert('Failed to save the file !'); }
@@ -238,7 +241,7 @@ $('[data-action="editequation"]').click(_.debounce(function() {
         label:'Confirm',
         className: 'btn-primary',
         callback: function() {
-          result = editor.getValue();
+          let result = editor.getValue();
           if(result !== null) mathsheet=result;
             try{
                 math.eval(mathsheet,scope);
@@ -264,9 +267,9 @@ $('[data-action="editequation"]').click(_.debounce(function() {
       lineNumbers: true,
       matchBrackets: true,
     });
-    eq = $('#equations');
+    let eq = $('#equations');
     editor.setValue(mathsheet);
-    var mm = [];
+    let mm = [];
     editor.getValue().split('\n').forEach(function(x){
       if(math.parse(x).toTex()!=='undefined'){
         mm.push(x);
@@ -275,9 +278,9 @@ $('[data-action="editequation"]').click(_.debounce(function() {
 
     $('#latex').html('');
     $('#latex').css('maxHeight',editor.getWrapperElement().offsetHeight);
-    for(var i in mm){
+    for(let i in mm){
       try{
-        var a  = math.parse(mm[i]).toTex();
+        let a  = math.parse(mm[i]).toTex();
         if(a!=='undefined'){
           $('#latex').append('<li class="list-group-item">$'+a+'$</li>');
         }
@@ -288,7 +291,7 @@ $('[data-action="editequation"]').click(_.debounce(function() {
     }
     mathjaxHelper.typesetMath(document.getElementById('latex'));
     editor.on('change',function(cm,chs){
-      var mm = [];
+      let mm = [];
       editor.getValue().split('\n').forEach(function(x,i){
         try{
         if(math.parse(x).toTex()!=='undefined'){
@@ -297,9 +300,9 @@ $('[data-action="editequation"]').click(_.debounce(function() {
         }
         catch(e){}
       });
-      var len = $('#latex').find('li').length;
-      var i=0;
-      var a;
+      let len = $('#latex').find('li').length;
+      let i=0;
+      let a;
       for(i;i < len ;i++){
         if(i<mm.length){
             a  = math.parse(mm[i]).toTex().trim();
@@ -348,7 +351,7 @@ function init(){
   if(mathsheet===''){
     mathsheet = tmp.config.mathsheet.trim();
   }
-  var inputs = tmp.config.inputs;
+  let inputs = tmp.config.inputs;
   inputs.forEach(function(input){
     if(!input.sendtohardware){
       scope[input.name]=input.default;
@@ -383,17 +386,17 @@ function inputhandler(data){
 
 
 function updateTex(){
-  var nodes = mathsheet.split('\n');
+  let nodes = mathsheet.split('\n');
   nodes.forEach(function(n){
     if(n.indexOf('=')!==-1){
-      var nn=n.split('=');
+      let nn=n.split('=');
       tex[nn[0].trim()]=math.parse(nn[1].trim()).toTex();
     }
   });
 }
 function evaluate() {
-  for (var block in ui.blocks) {
-    var bb = ui.blocks[block];
+  for (let block in ui.blocks) {
+    let bb = ui.blocks[block];
     try {
       $('[data-measure*='+ bb.val+']').text(math.format(scope[bb.val],{notation:bb.format,precision:bb.sig}));
     } catch (err) {
@@ -425,7 +428,7 @@ function initpopover(block){
 
 function updatePopover(block){
 
-  var popover=$('[data-measure*="'+block.val+'"]').attr('data-content','$$' + tex[block.val].trim() + '$$').data('bs.popover');
+  let popover=$('[data-measure*="'+block.val+'"]').attr('data-content','$$' + tex[block.val].trim() + '$$').data('bs.popover');
   popover.setContent();
   popover.$tip.addClass(popover.options.placement);
 }
@@ -444,7 +447,7 @@ ipcRenderer.on('on',(event,args)=>{
           $("[name='on-off']").bootstrapSwitch('state',false);
           return;
         }
-        var text = result.trim() === '' ? session._name : result;
+        let text = result.trim() === '' ? session._name : result;
         session._name = text;
         $('#session').text(text);
         $('#date').text(' - ' + session._date);

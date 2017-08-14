@@ -1,13 +1,13 @@
 /*jshint esversion: 6*/
-var app = require('electron').remote;
-const fs = require('fs');
-const path = require('path');
-const {ipcRenderer} = require('electron');
+import {remote} from 'electron';
+import * as fs from 'fs';
+import * as path from 'path';
+import {ipcRenderer} from 'electron';
 const jsyaml = require('js-yaml');
 $(document).keydown(function(e) {
     // ESCAPE key pressed
     if (e.keyCode == 27) {
-        app.getCurrentWindow().close();
+        remote.getCurrentWindow().close();
     }
 });
 $(document).ready(function(){
@@ -52,7 +52,7 @@ function appendProduct(producer,name){
 
     $(this).click(function(){
       ipcRenderer.send('device-select',{device:$(this).data('device')});
-      app.getCurrentWindow().close();
+      remote.getCurrentWindow().close();
     });
   });
 }

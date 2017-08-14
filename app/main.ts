@@ -1,19 +1,20 @@
 /*jshint esversion: 6*/
-const electron = require('electron');
-var {dialog} = require('electron');
+import * as electron from 'electron';
+import {dialog} from 'electron';
+import {fork} from 'child_process';
+import * as math from 'mathjs';
+import * as dateFormat from 'dateformat';
+import * as fs from 'fs';
+import * as path from 'path';
+import * as http from 'https';
+
 const electron_debug = require('electron-debug')({enabled: true});
 
-const {fork} = require('child_process');
-var usb;
-const math = require('mathjs');
-const dateFormat = require('dateformat'); //for date
-const _ = require('lodash');
-var fs = require('fs');
-var path = require('path');
-var http = require('https');
-var logger;
-var usb_on=false;
-var corr = {a:0,b:0};
+let usb;
+var _ = require('lodash');
+let logger;
+let usb_on : boolean =false;
+let corr  = {a:0,b:0};
 /*const Raven = require('raven');
 try{
   Raven.config('https://04a037c659c741938d91beb75df2f653:9c23348a48934d40a2d909b05c342139@sentry.dev.fermiumlabs.com/2').install();
@@ -21,24 +22,28 @@ try{
 catch(err){
   console.log('Error connecting to sentry');
 }*/
-var dbfile;
+let dbfile;
 // Module to control application life.
 const app = electron.app;
 const Menu = electron.Menu;
 // Module to create native browser window.
 const BrowserWindow = electron.BrowserWindow;
-const {ipcMain} = require('electron');
-const PDFWindow = require('electron-pdf-window');
-const jsyaml = require('js-yaml');
-var config;
+import {ipcMain} from 'electron';
+import * as PDFWindow from 'electron-pdf-window';
+import * as jsyaml from 'js-yaml';
+let config;
 // Keep a global reference of the window object, if you don't, the window will
 // be closed automatically when the JavaScript object is garbage collected.
 let mainWindow;
 let plotWindow = {};
 let handbookWindow;
 let selectDeviceWindow;
-declare var session : {'_name':string,'_date':Date};
-
+declare module NodeJS  {
+  interface Global {
+    'session':{'_name':string,'_date':any}
+  }
+}
+global.session = {'_name':'','_date':dateFormat(Date.now(), 'yyyy_mm_dd')};
 function createWindow () {
 
   // Create the browser window.
@@ -211,8 +216,8 @@ ipcMain.on('save-file',(event,arg)=>{
     action:'createdb',
     message:{
       path: arg.path,
-      name:session._name,
-      date:session._date,
+      name:global.session._name,
+      date:global.session._date,
       model:config.product.model,
       manufacturer:config.product.manufacturercode
     }
@@ -295,7 +300,7 @@ ipcMain.on('get-device',(event,arg)=>{
 });
 ipcMain.on('device-select',(event,arg)=>{
   config=jsyaml.safeLoad(fs.readFileSync(path.normalize(path.join(arg.device,'config.yaml'))));
-  session._name=config.product.model;
+  global.session._name=config.product.model;
   createWindow();
 });
 ipcMain.on('export',(event,args)=>{
