@@ -105,6 +105,13 @@ $('[data-action="handbook"]').click(function() {
 });
 $('[data-export]').click(function(){
   ipcRenderer.send('export',{ex:$(this).data('export'),math:mathsheet});
+  waitingDialog.show("Exporting...",{dialogSize: 'sm'});
+  $.blockUI({message:null});  
+});
+ipcRenderer.on('exported',()=>{
+  waitingDialog.hide();
+  $.unblockUI();
+  
 });
 $('[data-action="save-file"]').click(function(){
   let p= path.join(require('os').homedir(),'.datalogger','sessions',session._name+"_"+session._date+'.json');
@@ -471,11 +478,13 @@ ipcRenderer.on('on',(event,args)=>{
       }
     });
   }
+  $.unblockUI();
 });
 /* Machine controls */
 
 function on(){
   ipcRenderer.send('on');
+  $.blockUI();
 }
 
 function off(){

@@ -7,6 +7,10 @@ import * as dateFormat from 'dateformat';
 import * as fs from 'fs';
 import * as path from 'path';
 import * as http from 'https';
+import {ipcMain} from 'electron';
+import * as PDFWindow from 'electron-pdf-window';
+import * as jsyaml from 'js-yaml';
+//import AppUpdater from './AppUpdater';
 
 const electron_debug = require('electron-debug')({enabled: true});
 
@@ -28,9 +32,6 @@ const app = electron.app;
 const Menu = electron.Menu;
 // Module to create native browser window.
 const BrowserWindow = electron.BrowserWindow;
-import {ipcMain} from 'electron';
-import * as PDFWindow from 'electron-pdf-window';
-import * as jsyaml from 'js-yaml';
 let config;
 // Keep a global reference of the window object, if you don't, the window will
 // be closed automatically when the JavaScript object is garbage collected.
@@ -47,11 +48,13 @@ global.session = {'_name':'','_date':dateFormat(Date.now(), 'yyyy_mm_dd')};
 function createWindow () {
 
   // Create the browser window.
-  mainWindow = new BrowserWindow({width: 850, height: 950});
+  mainWindow = new BrowserWindow({width: 850, height: 950,show:false});
 
   // and load the index.html of the app.
   mainWindow.loadURL(`file://${__dirname}/main/index.html`);
-
+  mainWindow.once('ready-to-show',()=>{
+    mainWindow.show();
+  })
   // Emitted when the window is closed.
   mainWindow.on('closed', function () {
     if(logger !== undefined && logger !== null) logger.kill();
@@ -61,15 +64,18 @@ function createWindow () {
     // when you should delete the corresponding element.
     mainWindow = null;
   });
+  //new AppUpdater();
 }
 
 function createSelectDevice () {
   // Create the browser window.
-  selectDeviceWindow = new BrowserWindow({width: 850, height: 950});
+  selectDeviceWindow = new BrowserWindow({width: 850, height: 950,show:false});
 
   // and load the index.html of the app.
   selectDeviceWindow.loadURL(`file://${__dirname}/selectdevice/index.html`);
-
+  selectDeviceWindow.once('ready-to-show',()=>{
+    selectDeviceWindow.show();
+  })
 
   // Emitted when the window is closed.
   selectDeviceWindow.on('closed', function () {
@@ -83,7 +89,10 @@ function createSelectDevice () {
 
 function createHandbookWindow(){
   var manual = config.manual;
-  handbookWindow = new PDFWindow({width: 800, height: 600});
+  handbookWindow = new PDFWindow({width: 800, height: 600,show:false});
+  handbookWindow.once('ready-to-show',()=>{
+    handbookWindow.show();
+  });
   if(_.has(manual,'git')){
     var options = {
         host: 'api.github.com',
@@ -138,10 +147,12 @@ function createHandbookWindow(){
 
 }
 function createPlotWindow (name) {
-  plotWindow[name]= new BrowserWindow({width:800, height:600,title:name});
+  plotWindow[name]= new BrowserWindow({width:800, height:600,title:name,show:false});
   plotWindow[name].loadURL(`file://${__dirname}/plot/index.html`);
 
-
+  plotWindow[name].once('ready-to-show',()=>{
+    plotWindow[name].show();
+  })
   // Emitted when the window is closed.
   plotWindow[name].on('closed', function () {
     // Dereference the window object, usually you would store windows
@@ -310,6 +321,7 @@ ipcMain.on('export',(event,args)=>{
     exprt.on('message',(data)=>{
       switch (data.action) {
         case 'end':
+          mainWindow.webContents.send('exported');
           exprt.kill();
           break;
       }
