@@ -107,7 +107,7 @@
     "rpm": {
       "depends" : [
         "libXScrnSaver",
-        "libusb-1.0-0-dev"
+        "libusb"
       ]
     },
     "win": {
