@@ -1,52 +1,60 @@
 /*jshint esversion: 6*/
-const electron = require('electron');
-var {dialog} = require('electron');
-const electron_debug = require('electron-debug')({enabled: true});
+import * as electron from 'electron';
+import {dialog} from 'electron';
+import {fork} from 'child_process';
+import * as math from 'mathjs';
+import * as dateFormat from 'dateformat';
+import * as fs from 'fs';
+import * as path from 'path';
+import * as http from 'https';
+import {ipcMain} from 'electron';
+import { isDev } from "./util"
+import * as PDFWindow from 'electron-pdf-window';
+import * as jsyaml from 'js-yaml';
+//import AppUpdater from './AppUpdater';
 
-const {fork} = require('child_process');
-var usb;
-const math = require('mathjs');
-const dateFormat = require('dateformat'); //for date
-const _ = require('lodash');
-var fs = require('fs');
-var path = require('path');
-var http = require('https');
-var logger;
-var usb_on=false;
-var corr = {a:0,b:0};
-/*const Raven = require('raven');
-try{
-  Raven.config('https://04a037c659c741938d91beb75df2f653:9c23348a48934d40a2d909b05c342139@sentry.dev.fermiumlabs.com/2').install();
+
+
+let usb;
+var _ = require('lodash');
+let logger;
+let usb_on : boolean =false;
+let corr  = {a:0,b:0};
+if(!isDev()){
+  let  Raven = require('raven');
+  try{
+    Raven.config('https://ddbac24f695c4daaa9b91d254238d074:6e935c0fb21843d9adbcd49cfb0fd325@sentry1.dev.fermiumlabs.com/2').install();
+  }
+  catch(err){
+    console.log('Error connecting to sentry');
+  }
 }
-catch(err){
-  console.log('Error connecting to sentry');
-}*/
-var dbfile;
+let dbfile;
 // Module to control application life.
 const app = electron.app;
 const Menu = electron.Menu;
 // Module to create native browser window.
 const BrowserWindow = electron.BrowserWindow;
-const {ipcMain} = require('electron');
-const PDFWindow = require('electron-pdf-window');
-const jsyaml = require('js-yaml');
-var config;
+let config;
 // Keep a global reference of the window object, if you don't, the window will
 // be closed automatically when the JavaScript object is garbage collected.
 let mainWindow;
 let plotWindow = {};
 let handbookWindow;
 let selectDeviceWindow;
-global.session = {'_name':'','_date':dateFormat(Date.now(), 'yyyy_mm_dd')};
 
+const glob : any = global;
+glob.session = {'_name':'','_date':dateFormat(Date.now(), 'yyyy_mm_dd')};
 function createWindow () {
 
   // Create the browser window.
-  mainWindow = new BrowserWindow({width: 850, height: 950});
+  mainWindow = new BrowserWindow({width: 850, height: 950,show:false});
 
   // and load the index.html of the app.
   mainWindow.loadURL(`file://${__dirname}/main/index.html`);
-
+  mainWindow.once('ready-to-show',()=>{
+    mainWindow.show();
+  })
   // Emitted when the window is closed.
   mainWindow.on('closed', function () {
     if(logger !== undefined && logger !== null) logger.kill();
@@ -56,15 +64,18 @@ function createWindow () {
     // when you should delete the corresponding element.
     mainWindow = null;
   });
+  //new AppUpdater();
 }
 
 function createSelectDevice () {
   // Create the browser window.
-  selectDeviceWindow = new BrowserWindow({width: 850, height: 950});
+  selectDeviceWindow = new BrowserWindow({width: 850, height: 950,show:false});
 
   // and load the index.html of the app.
   selectDeviceWindow.loadURL(`file://${__dirname}/selectdevice/index.html`);
-
+  selectDeviceWindow.once('ready-to-show',()=>{
+    selectDeviceWindow.show();
+  })
 
   // Emitted when the window is closed.
   selectDeviceWindow.on('closed', function () {
@@ -78,7 +89,10 @@ function createSelectDevice () {
 
 function createHandbookWindow(){
   var manual = config.manual;
-  handbookWindow = new PDFWindow({width: 800, height: 600});
+  handbookWindow = new PDFWindow({width: 800, height: 600,show:false});
+  handbookWindow.once('ready-to-show',()=>{
+    handbookWindow.show();
+  });
   if(_.has(manual,'git')){
     var options = {
         host: 'api.github.com',
@@ -133,10 +147,12 @@ function createHandbookWindow(){
 
 }
 function createPlotWindow (name) {
-  plotWindow[name]= new BrowserWindow({width:800, height:600,title:name});
+  plotWindow[name]= new BrowserWindow({width:800, height:600,title:name,show:false});
   plotWindow[name].loadURL(`file://${__dirname}/plot/index.html`);
 
-
+  plotWindow[name].once('ready-to-show',()=>{
+    plotWindow[name].show();
+  })
   // Emitted when the window is closed.
   plotWindow[name].on('closed', function () {
     // Dereference the window object, usually you would store windows
@@ -211,8 +227,8 @@ ipcMain.on('save-file',(event,arg)=>{
     action:'createdb',
     message:{
       path: arg.path,
-      name:session._name,
-      date:session._date,
+      name:glob.session._name,
+      date:glob.session._date,
       model:config.product.model,
       manufacturer:config.product.manufacturercode
     }
@@ -228,7 +244,7 @@ ipcMain.on('stop',(event,arg) => {
   if(logger!==undefined && logger !== null) logger.send({action:'stop'});
 });
 ipcMain.on('on',(event,arg) => {
-  usb = fork(path.normalize(path.join(__dirname,'processes','usb.js')),options={
+  usb = fork(path.normalize(path.join(__dirname,'processes','usb.js')),[],{
     env: {},
     stdio: ["ipc","inherit", "inherit", "inherit"]
   });
@@ -295,7 +311,7 @@ ipcMain.on('get-device',(event,arg)=>{
 });
 ipcMain.on('device-select',(event,arg)=>{
   config=jsyaml.safeLoad(fs.readFileSync(path.normalize(path.join(arg.device,'config.yaml'))));
-  session._name=config.product.model;
+  glob.session._name=config.product.model;
   createWindow();
 });
 ipcMain.on('export',(event,args)=>{
@@ -305,6 +321,7 @@ ipcMain.on('export',(event,args)=>{
     exprt.on('message',(data)=>{
       switch (data.action) {
         case 'end':
+          mainWindow.webContents.send('exported');
           exprt.kill();
           break;
       }

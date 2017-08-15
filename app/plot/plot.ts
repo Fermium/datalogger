@@ -1,14 +1,15 @@
 /*jshint esversion: 6*/
-var remote = require('electron').remote;
+import {remote} from 'electron';
 var _ = require('lodash');
 var config = remote.getGlobal('session');
 var source = config.source;
 var scope = remote.getGlobal('scope');
-const {ipcRenderer} = require('electron');
+import {ipcRenderer} from 'electron';
+declare var Rickshaw : any;
 
 
 // instantiate our graph!
-var tv = 1000;
+var tv : number = 1000;
 
 var graph = new Rickshaw.Graph( {
 	element: document.getElementById("plot"),
@@ -52,7 +53,7 @@ var yAxis = new Rickshaw.Graph.Axis.Y({
 yAxis.render();
 
 ipcRenderer.on('update',(event,data)=>{
-  dataplot = {};
+  let dataplot : any = {};
   dataplot.val=data.val;
 	graph.series.addData(dataplot);
 	graph.update();

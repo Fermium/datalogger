@@ -2,7 +2,7 @@
   "name": "Datalogger",
   "version": "1.0.0",
   "description": "A datalogger application",
-  "main": "app/main.js",
+  "main": "app/init.js",
   "scripts": {
     "start": " electron .",
     "debug": " electron --debug=5858 .",
@@ -28,15 +28,30 @@
   },
   "license": "CC0-1.0",
   "devDependencies": {
+    "@types/bootstrap": "^3.3.35",
+    "@types/jquery": "^3.2.11",
+    "@types/node": "^8.0.22",
     "babel-plugin-transform-async-to-generator": "^6.24.1",
     "babel-preset-env": "^1.6.0",
     "babel-preset-react": "^6.23.0",
     "electron": "^1.6.6",
     "electron-builder": "^19.19.1",
     "electron-builder-squirrel-windows": "^16.6.0",
-    "gulp-concat": "^2.6.0"
+    "electron-compilers": "^5.9.0",
+    "gulp": "^3.9.1",
+    "gulp-concat": "^2.6.0",
+    "gulp-typedoc": "^2.0.3",
+    "typedoc": "^0.8.0"
   },
   "dependencies": {
+    "@types/bootbox": "^4.4.33",
+    "@types/bootstrap-select": "^1.11.1",
+    "@types/bootstrap-switch": "^0.0.31",
+    "@types/ion.rangeslider": "^2.0.29",
+    "@types/jquery.blockui": "^0.0.28",
+    "@types/jquery.pnotify": "^3.0.35",
+    "bootbox": "^4.4.0",
+    "bootstrap": "^3.3.7",
     "bootstrap-slider": "^9.7.2",
     "chart.js": "^2.5.0",
     "codemirror": "^5.25.0",
@@ -46,10 +61,13 @@
     "devtron": "^1.4.0",
     "easytimer": "^1.1.1",
     "echarts": "^3.4.0",
+    "electron-compile": "^6.4.1",
     "electron-debug": "^1.3.0",
+    "electron-is-dev": "^0.3.0",
     "electron-pdf-window": "^1.0.10",
     "electron-titlebar": "0.0.3",
     "fs-path": "0.0.23",
+    "jquery": "^3.2.1",
     "js-yaml": "^3.8.2",
     "json2csv": "^3.7.3",
     "json2xls": "^0.1.2",
@@ -61,22 +79,28 @@
     "mousetrap": "^1.6.1",
     "node-json-db": "^0.7.3",
     "os": "^0.1.1",
-    "raven": "^2.0.1",
+    "pnotify": "^3.2.1",
+    "raven": "^2.1.1",
     "ref": "^1.3.4",
     "ref-struct": "^1.1.0",
     "rickshaw": "^1.6.0",
-    "riot": "^2.3.15"
+    "riot": "^2.3.15",
+    "selectboxit": "^3.8.2"
   },
   "build": {
     "productName": "Datalogger",
     "artifactName": "${productName}.${ext}",
     "asar": true,
     "appId": "com.fermiumlabs.datalogger",
-    "extraFiles": [{
-      "from": "build/lib/macos/",
-      "to": "Frameworks",
-      "filter": ["**/*.dylib"]
-    }],
+    "extraFiles": [
+      {
+        "from": "build/lib/macos/",
+        "to": "Frameworks",
+        "filter": [
+          "**/*.dylib"
+        ]
+      }
+    ],
     "asarUnpack": [
       "./app/devices/**/**",
       "./node_modules/data-chan/libDataChan*"
@@ -87,7 +111,9 @@
     },
     "nsis": {
       "oneClick": false,
-      "allowElevation": true
+      "allowElevation": true,
+      "artifactName": "${productName}-Setup.${ext}",
+      "deleteAppDataOnUninstall": true
     },
     "linux": {
       "target": [
@@ -96,16 +122,16 @@
         "AppImage"
       ],
       "desktop": {
-        "Category":"Science;Education;"
+        "Category": "Science;Education;"
       }
     },
     "deb": {
-      "depends" : [
+      "depends": [
         "libusb-1.0-0-dev"
       ]
     },
     "rpm": {
-      "depends" : [
+      "depends": [
         "libXScrnSaver",
         "libusb"
       ]
@@ -114,12 +140,6 @@
       "target": [
         "nsis"
       ]
-    },
-    "nsis": {
-      "oneClick": false,
-      "allowElevation": true,
-      "artifactName": "${productName}-Setup.${ext}",
-      "deleteAppDataOnUninstall": true
     }
   }
 }
