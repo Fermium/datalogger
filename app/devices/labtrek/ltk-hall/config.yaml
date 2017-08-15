@@ -5,7 +5,7 @@ product:
   manufacturercode : "labtrek"
   name: "Hall effect apparatus"
   model: "ltk-hall"
-  description: "Measure the Hall effect over a broad range of temperatures, magnetic fields and current"
+  description: "Measure Hall effect and electron mobility over a broad temperatures, magnetic field and current range"
   image: "pic.jpg"
   usb:
     vid: 0x16d0
