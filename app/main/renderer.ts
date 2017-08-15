@@ -38,7 +38,7 @@ interface Obj {
 }
 let channels : Obj;
 let unit = {};
-
+let ison : boolean = false;
 let modal;
 /* End Variables */
 
@@ -178,7 +178,7 @@ $('[data-action="inputs"]').click(_.debounce(function(){
         '</div>'));
     }
     $('.gain').each(function(i){
-      $(this).selectBoxIt({
+      ($(this) as any).selectBoxIt({
         autoWidth: false,
         copyClasses : "container",
       });
@@ -256,8 +256,10 @@ $('[data-action="editequation"]').click(_.debounce(function() {
           let result = editor.getValue();
           if(result !== null) mathsheet=result;
             try{
+              if(ison){
                 math.eval(mathsheet,scope);
                 evaluate();
+              }
             }
             catch(err){
               dialog.showMessageBox({type: 'error',title: 'Error in math', message : err.toString()});
@@ -315,8 +317,10 @@ $('[data-action="editequation"]').click(_.debounce(function() {
       let len = $('#latex').find('li').length;
       let i=0;
       let a;
+      let removed=0;
       for(i;i < len ;i++){
         if(i<mm.length){
+          console.log('minore')
             a  = math.parse(mm[i]).toTex().trim();
             a = a=='undefined' ? '' : a;
             if($('#latex').find('li').eq(i).text().trim()!=a){
@@ -325,13 +329,16 @@ $('[data-action="editequation"]').click(_.debounce(function() {
                 mathjaxHelper.typesetMath($('#latex').find('li').eq(i).get(0));
               }
               else{
-                $('#latex').find('li').eq(i).remove();
+                $('#latex').find('li').eq(i-removed).remove();
+                removed++;
               }
             }
-          if(i>=mm.length){
-            $('#latex').find('li').eq(i).remove();
           }
-        }
+          if(i>=mm.length){
+            console.log('maggiore')
+            $('#latex').find('li').eq(i-removed).remove();
+            removed++;
+          }
       }
       for(i;i<mm.length;i++){
         a  = math.parse(mm[i]).toTex().trim();
@@ -448,6 +455,7 @@ function updatePopover(block){
 
 
 ipcRenderer.on('on',(event,args)=>{
+  ison = args.st;
   if(args.st){
     bootbox.prompt({
       size: 'small',
@@ -503,6 +511,7 @@ function off(){
     e.enabled=false;
   });
   ui.init();
+  ison=false;
   ipcRenderer.send('off');
 }
 
