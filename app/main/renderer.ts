@@ -23,7 +23,6 @@ let session = app.getGlobal('session');
 /* End Electron requires */
 
 /* Variables */
-
 let scope = {};
 let timer = new easytimer();
 let tex = {};

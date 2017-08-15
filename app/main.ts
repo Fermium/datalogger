@@ -8,24 +8,27 @@ import * as fs from 'fs';
 import * as path from 'path';
 import * as http from 'https';
 import {ipcMain} from 'electron';
+import { isDev } from "./util"
 import * as PDFWindow from 'electron-pdf-window';
 import * as jsyaml from 'js-yaml';
 //import AppUpdater from './AppUpdater';
 
-const electron_debug = require('electron-debug')({enabled: true});
+
 
 let usb;
 var _ = require('lodash');
 let logger;
 let usb_on : boolean =false;
 let corr  = {a:0,b:0};
-/*const Raven = require('raven');
-try{
-  Raven.config('https://04a037c659c741938d91beb75df2f653:9c23348a48934d40a2d909b05c342139@sentry.dev.fermiumlabs.com/2').install();
+if(!isDev()){
+  let  Raven = require('raven');
+  try{
+    Raven.config('https://ddbac24f695c4daaa9b91d254238d074:6e935c0fb21843d9adbcd49cfb0fd325@sentry1.dev.fermiumlabs.com/2').install();
+  }
+  catch(err){
+    console.log('Error connecting to sentry');
+  }
 }
-catch(err){
-  console.log('Error connecting to sentry');
-}*/
 let dbfile;
 // Module to control application life.
 const app = electron.app;
@@ -39,12 +42,9 @@ let mainWindow;
 let plotWindow = {};
 let handbookWindow;
 let selectDeviceWindow;
-declare module NodeJS  {
-  interface Global {
-    'session':{'_name':string,'_date':any}
-  }
-}
-global.session = {'_name':'','_date':dateFormat(Date.now(), 'yyyy_mm_dd')};
+
+const glob : any = global;
+glob.session = {'_name':'','_date':dateFormat(Date.now(), 'yyyy_mm_dd')};
 function createWindow () {
 
   // Create the browser window.
@@ -227,8 +227,8 @@ ipcMain.on('save-file',(event,arg)=>{
     action:'createdb',
     message:{
       path: arg.path,
-      name:global.session._name,
-      date:global.session._date,
+      name:glob.session._name,
+      date:glob.session._date,
       model:config.product.model,
       manufacturer:config.product.manufacturercode
     }
@@ -244,7 +244,7 @@ ipcMain.on('stop',(event,arg) => {
   if(logger!==undefined && logger !== null) logger.send({action:'stop'});
 });
 ipcMain.on('on',(event,arg) => {
-  usb = fork(path.normalize(path.join(__dirname,'processes','usb.js')),{
+  usb = fork(path.normalize(path.join(__dirname,'processes','usb.js')),[],{
     env: {},
     stdio: ["ipc","inherit", "inherit", "inherit"]
   });
@@ -311,7 +311,7 @@ ipcMain.on('get-device',(event,arg)=>{
 });
 ipcMain.on('device-select',(event,arg)=>{
   config=jsyaml.safeLoad(fs.readFileSync(path.normalize(path.join(arg.device,'config.yaml'))));
-  global.session._name=config.product.model;
+  glob.session._name=config.product.model;
   createWindow();
 });
 ipcMain.on('export',(event,args)=>{

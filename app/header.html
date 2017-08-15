@@ -1,11 +1,14 @@
 <script src="./libs/raven.min.js"></script>
 <script>
-/*try{
-  Raven.config('https://04a037c659c741938d91beb75df2f653@sentry.dev.fermiumlabs.com/2').install();
+import { isDev } from "../util"
+if(!isDev()){
+  try{
+    Raven.config('https://ddbac24f695c4daaa9b91d254238d074@sentry1.dev.fermiumlabs.com/2').install()
+  }
+  catch(err){
+    console.log('Error connecting to sentry');
+  }
 }
-catch(err){
-  console.log('Error connecting to sentry');
-}*/
 </script>
 <link href='https://fonts.googleapis.com/css?family=Roboto:400,300,100,500,700,900' rel='stylesheet' type='text/css'>
 <link href='./assets/css/icons/icomoon/styles.css' rel='stylesheet' type='text/css'>
