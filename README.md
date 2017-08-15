@@ -1,8 +1,8 @@
 # datalogger
 
-# Debugging
+Datlogger (name needed!) is an application to control and acquire data from scientific instruments.
 
-## DevTools
+## Toggling DevTools
 
 Toggle DevTools.
 
@@ -28,17 +28,20 @@ Open DevTools and focus the Element Inspector tool.
 
 # developing
 
+This application is designed to run on node 6. Please use [nvm](https://github.com/creationix/nvm) to install node 6 and use it:
+
+* nvm install 6
+* nmv use 6
+* nmv alias default 6
+
 Please use included Vagrant images:
 * ubuntu 
 * ubuntu_desktop
 * windows
 * arch (still not working)
 
+If you want to develop without the vagrant images, install the required dependencies described [here](https://github.com/nodejs/node-gyp)
 
-### To avoid node-gyp rebuild to fail
+# Contributing
 
-* Run PowerShell as administrator and npm install -g windows-build-tools
-* Add python.exe to your path (should be in %UserProfile%.windows-build-tools\python27)
-* npm config set python python2.7
-* npm config set python %UserProfile%\.windows-build-tools\python27\python.exe
-* set VCTargetsPath="C:\Program Files (x86)\MSBuild\Microsoft.Cpp\v4.0\v140"
+Please open pull requests against develop, not master. 
