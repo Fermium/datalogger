@@ -46,4 +46,4 @@ yarn.*
 # Vagrant
 .vagrant
 
-docs/
+_docs/
