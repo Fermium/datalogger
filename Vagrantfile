@@ -287,4 +287,42 @@ Vagrant.configure(2) do |config|
     windows.vm.provision :shell, path: 'scripts/windows-build-tools.ps1'
 
   end
+  
+  config.vm.define 'fedora_desktop' do |fedora_desktop|
+    # Every Vagrant development environment requires a box. You can search for
+    # boxes at https://atlas.hashicorp.com/search.
+    fedora_desktop.vm.box = "jhcook/fedora26"
+
+    # Create a public network, which generally matched to bridged network.
+    # Bridged networks make the machine appear as another physical device on
+    # your network.
+    fedora_desktop.vm.network 'private_network', type: 'dhcp'
+
+    # Provider-specific configuration so you can fine-tune various
+    # backing providers for Vagrant. These expose provider-specific options.
+    fedora_desktop.vm.provider 'virtualbox' do |vb|
+      # Display the VirtualBox GUI when booting the machine
+      vb.gui = true
+
+      vb.name = 'datalogger-fedora_desktop'
+      # Customize the amount of memory on the VM:
+      vb.memory = '1024'
+
+      # Limit CPU usage
+      vb.customize ['modifyvm', :id, '--cpuexecutioncap', '65']
+    end
+
+    ###############################################################
+    fedora_desktop.vm.provision 'shell', privileged: false, inline: <<-SHELL
+       sudo yum -y update
+       printf "\n\nInstalling software\n"
+
+       # link volume to home user folder
+       ln -s /vagrant datalogger
+
+
+       printf "\n\n\n\nThe box is ready. Now simply run \"vagrant ssh\" to connect! \n"
+
+     SHELL
+  end
 end
