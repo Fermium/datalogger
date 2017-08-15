@@ -46,8 +46,8 @@ let modal;
 $(document).ready(function(){
   init();
   $("[name='start-stop']").bootstrapSwitch({
-      onText: 'REC',
-      offText: '<i class="icon-pause2"></i>',
+      onText: '<i class="fa fa-circle" aria-hidden="true"></i>',
+      offText: '<i class="fa fa-pause" aria-hidden="true"></i>',
       onSwitchChange: (event, state) => {
         if (state) {
           rec();
@@ -57,8 +57,8 @@ $(document).ready(function(){
       }
   });
   $("[name='on-off']").bootstrapSwitch({
-    onText: 'ON',
-    offText: 'OFF',
+    onText: '<i class="fa fa-power-off" aria-hidden="true"></i>',
+    offText: '<i class="fa fa-power-off" aria-hidden="true"></i>',
     onSwitchChange: (event, state) => {
       if (state) {
         on();
