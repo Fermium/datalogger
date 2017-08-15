@@ -4,11 +4,11 @@ gulp.task("typedoc", function() {
     return gulp
         .src(["app/**/*.ts"])
         .pipe(typedoc({
+          ignoreCompilerErrors: true,
             module: "commonjs",
             target: "es5",
-            out: "docs/",
+            out: "_docs/",
             name: "Datalogger",
-            ignoreCompilerErrors: true
 
         }))
     ;
