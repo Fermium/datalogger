@@ -1,5 +1,9 @@
 /*  NodeJS Requires  */
 /*jshint esversion: 6*/
+/// <reference types='bootstrap' />
+/// <reference types='bootstrap-switch' />
+/// <reference types='jquery.blockui' />
+/// <reference types='jquery.pnotify' />
 import * as path from 'path';
 let _ = require('lodash');
 import * as math from 'mathjs';
@@ -11,15 +15,17 @@ let pjson = require(path.normalize(path.join('..','..','package.json')));
 require('codemirror/mode/javascript/javascript');
 require('codemirror/addon/edit/matchbrackets');
 let recording;
-
+declare var ui : any;
 /* End NodeJS Requires */
 /* Electron requires */
-
+interface JQuery {
+  'selectBoxIt' : any
+}
 const app = require('electron').remote;
 const {ipcRenderer} = require('electron');
 let dialog = app.dialog;
 let session = app.getGlobal('session');
-
+declare var waitingDialog : any;
 /* End Electron requires */
 
 /* Variables */
@@ -483,7 +489,7 @@ ipcRenderer.on('on',(event,args)=>{
 
 function on(){
   ipcRenderer.send('on');
-  $.blockUI();
+  $.blockUI({message:null});
 }
 
 function off(){
@@ -501,7 +507,7 @@ function off(){
 }
 
 function rec(){
-  $.blockUI();
+  $.blockUI({message:null});
   menu.items[2].submenu.items.forEach((e)=>{
     e.enabled=true;
   });
@@ -567,7 +573,7 @@ const template = [
       {
         label: 'New File',
         accelerator : 'CmdOrCtrl+N',
-        click () { _.debounce(()=>{$('[data-action="save-file"]').trigger('click');},1000);}
+        click () { $('[data-action="save-file"]').trigger('click');}
       },
       {
         label: 'Change Experiment',

@@ -150,6 +150,6 @@
   var {ipcRenderer} = require('electron');
   var path = require('path');
   var device=ipcRenderer.sendSync('get-device');
-  var ui = require(path.normalize(path.join('..',device,'src','renderer.js')));
+  var ui = require(path.normalize(path.join('..',device,'src','renderer.ts')));
   </script>
 </template>

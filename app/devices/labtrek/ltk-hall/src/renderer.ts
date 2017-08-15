@@ -1,12 +1,12 @@
 /*jshint esversion: 6*/
-var _ = require('lodash');
-var blocks = [];
-const EventEmitter = require('events');
+/// <reference types='ion.rangeslider' />
+import * as _ from 'lodash';
+import * as EventEmitter from 'events';
+var blocks : any = [];
 var handler = new EventEmitter();
 $('[data-measure]').each(function(i){
   blocks.push($(this).data('measure'));
 });
-
 module.exports = {
   blocks,
   handler,
@@ -47,7 +47,7 @@ module.exports = {
           'data-from' : input.default,
           'data-step':  input.step,
           'data-slider' : input.type=='slider',
-          'data-pretty' : false | input.pretty,
+          'data-pretty' : 0 | input.pretty,
           'data-function' : input.function,
           'data-hardware' : input.sendtohardware
         }));
@@ -93,7 +93,7 @@ module.exports = {
       $('#'+id+'-t').on('change',function(){
         var slider = $('#'+id).data('ionRangeSlider');
         slider.update({
-          from : $(this).val()/(pretty*99+1)
+          from : ($(this).val() as number)/(pretty*99+1)
         });
         if($(this).val()>slider.result.max*pretty*100){
           $(this).val(slider.result.max*pretty*100);

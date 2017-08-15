@@ -28,7 +28,9 @@
   },
   "license": "CC0-1.0",
   "devDependencies": {
+    "@types/bootstrap": "^3.3.35",
     "@types/jquery": "^3.2.11",
+    "@types/node": "^8.0.22",
     "babel-plugin-transform-async-to-generator": "^6.24.1",
     "babel-preset-env": "^1.6.0",
     "babel-preset-react": "^6.23.0",
@@ -42,6 +44,14 @@
     "typedoc": "^0.8.0"
   },
   "dependencies": {
+    "@types/bootbox": "^4.4.33",
+    "@types/bootstrap-select": "^1.11.1",
+    "@types/bootstrap-switch": "^0.0.31",
+    "@types/ion.rangeslider": "^2.0.29",
+    "@types/jquery.blockui": "^0.0.28",
+    "@types/jquery.pnotify": "^3.0.35",
+    "bootbox": "^4.4.0",
+    "bootstrap": "^3.3.7",
     "bootstrap-slider": "^9.7.2",
     "chart.js": "^2.5.0",
     "codemirror": "^5.25.0",
@@ -69,22 +79,28 @@
     "mousetrap": "^1.6.1",
     "node-json-db": "^0.7.3",
     "os": "^0.1.1",
+    "pnotify": "^3.2.1",
     "raven": "^2.1.1",
     "ref": "^1.3.4",
     "ref-struct": "^1.1.0",
     "rickshaw": "^1.6.0",
-    "riot": "^2.3.15"
+    "riot": "^2.3.15",
+    "selectboxit": "^3.8.2"
   },
   "build": {
     "productName": "Datalogger",
     "artifactName": "${productName}.${ext}",
     "asar": true,
     "appId": "com.fermiumlabs.datalogger",
-    "extraFiles": [{
-      "from": "build/lib/macos/",
-      "to": "Frameworks",
-      "filter": ["**/*.dylib"]
-    }],
+    "extraFiles": [
+      {
+        "from": "build/lib/macos/",
+        "to": "Frameworks",
+        "filter": [
+          "**/*.dylib"
+        ]
+      }
+    ],
     "asarUnpack": [
       "./app/devices/**/**",
       "./node_modules/data-chan/libDataChan*"
@@ -95,7 +111,9 @@
     },
     "nsis": {
       "oneClick": false,
-      "allowElevation": true
+      "allowElevation": true,
+      "artifactName": "${productName}-Setup.${ext}",
+      "deleteAppDataOnUninstall": true
     },
     "linux": {
       "target": [
@@ -122,12 +140,6 @@
       "target": [
         "nsis"
       ]
-    },
-    "nsis": {
-      "oneClick": false,
-      "allowElevation": true,
-      "artifactName": "${productName}-Setup.${ext}",
-      "deleteAppDataOnUninstall": true
     }
   }
 }
