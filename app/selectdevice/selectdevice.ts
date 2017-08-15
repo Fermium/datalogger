@@ -57,7 +57,7 @@ function appendProduct(producer,name){
   });
 }
 $('#search').change(function(){
-  var str = $(this).val().split(' ');
+  var str = ($(this).val() as any).split(' ');
   $('[data-product]').each(function(){
     $(this).parent().fadeIn(100);
   });

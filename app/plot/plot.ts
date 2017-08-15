@@ -5,6 +5,7 @@ var config = remote.getGlobal('session');
 var source = config.source;
 var scope = remote.getGlobal('scope');
 import {ipcRenderer} from 'electron';
+declare var Rickshaw : any;
 
 
 // instantiate our graph!
