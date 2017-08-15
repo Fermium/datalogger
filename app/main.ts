@@ -41,18 +41,16 @@ let config;
 let mainWindow;
 let plotWindow = {};
 let handbookWindow;
-let selectDeviceWindow;
 
 const glob : any = global;
 glob.session = {'_name':'','_date':dateFormat(Date.now(), 'yyyy_mm_dd')};
 function createWindow () {
 
   // Create the browser window.
-  mainWindow = new BrowserWindow({width: 850, height: 950,show:false});
 
   // and load the index.html of the app.
   mainWindow.loadURL(`file://${__dirname}/main/index.html`);
-  mainWindow.once('ready-to-show',()=>{
+  mainWindow.on('ready-to-show',()=>{
     mainWindow.show();
   })
   // Emitted when the window is closed.
@@ -69,20 +67,19 @@ function createWindow () {
 
 function createSelectDevice () {
   // Create the browser window.
-  selectDeviceWindow = new BrowserWindow({width: 850, height: 950,show:false});
-
   // and load the index.html of the app.
-  selectDeviceWindow.loadURL(`file://${__dirname}/selectdevice/index.html`);
-  selectDeviceWindow.once('ready-to-show',()=>{
-    selectDeviceWindow.show();
+
+  mainWindow.loadURL(`file://${__dirname}/selectdevice/index.html`);
+  mainWindow.on('ready-to-show',()=>{
+    mainWindow.show();
   })
 
   // Emitted when the window is closed.
-  selectDeviceWindow.on('closed', function () {
+  mainWindow.on('closed', function () {
     // Dereference the window object, usually you would store windows
     // in an array if your app supports multi windows, this is the time
     // when you should delete the corresponding element.
-    selectDeviceWindow = null;
+    mainWindow = null;
   });
 
 }
@@ -90,7 +87,7 @@ function createSelectDevice () {
 function createHandbookWindow(){
   var manual = config.manual;
   handbookWindow = new PDFWindow({width: 800, height: 600,show:false});
-  handbookWindow.once('ready-to-show',()=>{
+  handbookWindow.on('ready-to-show',()=>{
     handbookWindow.show();
   });
   if(_.has(manual,'git')){
@@ -150,7 +147,7 @@ function createPlotWindow (name) {
   plotWindow[name]= new BrowserWindow({width:800, height:600,title:name,show:false});
   plotWindow[name].loadURL(`file://${__dirname}/plot/index.html`);
 
-  plotWindow[name].once('ready-to-show',()=>{
+  plotWindow[name].on('ready-to-show',()=>{
     plotWindow[name].show();
   })
   // Emitted when the window is closed.
@@ -168,6 +165,7 @@ function createPlotWindow (name) {
 // initialization and is ready to create browser windows.
 // Some APIs can only be used after this event occurs.
 app.on('ready', function(){
+  mainWindow=  new BrowserWindow({width: 850, height: 950,show:false,backgroundColor:'#f5f5f5'});
   createSelectDevice();
 });
 
@@ -201,8 +199,7 @@ ipcMain.on('plot',(event,arg) => {
   createPlotWindow(arg.name);
 });
 ipcMain.on('relaunch',(event,arg) => {
-  app.relaunch();
-  app.exit();
+  createSelectDevice();
 });
 ipcMain.on('handbook',(event,arg) => {
   createHandbookWindow();

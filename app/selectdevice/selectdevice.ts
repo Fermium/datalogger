@@ -52,7 +52,6 @@ function appendProduct(producer,name){
 
     $(this).click(function(){
       ipcRenderer.send('device-select',{device:$(this).data('device')});
-      remote.getCurrentWindow().close();
     });
   });
 }

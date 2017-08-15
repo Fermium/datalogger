@@ -494,10 +494,10 @@ function on(){
 
 function off(){
   timer.stop();
-  $('#timer').html('00:00:00');
+  $('#timer').html('');
   $("[name='start-stop']").bootstrapSwitch('state', false);
   $("[name='start-stop']").bootstrapSwitch('disabled',true);
-  $('#experiment').text('');
+  $('#experiment').text('Unnamed Experiment');
   $('#date').text('');
   menu.items[2].submenu.items.forEach((e)=>{
     e.enabled=false;
