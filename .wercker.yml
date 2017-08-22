@@ -1,0 +1,17 @@
+box: node:6
+
+build:
+  steps:
+    - script:
+        name: Install Yarn
+        code: |
+          npm install -g yarn
+    - script:
+        name: echo nodejs information
+        code: |
+          echo "node version $(node -v) running"
+          echo "yarn version $(yarn -v) running"
+    - script:
+        name: Install dependencies
+        code: |
+          yarn install
