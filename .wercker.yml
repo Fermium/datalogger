@@ -1,0 +1,14 @@
+box: electronuserland/electron-builder:wine
+
+build:
+  steps:
+    - script:
+        name: echo nodejs information
+        code: |
+          echo "node version $(node -v) running"
+          echo "npm version $(npm -v) running"
+          echo "yarn version $(yarn -v) running"
+    - script:
+        name: Install dependencies
+        code: |
+          yarn install
