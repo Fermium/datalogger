@@ -9,6 +9,12 @@ build:
           echo "npm version $(npm -v) running"
           echo "yarn version $(yarn -v) running"
     - script:
+        name: Set up Node v6
+        code: |
+          nvm install 6
+          nvm use 6
+          nvm alias default 6
+    - script:
         name: Install dependencies
         code: |
           yarn install
