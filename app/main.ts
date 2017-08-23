@@ -149,7 +149,8 @@ function createPlotWindow (name) {
     height:600,
     title:name,
     show:false,
-    minWidth: 810
+    minWidth: 810,
+    minHeight: 600
   });
   plotWindow[name].loadURL(`file://${__dirname}/plot/index.html`);
 
@@ -176,7 +177,8 @@ app.on('ready', function(){
     height: 950,
     show:false,
     backgroundColor:'#f5f5f5',
-    minWidth: 810
+    minWidth: 810,
+    minHeight: 600
   });
   createSelectDevice();
 });
