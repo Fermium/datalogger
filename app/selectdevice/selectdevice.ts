@@ -31,7 +31,7 @@ function updateList(producer){
 }
 function appendProduct(producer,name){
   var product=jsyaml.safeLoad(fs.readFileSync(path.normalize(path.join(__dirname,'devices',producer,name,'config.yaml').replace('app.asar','app.asar.unpacked').replace('selectdevice','')))).product;
-  $('.content-wrapper').append($('<div/>').addClass('col-xs-6').append($('<div/>').addClass('panel panel-default product').attr({
+  $('#devices').append($('<div/>').addClass('col-lg-4 col-md-4 col-sm-6 col-xs-12').append($('<div/>').addClass('panel panel-default product').attr({
     'style':"-webkit-app-region: no-drag",
     'data-product':name,
     'data-producer':producer,
@@ -42,7 +42,7 @@ function appendProduct(producer,name){
   }));
   $('[data-product='+name+'][data-producer='+producer+']').append($('<div/>').addClass('panel-body'));
   $('[data-product='+name+'][data-producer='+producer+']'+" .panel-body").append($('<h4/>').text(product.name));
-  $('[data-product='+name+'][data-producer='+producer+']'+" .panel-body h4").append($('<small/>').text(producer));
+  $('[data-product='+name+'][data-producer='+producer+']'+" .panel-body h4").append($('<small/>').css('display', 'block').html(producer + "<div title='temp logo holder' style='background-color:gray;width:9px;height:9px; display:inline-block;margin-left: 5px;'></div>"));
   $('[data-product='+name+'][data-producer='+producer+']'+" .panel-body").append($('<p/>').text(product.description));
   $('[data-product='+name+'][data-producer='+producer+']'+" .panel-body").append($('<a/>').addClass('btn btn-primary select-device').attr({
     href : '#',
@@ -58,7 +58,7 @@ function appendProduct(producer,name){
 $('#search').change(function(){
   var str = ($(this).val() as any).split(' ');
   $('[data-product]').each(function(){
-    $(this).parent().fadeIn(100);
+    $(this).parent().fadeIn(10);
   });
   str.forEach(function(s){
     if(s!==''){

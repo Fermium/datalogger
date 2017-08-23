@@ -169,6 +169,7 @@ $('[data-action="inputs"]').click(_.debounce(function(){
     let i;
     $('#inputs-content').empty();
     for(i=0;i<channels.length;i++){
+      console.log(channels[i]);
       $('#inputs-content').append($('<div/>').addClass('row').append(
         '<div class="col-md-3 col-sm-3 col-xs-3">'+
         channels[i].name+
