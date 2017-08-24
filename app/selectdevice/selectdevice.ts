@@ -55,7 +55,7 @@ function appendProduct(producer,name){
   console.log($mainCont)
   $mainCont.append($('<div/>').addClass('panel-body'));
   $mainCont.find('.panel-body').append($('<h4/>').text(product.name));
-  $mainCont.find('.panel-body').find("h4").append($('<small/>').css('display', 'block').html(producer + "<div title='temp logo holder' style='background-color:gray;width:9px;height:9px; display:inline-block;margin-left: 5px;'></div>"));
+  $mainCont.find('.panel-body').find("h4").append($('<small/>').css('display', 'block').html(producer));
   $mainCont.find('.panel-body').append($('<p/>').text(product.description));
   $mainCont.find('.panel-body').append($('<a/>').addClass('btn btn-primary select-device').attr({
     href : '#',
