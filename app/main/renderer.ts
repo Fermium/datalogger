@@ -46,8 +46,8 @@ let modal;
 $(document).ready(function(){
   init();
   $("[name='start-stop']").bootstrapSwitch({
-      onText: '<i class="fa fa-circle" aria-hidden="true"></i>',
-      offText: '<i class="fa fa-pause" aria-hidden="true"></i>',
+      onText: '<i class="fa fa-pause" aria-hidden="true"></i>',
+      offText: '<i class="fa fa-circle" aria-hidden="true"></i>',
       onSwitchChange: (event, state) => {
         if (state) {
           rec();
@@ -139,11 +139,68 @@ $('[data-action="plot"]').click(function(){
   ipcRenderer.send('plot',{'name':name});
 });
 
+// $('[data-action="inputs"]').click(_.debounce(function(){
+//   if(modal!==undefined) modal.modal('hide');
+//   modal=bootbox.dialog({
+//     message : '<div id="inputs-content"</div>',
+//     title : 'Gains',
+//     buttons : {
+//       danger : {
+//         label : 'Cancel',
+//         className : 'btn-default',
+//         callback : function(){
+//         }
+//       },
+//       success : {
+//         label:'Confirm',
+//         className: 'btn-primary',
+//         callback: function() {
+//           $('select.gain').each(function(i){
+//             channels[i].gain = $(this).val();
+//             ipcRenderer.send('send-to-hardware',{id:'set_gain',channel: channels[i].code,value:channels[i].gain});
+//           });
+//         }
+//       }
+//     },
+//     show : false,
+//     onEscape : true
+//   });
+//   modal.on('shown.bs.modal',function(){
+//     let i;
+//     let $iContent = $('#inputs-content');
+//     $iContent.empty();
+    
+//     for(i=0;i<channels.length;i++){
+//       console.log(channels[i]);
+//       $iContent.append($('<div/>').addClass('row').append(
+//         '<div class="col-md-3 col-sm-3 col-xs-3">'+
+//         channels[i].name+
+//         '</div><div class="col-md-3 col-sm-3 col-xs-3">'+
+//         '<select class="gain"></select></div><div class="col-md-6 col-sm-6 col-xs-6">'+
+//         channels[i].description+
+//         '</div>'));
+//     }
+
+//     $('.gain').each(function(i){
+//       ($(this) as any).selectBoxIt({
+//         autoWidth: false,
+//         copyClasses : "container",
+//       });
+//       channels[i].gainvalues.forEach((el,j)=>{
+//         $(this).data("selectBox-selectBoxIt").add({value: el,text : 'x'+channels[i].gainlabels[j]});
+//       });
+//       $(this).find('option[value='+channels[i].gain+']').attr('selected','selected');
+//       $(this).data('selectBox-selectBoxIt').refresh();
+//     });
+//   });
+
+//   modal.modal('show');
+// },200));
+
 $('[data-action="inputs"]').click(_.debounce(function(){
-  if(modal!==undefined)modal.modal('hide');
+  if(modal!==undefined) modal.modal('hide');
   modal=bootbox.dialog({
     message : '<div id="inputs-content"</div>',
-    title : 'Gains',
     buttons : {
       danger : {
         label : 'Cancel',
@@ -165,19 +222,42 @@ $('[data-action="inputs"]').click(_.debounce(function(){
     show : false,
     onEscape : true
   });
+
   modal.on('shown.bs.modal',function(){
-    let i;
-    $('#inputs-content').empty();
-    for(i=0;i<channels.length;i++){
-      console.log(channels[i]);
-      $('#inputs-content').append($('<div/>').addClass('row').append(
-        '<div class="col-md-3 col-sm-3 col-xs-3">'+
-        channels[i].name+
-        '</div><div class="col-md-3 col-sm-3 col-xs-3">'+
-        '<select class="gain"></select></div><div class="col-md-6 col-sm-6 col-xs-6">'+
-        channels[i].description+
-        '</div>'));
-    }
+    let $iContent = $('#inputs-content');
+    $iContent.empty();
+    let html = '';
+    html += `<!-- Table -->
+              <table class="table">
+              <thead>
+                  <tr>
+                    <td>Variable</td>
+                    <td>Gain</td>
+                    <td>Description</td>
+                  </tr>
+              </thead>
+              <tbody>`;
+              for(let i=0; i < channels.length; i++){
+                html += `
+                  <tr>
+                    <td>${channels[i].name}</td>
+                    <td>
+                      <select class="gain">`
+                     for(let j = 0; j <= channels[i].gainlabels; j++){
+                       html += `<option value="${channels[i].gainvalues[j]}" >${channels[i].gainlabels[j]}</option>`;
+                     }   
+                html +=`</select>
+                    </td>
+                    <td>
+                     <div class='var-desc'>
+                     ${channels[i].description}
+                     </div>
+                    </td>
+                  </tr>
+                `;
+              }
+    html +=   `</tbody></table>`;
+    $iContent.html(html);
     $('.gain').each(function(i){
       ($(this) as any).selectBoxIt({
         autoWidth: false,
@@ -190,12 +270,7 @@ $('[data-action="inputs"]').click(_.debounce(function(){
       $(this).data('selectBox-selectBoxIt').refresh();
     });
   });
-  modal.on('hide.bs.modal',()=>{
-    if(parseFloat($('body').css('padding-right'))>0){
 
-      $('body').css('padding-right',0);
-    }
-  });
   modal.modal('show');
 },200));
 

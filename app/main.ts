@@ -144,7 +144,14 @@ function createHandbookWindow(){
 
 }
 function createPlotWindow (name) {
-  plotWindow[name]= new BrowserWindow({width:800, height:600,title:name,show:false});
+  plotWindow[name]= new BrowserWindow({
+    width:800, 
+    height:600,
+    title:name,
+    show:false,
+    minWidth: 800,
+    minHeight: 600
+  });
   plotWindow[name].loadURL(`file://${__dirname}/plot/index.html`);
 
   plotWindow[name].on('ready-to-show',()=>{
@@ -165,7 +172,14 @@ function createPlotWindow (name) {
 // initialization and is ready to create browser windows.
 // Some APIs can only be used after this event occurs.
 app.on('ready', function(){
-  mainWindow=  new BrowserWindow({width: 850, height: 950,show:false,backgroundColor:'#f5f5f5'});
+  mainWindow =  new BrowserWindow({
+    width: 850, 
+    height: 950,
+    show:false,
+    backgroundColor:'#f5f5f5',
+    minWidth: 800,
+    minHeight: 600
+  });
   createSelectDevice();
 });
 
