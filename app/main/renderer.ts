@@ -350,7 +350,7 @@ $('[data-action="editequation"]').click(_.debounce(function() {
           }catch(e){
             $eqAlert
               .addClass("alert alert-danger")
-              .text("Something is wrong with the equation, please double check the fields.")
+              .text(`Error in math: ${e.toString()}`)
               .show();
                 // dialog.showMessageBox({type: 'error',title: 'Error in math', message : err.toString()});
             
