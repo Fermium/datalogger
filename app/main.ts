@@ -13,8 +13,6 @@ import * as PDFWindow from 'electron-pdf-window';
 import * as jsyaml from 'js-yaml';
 //import AppUpdater from './AppUpdater';
 
-
-
 let usb;
 var _ = require('lodash');
 let logger;
@@ -23,7 +21,9 @@ let corr  = {a:0,b:0};
 if(!isDev()){
   let  Raven = require('raven');
   try{
-    Raven.config('https://d62ce425b8f346439bf694c9f36eae45:84b649383e3843d49d1e56561cff98b1@sentry.io/208461').install();
+    Raven.config('https://d62ce425b8f346439bf694c9f36eae45:84b649383e3843d49d1e56561cff98b1@sentry.io/208461',{
+      release: electron.app.getVersion()
+    }).install();
   }
   catch(err){
     console.log('Error connecting to sentry');
