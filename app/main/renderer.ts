@@ -16,6 +16,7 @@ require('codemirror/mode/javascript/javascript');
 require('codemirror/addon/edit/matchbrackets');
 let recording;
 declare var ui : any;
+declare const MathJax: any;
 /* End NodeJS Requires */
 /* Electron requires */
 interface JQuery {
@@ -278,7 +279,8 @@ $('[data-action="editequation"]').click(_.debounce(function() {
   if(modal!==undefined)modal.modal('hide');
   let editor;
   modal=bootbox.dialog({
-    message : '<div id=\'eqmodal\'>'+
+    className: 'math-sheet',
+    message : '<div class="eq-alert" style="display:none"></div>  <div id=\'eqmodal\'>'+
     '<div class="row d-flex flex-column " style="position:relative">'+
         '<textarea class="form-control"  id="equations"></textarea>'+
       '</div>'+
@@ -329,21 +331,37 @@ $('[data-action="editequation"]').click(_.debounce(function() {
         label:'Confirm',
         className: 'btn-primary',
         callback: function() {
-          let result = editor.getValue();
-          if(result !== null) mathsheet=result;
-            try{
-              if(ison){
-                math.eval(mathsheet,scope);
-                evaluate();
-              }
+          let $eqAlert = $(".eq-alert");
+          $eqAlert.removeClass("alert-success")
+                  .removeClass("alert-danger")
+          try{
+            let result = editor.getValue();
+            if(result !== null) mathsheet=result;
+            if(ison){
+              math.eval(mathsheet,scope);
+              evaluate();
             }
-            catch(err){
-              dialog.showMessageBox({type: 'error',title: 'Error in math', message : err.toString()});
+            updateTex();
+            ui.blocks.forEach(updatePopover);
+            $eqAlert
+              .addClass("alert alert-success")
+              .text("Equations has been successfully saved.")
+              .show();
+          }catch(e){
+            $eqAlert
+              .addClass("alert alert-danger")
+              .text(`Error in math: ${e.toString()}`)
+              .show();
+                // dialog.showMessageBox({type: 'error',title: 'Error in math', message : err.toString()});
+            
+          }
 
-            }
-          updateTex();
-          ui.blocks.forEach(updatePopover);
-        }
+          $(".bootbox").animate({
+            scrollTop: 0
+          }, 100);
+          return false;
+        },
+
         },
 
     },
@@ -513,9 +531,16 @@ function initpopover(block){
       title: 'Formula',
       html: true,
       placement: 'bottom',
-      content: '<div id="' + block.val + '_formula">$$' + tex[block.val] + '$$</div>'
+      content: '<div class="mathjax-formula" id="' + block.val + '_formula">$$' + tex[block.val] + '$$</div>'
     }).on('shown.bs.popover', function() {
-      mathjaxHelper.typesetMath(document.getElementById(block.val + '_formula'));
+      MathJax.Hub.Queue(function () {
+        mathjaxHelper.typesetMath(document.getElementById(block.val + '_formula'));
+        $(`#${block.val}_formula`).show();
+      });
+      
+    })
+    .on('hide.bs.popover', function() {
+      $(`#${block.val}_formula`).hide();
     });
   }
 }
