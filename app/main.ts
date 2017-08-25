@@ -23,7 +23,7 @@ let corr  = {a:0,b:0};
 if(!isDev()){
   let  Raven = require('raven');
   try{
-    Raven.config('https://ddbac24f695c4daaa9b91d254238d074:6e935c0fb21843d9adbcd49cfb0fd325@sentry1.dev.fermiumlabs.com/2').install();
+    Raven.config('https://d62ce425b8f346439bf694c9f36eae45:84b649383e3843d49d1e56561cff98b1@sentry.io/208461').install();
   }
   catch(err){
     console.log('Error connecting to sentry');
@@ -145,7 +145,7 @@ function createHandbookWindow(){
 }
 function createPlotWindow (name) {
   plotWindow[name]= new BrowserWindow({
-    width:800, 
+    width:800,
     height:600,
     title:name,
     show:false,
@@ -173,7 +173,7 @@ function createPlotWindow (name) {
 // Some APIs can only be used after this event occurs.
 app.on('ready', function(){
   mainWindow =  new BrowserWindow({
-    width: 850, 
+    width: 850,
     height: 950,
     show:false,
     backgroundColor:'#f5f5f5',
