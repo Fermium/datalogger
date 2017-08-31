@@ -39,8 +39,19 @@ Please use included Vagrant images:
 * ubuntu_desktop
 * windows
 * arch (still not working)
+* fedora (test only)
 
 If you want to develop without the vagrant images, install the required dependencies described [here](https://github.com/nodejs/node-gyp)
+
+You will need to have a working [node-gyp](https://github.com/nodejs/node-gyp) since this app uses many native extensions
+
+## macOS
+
+If you're developing on macOS, run `yarn patchlibusb` after install, otherwise data-chan will not find libusb, since they're linked together for production and not for development
+
+## Windows
+
+Developing on Windows is messy. As long as you get node-gyp to work correctly, you'll be fine
 
 # Contributing
 
