@@ -767,14 +767,24 @@ const template = [
         click () { $('[data-action="handbook"]').trigger('click');}
       },
       {
-        label: 'About Datalogger',
-        click () { bootbox.dialog({
-          message : ''+
-          '<p>'+pjson.name+' v'+ pjson.version+'</p><p>Copyright &#9400;	 2017-2018 Fermium LABS srl. All rights reserved</p><p>Website:<a href="https://www.fermiumlabs.com" onclick="myFunction(this.href)">https://www.fermiumlabs.com</a></p><p>Technical Support: <a href="mailto:support@fermiumlabs.com" onclick="myFunction(this.href)">support@fermiumlabs.com</a></p>',
-          title : 'About Datalogger',
-          show : true,
-          onEscape : true
-        });}
+        label: `About ${pjson.name}`,
+        click () {
+          let html = `
+            <div style="text-align:center">
+              <img src="../assets/images/fermiumlabs.svg" />
+              <p>${pjson.name} v${pjson.version}</p>
+              <p>Copyright &#9400;	 2017-2018 Fermium LABS srl. All rights reserved</p>
+              <p>Website:<a href="https://www.fermiumlabs.com" onclick="myFunction(this.href)">https://www.fermiumlabs.com</a></p>
+              <p>Technical Support: <a href="mailto:support@fermiumlabs.com" onclick="myFunction(this.href)">support@fermiumlabs.com</a></p>
+            </div>
+          `;
+          bootbox.dialog({
+            message : html,
+            title : 'About Datalogger',
+            show : true,
+            onEscape : true
+          });
+        }
       }
     ]
   },
@@ -790,4 +800,5 @@ const template = [
 
 
 const menu = Menu.buildFromTemplate(template);
+console.log(app.getCurrentWindow());
 app.getCurrentWindow().setMenu(menu);
