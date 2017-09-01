@@ -41,6 +41,12 @@ let channels : Obj;
 let unit = {};
 let ison : boolean = false;
 let modal;
+
+let pnotifyStack = {dir1: "up", dir2: "left"};
+let pnotifyButtons = {
+  closer: true
+}
+
 /* End Variables */
 
 /**************************************************/
@@ -631,6 +637,7 @@ function rec(){
   });
   ipcRenderer.send('start');
   ipcRenderer.on('started',function(event,args){
+    PNotify.removeAll();
     if(!args.return){
       $("[name='start-stop']").bootstrapSwitch('state', false);
     } else {
@@ -640,8 +647,11 @@ function rec(){
         icon: false,
         type: 'info',
         styling: 'bootstrap3',
-        addclass: 'translucent',
-        animate_speed: 'fast'
+        addclass: 'stack-bottom-right',
+        animate_speed: 'fast',
+        buttons: pnotifyButtons,
+        stack: pnotifyStack,
+        delay: 2500
       });
     }
   });
@@ -653,6 +663,7 @@ function rec(){
 }
 
 function pause(){
+  PNotify.removeAll();
   ipcRenderer.send('stop');
   timer.pause();
   new PNotify({
@@ -661,8 +672,11 @@ function pause(){
     icon: false,
     type: 'info',
     styling: 'bootstrap3',
-    addclass: 'translucent',
-    animate_speed: 'fast'
+    addclass: 'stack-bottom-right',
+    animate_speed: 'fast',
+    buttons: pnotifyButtons,
+    stack: pnotifyStack,
+    delay: 2500
   });
 }
 function check_temp(){
@@ -761,14 +775,24 @@ const template = [
         click () { $('[data-action="handbook"]').trigger('click');}
       },
       {
-        label: 'About Datalogger',
-        click () { bootbox.dialog({
-          message : ''+
-          '<p>'+pjson.name+' v'+ pjson.version+'</p><p>Copyright &#9400;	 2017-2018 Fermium LABS srl. All rights reserved</p><p>Website:<a href="https://www.fermiumlabs.com" onclick="myFunction(this.href)">https://www.fermiumlabs.com</a></p><p>Technical Support: <a href="mailto:support@fermiumlabs.com" onclick="myFunction(this.href)">support@fermiumlabs.com</a></p>',
-          title : 'About Datalogger',
-          show : true,
-          onEscape : true
-        });}
+        label: `About ${pjson.name}`,
+        click () {
+          let html = `
+            <div style="text-align:center">
+              <img src="../assets/images/fermiumlabs.svg" />
+              <p>${pjson.name} v${pjson.version}</p>
+              <p>Copyright &#9400;	 2017-2018 Fermium LABS srl. All rights reserved</p>
+              <p>Website: <a href="https://www.fermiumlabs.com" onclick="myFunction(this.href)">https://www.fermiumlabs.com</a></p>
+              <p>Technical Support: <a href="mailto:support@fermiumlabs.com" onclick="myFunction(this.href)">support@fermiumlabs.com</a></p>
+            </div>
+          `;
+          bootbox.dialog({
+            message : html,
+            title : 'About Datalogger',
+            show : true,
+            onEscape : true
+          });
+        }
       }
     ]
   },
@@ -784,4 +808,5 @@ const template = [
 
 
 const menu = Menu.buildFromTemplate(template);
+console.log(app.getCurrentWindow());
 app.getCurrentWindow().setMenu(menu);
