@@ -71,8 +71,9 @@ $(document).ready(function(){
 });
 
 /* Events */
-ipcRenderer.on('usb-fail',function(event,args){
+ipcRenderer.on('usb-error',function(event,args){
   $("[name='on-off']").bootstrapSwitch('state', false);
+  //Hey WILCO, you can attach a notification here ^^^
 });
 
 ipcRenderer.on('measure',function(event,args){
@@ -483,7 +484,7 @@ function init(){
     Raven.showReportDialog();*/
   }
 }
-ipcRenderer.on('init',init);
+ipcRenderer.on('usb-init',init);
 
 
 
