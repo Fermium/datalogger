@@ -3,7 +3,7 @@
 product:
   manufacturer: "LabTrek"
   manufacturercode : "labtrek"
-  name: "Microware Bench"
+  name: "Microwave Bench"
   model: "ltk-mw"
   description: "Realize hundreds of experiments in a single intregrated microware bench (upcoming !)"
   image: "pic.png"
