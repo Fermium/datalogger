@@ -7,6 +7,7 @@ product:
   model: "ltk-hall"
   description: "Measure Hall effect and electron mobility over a broad temperatures, magnetic field and current range"
   image: "pic.jpg"
+  enable: true
   usb:
     vid: 0x16d0
     pid: 0x0c9b
