@@ -41,6 +41,12 @@ let channels : Obj;
 let unit = {};
 let ison : boolean = false;
 let modal;
+
+let pnotifyStack = {dir1: "up", dir2: "left"};
+let pnotifyButtons = {
+  closer: true
+}
+
 /* End Variables */
 
 /**************************************************/
@@ -623,6 +629,7 @@ function rec(){
   });
   ipcRenderer.send('start');
   ipcRenderer.on('started',function(event,args){
+    PNotify.removeAll();
     if(!args.return){
       $("[name='start-stop']").bootstrapSwitch('state', false);
     } else {
@@ -632,8 +639,11 @@ function rec(){
         icon: false,
         type: 'info',
         styling: 'bootstrap3',
-        addclass: 'translucent',
-        animate_speed: 'fast'
+        addclass: 'stack-bottom-right',
+        animate_speed: 'fast',
+        buttons: pnotifyButtons,
+        stack: pnotifyStack,
+        delay: 2500
       });
     }
   });
@@ -645,6 +655,7 @@ function rec(){
 }
 
 function pause(){
+  PNotify.removeAll();
   ipcRenderer.send('stop');
   timer.pause();
   new PNotify({
@@ -653,8 +664,11 @@ function pause(){
     icon: false,
     type: 'info',
     styling: 'bootstrap3',
-    addclass: 'translucent',
-    animate_speed: 'fast'
+    addclass: 'stack-bottom-right',
+    animate_speed: 'fast',
+    buttons: pnotifyButtons,
+    stack: pnotifyStack,
+    delay: 2500
   });
 }
 function check_temp(){
