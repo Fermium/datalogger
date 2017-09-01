@@ -276,8 +276,14 @@ ipcMain.on('on',(event,arg) => {
       case 'error':
         mainWindow.webContents.send('usb-error', {});
         //report to sentry
-        Raven.captureException(data.payload)
         console.log("Error in USB:", data.message);
+        if(!isDev()){
+        Raven.captureException(data.payload)
+       }
+       else{
+         console.log(data.e);
+       }
+        
         break;
       case 'usb-init':
         mainWindow.webContents.send('init', {});
@@ -295,10 +301,12 @@ ipcMain.on('on',(event,arg) => {
   });
   
 usb.on('exit',(code,n)=>{
+  mainWindow.webContents.send('usb-error', {});
   console.log('usb exited with exit code', code);
 });
 
  usb.on('disconnect',(code,n)=>{
+  mainWindow.webContents.send('usb-error', {});
   console.log('usb disconnected with exit code', code);
 });
 

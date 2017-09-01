@@ -9,16 +9,9 @@ function dispatch_error(message, e) {
   });
 }
 
-
-//yes, this is needed. Too much shit can go wrong here
-try {
-  var datachan = require('data-chan').lib;
-  var dc_search_results = require('data-chan').search_enum;
-  var MAX_MEASURE_NUM = require('data-chan').MAX_MEASURE_NUM;
-
-} catch (e) {
-  dispatch_error('Unable to load the Data-chan library', e)
-}
+var datachan = require('data-chan').lib;
+var dc_search_results = require('data-chan').search_enum;
+var MAX_MEASURE_NUM = require('data-chan').MAX_MEASURE_NUM;
 
 
 var ref = require('ref');
@@ -40,7 +33,7 @@ var device;
 var thread;
 
 function on(vid, pid) {
-  console.log("USB on with VID", vid,"and PID", pid)
+  console.log("USB on with VID", vid, "and PID", pid)
 
   datachan.datachan_init();
 
@@ -110,7 +103,7 @@ function read() {
     meas_index = datachan.datachan_device_enqueued_measures(device.device);
 
     if (meas_index === 0) {
-      dispatch_error('No measure available to read', e)
+      //dispatch_error('No measure available to read', e)
       return;
     }
 
