@@ -583,8 +583,16 @@ ipcRenderer.on('on',(event,args)=>{
     $("[name='on-off']").bootstrapSwitch('state',false);
     bootbox.confirm({
       size: 'small',
-      title : 'Usb Error',
-      message: 'Usb device disconnected, please reconnect and then click ok',
+      title : 'Unable to find the instrument',
+      message: 'Please verify it is connected to the USB and powered on.<br>On Unix, also check for access permissions',
+      buttons: {
+        cancel: {
+            label: 'Cancel'
+        },
+        confirm: {
+            label: 'Retry'
+        }
+    },
       callback: function(result){
         if(result){
           $("[name='on-off']").bootstrapSwitch('state',true);
