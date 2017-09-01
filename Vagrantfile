@@ -20,7 +20,7 @@ Vagrant.configure(2) do |config|
 
       vb.name = 'datalogger-arch'
       # Customize the amount of memory on the VM:
-      vb.memory = '1024'
+      vb.memory = '2048'
 
       # Avoid ubuntu network problems at boot
       vb.customize ['modifyvm', :id, '--cableconnected1', 'on']
@@ -44,6 +44,17 @@ Vagrant.configure(2) do |config|
       ./configure
       make
       sudo make install
+      
+      #Install NVM (Node Version Manager)
+      curl -o- https://raw.githubusercontent.com/creationix/nvm/v0.33.2/install.sh | bash
+      export NVM_DIR="$HOME/.nvm"
+      [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"  # This loads nvm
+      [ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"  # This loads nvm bash_completion
+      
+      #Install NodeJS 6
+      nvm install 6
+      nvm use 6
+      nvm alias default 6
 
 
       # link volume to home user folder
@@ -71,32 +82,11 @@ Vagrant.configure(2) do |config|
 
       vb.name = 'datalogger-ubuntu'
       # Customize the amount of memory on the VM:
-      vb.memory = '1024'
+      vb.memory = '2048'
 
       # Limit CPU usage
       vb.customize ['modifyvm', :id, '--cpuexecutioncap', '65']
     end
-
-    ## Enable USB Controller on VirtualBox
-    # ubuntu.vm.provider 'virtualbox' do |vb|
-    #  vb.customize ['modifyvm', :id, '--usb', 'on']
-    #  vb.customize ['modifyvm', :id, '--usbehci', 'on']
-    # end
-
-    ## Implement determined configuration attributes
-    # ubuntu.vm.provider 'virtualbox' do |vb|
-    #  vb.customize ['usbfilter', 'add', '0',
-    #                '--target', :id,
-    #                '--name', 'datachan tester',
-    #                '--product', 'datachan tester']
-    # end
-
-    # ubuntu.vm.provider 'virtualbox' do |vb|
-    #  vb.customize ['usbfilter', 'add', '0',
-    #                '--target', :id,
-    #                '--name', 'USBasp',
-    #                '--product', 'USBasp']
-    # end
 
     ###############################################################
     ubuntu.vm.provision 'shell', privileged: false, inline: <<-SHELL
@@ -144,7 +134,7 @@ Vagrant.configure(2) do |config|
   config.vm.define 'ubuntu_desktop' do |ubuntu_desktop|
     # Every Vagrant development environment requires a box. You can search for
     # boxes at https://atlas.hashicorp.com/search.
-    ubuntu_desktop.vm.box = 'ubuntu/xenial64'
+    ubuntu_desktop.vm.box = 'boxcutter/ubuntu1604-desktop'
 
     # Create a public network, which generally matched to bridged network.
     # Bridged networks make the machine appear as another physical device on
@@ -159,43 +149,23 @@ Vagrant.configure(2) do |config|
 
       vb.name = 'datalogger-ubuntu-desktops'
       # Customize the amount of memory on the VM:
-      vb.memory = '1024'
+      vb.memory = '2048'
 
       # Limit CPU usage
       vb.customize ['modifyvm', :id, '--cpuexecutioncap', '65']
+      vb.customize ["modifyvm", :id, "--accelerate3d", "on"]
     end
 
-    ## Enable USB Controller on VirtualBox
-    # ubuntu.vm.provider 'virtualbox' do |vb|
-    #  vb.customize ['modifyvm', :id, '--usb', 'on']
-    #  vb.customize ['modifyvm', :id, '--usbehci', 'on']
-    # end
-
-    ## Implement determined configuration attributes
-    # ubuntu.vm.provider 'virtualbox' do |vb|
-    #  vb.customize ['usbfilter', 'add', '0',
-    #                '--target', :id,
-    #                '--name', 'datachan tester',
-    #                '--product', 'datachan tester']
-    # end
-
-    # ubuntu.vm.provider 'virtualbox' do |vb|
-    #  vb.customize ['usbfilter', 'add', '0',
-    #                '--target', :id,
-    #                '--name', 'USBasp',
-    #                '--product', 'USBasp']
-    # end
 
     ###############################################################
     ubuntu_desktop.vm.provision 'shell', privileged: false, inline: <<-SHELL
        export DEBIAN_FRONTEND=noninteractive
 
-
        printf "\n\nInstalling software\n"
 
        sudo apt-get update
        sudo apt-get -y install wget python python-dev curl build-essential
-       sudo apt-get -y install ubuntu-mate-cloudtop virtualbox-guest-x11
+       #sudo apt-get -y install ubuntu-mate-cloudtop virtualbox-guest-x11
 
        # Electron Builder requirements https://github.com/electron-userland/electron-builder/wiki/Multi-Platform-Build
        sudo apt-get -y install icnsutils rpm graphicsmagick xz-utils
@@ -225,7 +195,7 @@ Vagrant.configure(2) do |config|
        #Enable autologin
        sudo /bin/sh -c "echo autologin-user=ubuntu >> /usr/share/lightdm/lightdm.conf.d/60-lightdm-gtk-greeter.conf"
        # link volume to home user folder
-       ln -s /vagrant datalogger
+       ln -s /vagrant /home/vagrant/Desktop/datalogger
 
        printf "\n\n\n\nThe box is ready. Now run vagrant reload ubuntu_desktop && vagrant ssh ubuntu_desktop to connect! \n"
 
@@ -257,7 +227,8 @@ Vagrant.configure(2) do |config|
       v.customize ['modifyvm', :id, '--vram', '256']
       v.customize ['modifyvm', :id, '--clipboard', 'bidirectional']
       v.customize ['setextradata', 'global', 'GUI/MaxGuestResolution', 'any']
-      v.customize ['setextradata', :id, 'CustomVideoMode1', '1024x768x32']
+      v.customize ['setextradata', :id, 'CustomVideoMode1', '2048x768x32']
+      v.customize ["modifyvm", :id, "--accelerate3d", "on"]
     end
 
     ## Enable USB Controller on VirtualBox
@@ -306,19 +277,58 @@ Vagrant.configure(2) do |config|
 
       vb.name = 'datalogger-fedora_desktop'
       # Customize the amount of memory on the VM:
-      vb.memory = '1024'
+      vb.memory = '2048'
 
       # Limit CPU usage
       vb.customize ['modifyvm', :id, '--cpuexecutioncap', '65']
+      vb.customize ["modifyvm", :id, "--accelerate3d", "on"]
     end
 
     ###############################################################
     fedora_desktop.vm.provision 'shell', privileged: false, inline: <<-SHELL
-       sudo yum -y update
+       #sudo yum -y update
        printf "\n\nInstalling software\n"
 
        # link volume to home user folder
-       ln -s /vagrant datalogger
+       ln -s /vagrant /home/vagrant/Desktop/datalogger
+
+
+       printf "\n\n\n\nThe box is ready. Now simply run \"vagrant ssh\" to connect! \n"
+
+     SHELL
+  end
+  config.vm.define 'centos_desktop' do |centos_desktop|
+    # Every Vagrant development environment requires a box. You can search for
+    # boxes at https://atlas.hashicorp.com/search.
+    centos_desktop.vm.box = "boxcutter/centos73-desktop"
+
+    # Create a public network, which generally matched to bridged network.
+    # Bridged networks make the machine appear as another physical device on
+    # your network.
+    centos_desktop.vm.network 'private_network', type: 'dhcp'
+
+    # Provider-specific configuration so you can fine-tune various
+    # backing providers for Vagrant. These expose provider-specific options.
+    centos_desktop.vm.provider 'virtualbox' do |vb|
+      # Display the VirtualBox GUI when booting the machine
+      vb.gui = true
+
+      vb.name = 'datalogger-centos_desktop'
+      # Customize the amount of memory on the VM:
+      vb.memory = '2048'
+
+      # Limit CPU usage
+      vb.customize ['modifyvm', :id, '--cpuexecutioncap', '65']
+      vb.customize ["modifyvm", :id, "--accelerate3d", "on"]
+    end
+
+    ###############################################################
+    centos_desktop.vm.provision 'shell', privileged: false, inline: <<-SHELL
+       #sudo yum -y update
+       printf "\n\nInstalling software\n"
+
+       # link volume to home user folder
+       ln -s /vagrant /home/vagrant/Desktop/datalogger
 
 
        printf "\n\n\n\nThe box is ready. Now simply run \"vagrant ssh\" to connect! \n"
