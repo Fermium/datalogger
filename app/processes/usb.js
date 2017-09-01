@@ -83,6 +83,11 @@ function send_command(command) {
   }
 }
 
+function is_on()
+{
+  return datachan.datachan_device_is_enabled(device.device);
+}
+
 function read() {
 
   var scope = {
@@ -148,10 +153,10 @@ process.on('message', (data) => {
       off();
       break;
 
-    case 'ison':
+    case 'is_on':
       process.send({
-        action: 'ison',
-        message: ison()
+        action: 'is_on',
+        message: is_on()
       });
       break;
 

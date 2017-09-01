@@ -39,7 +39,7 @@ interface Obj {
 }
 let channels : Obj;
 let unit = {};
-let ison : boolean = false;
+let is_on : boolean = false;
 let modal;
 /* End Variables */
 
@@ -338,7 +338,7 @@ $('[data-action="editequation"]').click(_.debounce(function() {
           try{
             let result = editor.getValue();
             if(result !== null) mathsheet=result;
-            if(ison){
+            if(is_on){
               math.eval(mathsheet,scope);
               evaluate();
             }
@@ -557,7 +557,7 @@ function updatePopover(block){
 
 
 ipcRenderer.on('on',(event,args)=>{
-  ison = args.st;
+  is_on = args.st;
   if(args.st){
     bootbox.prompt({
       size: 'small',
@@ -613,7 +613,7 @@ function off(){
     e.enabled=false;
   });
   ui.init();
-  ison=false;
+  is_on=false;
   ipcRenderer.send('off');
 }
 

@@ -337,7 +337,7 @@ ipcMain.on('update',(event,arg)=>{
 });
 
 ipcMain.on('isrunning',(event,arg)=>{
-  //usb.send({action:'ison',message:''});
+  usb.send({action:'is_on',message:''});
 });
 
 ipcMain.on('send-to-hardware',(event,arg)=>{
