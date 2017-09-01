@@ -7,6 +7,9 @@ product:
   model: "ltk-hall"
   description: "Measure the Hall effect over a broad range of temperatures, magnetic fields and current"
   image: "pic.jpg"
+  usb:
+    vid: 0x16d0
+    pid: 0x0c9b
 manual:
   # URL should be HTTPS
   url: "https://s3-eu-west-1.amazonaws.com/handbooks-autobuild/hall-effect-handbook/Hall_Handbook.pdf"
@@ -97,7 +100,7 @@ config:
       - name: "Sample Current [A]"
         function : 'set_current_output'
         type: "slider"
-        min: 0
+        min: -0.05
         max: 0.05
         step: 0.001
         default: 0
