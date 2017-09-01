@@ -38,20 +38,36 @@
 
 
 	<!-- /global stylesheets -->
+	<style>
+		.var-desc{
+			max-height: 100px;
+			overflow-x: hidden;
+			overflow-y: auto;
+		}
+		thead{
+			font-weight: bold;
+		}
+		.bootstrap-switch-id-start-stop .fa-circle{
+			color: red;
+		}
+		.bootstrap-switch-id-start-stop.bootstrap-switch-disabled .fa-circle{
+			color: gray
+		}
+	</style>
 </head>
 
 <body>
 
 	<!-- Main navbar -->
 	<div class='navbar navbar-inverse '>
-		<div class='navbar-header'>
+		<div class='navbar-header main'>
 			<div class='navbar-brand'><img src='../assets/images/logo_light.png' alt=''></img></div>
 		</div>
 
-		<div class=''>
+		<div class='navbar-tools'>
 			<ul class='nav navbar-nav navbar-right off'>
 				<li  id='exportdd' class='dropdown'>
-					<a data-toggle='dropdown' class='sidebar-control sidebar-main-toggle hidden-xs'>
+					<a data-toggle='dropdown' class='sidebar-control sidebar-main-toggle'>
 						<i class='icon-table2' data-toggle='tooltip' data-placement='bottom' title='Export'></i>
 						<i class='caret'></i>
 					</a>
@@ -82,9 +98,13 @@
   			</div>
 
 				<div class='heading-elements '>
-					<input type='checkbox' name='on-off' data-toggle='tooltip' data-placement='bottom' title='Power On'>
-					<a class='btn btn-primary' data-action='save-file' ><i class='icon-file-plus' data-toggle='tooltip' data-placement='bottom' title='New File'></i></a>
-					<input type='checkbox' name='start-stop' id='start-stop' disabled data-toggle='tooltip' data-placement='bottom' title='Record Measures'>
+					<a href="#" title="Power">
+						<input type='checkbox' name='on-off' title="power" data-toggle='tooltip' data-placement='bottom' data-title='Power On'>
+					</a>
+					<a class='btn btn-primary' style="padding: 5px 12px;" data-action='save-file' title="Select file"><i class='icon-file-plus' data-toggle='tooltip' data-placement='bottom' title='New File'></i></a>
+					<a href="#" title="Start acquisition">
+						<input type='checkbox' name='start-stop' id='start-stop' disabled data-toggle='tooltip' data-placement='bottom' title='Record Measures'>
+					</a>
 				</div>
   	</div>
 	</div>

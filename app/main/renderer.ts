@@ -16,6 +16,7 @@ require('codemirror/mode/javascript/javascript');
 require('codemirror/addon/edit/matchbrackets');
 let recording;
 declare var ui : any;
+declare const MathJax: any;
 /* End NodeJS Requires */
 /* Electron requires */
 interface JQuery {
@@ -46,8 +47,8 @@ let modal;
 $(document).ready(function(){
   init();
   $("[name='start-stop']").bootstrapSwitch({
-      onText: '<i class="fa fa-circle" aria-hidden="true"></i>',
-      offText: '<i class="fa fa-pause" aria-hidden="true"></i>',
+      onText: '<i class="fa fa-pause" aria-hidden="true"></i>',
+      offText: '<i class="fa fa-circle" aria-hidden="true"></i>',
       onSwitchChange: (event, state) => {
         if (state) {
           rec();
@@ -139,11 +140,68 @@ $('[data-action="plot"]').click(function(){
   ipcRenderer.send('plot',{'name':name});
 });
 
+// $('[data-action="inputs"]').click(_.debounce(function(){
+//   if(modal!==undefined) modal.modal('hide');
+//   modal=bootbox.dialog({
+//     message : '<div id="inputs-content"</div>',
+//     title : 'Gains',
+//     buttons : {
+//       danger : {
+//         label : 'Cancel',
+//         className : 'btn-default',
+//         callback : function(){
+//         }
+//       },
+//       success : {
+//         label:'Confirm',
+//         className: 'btn-primary',
+//         callback: function() {
+//           $('select.gain').each(function(i){
+//             channels[i].gain = $(this).val();
+//             ipcRenderer.send('send-to-hardware',{id:'set_gain',channel: channels[i].code,value:channels[i].gain});
+//           });
+//         }
+//       }
+//     },
+//     show : false,
+//     onEscape : true
+//   });
+//   modal.on('shown.bs.modal',function(){
+//     let i;
+//     let $iContent = $('#inputs-content');
+//     $iContent.empty();
+    
+//     for(i=0;i<channels.length;i++){
+//       console.log(channels[i]);
+//       $iContent.append($('<div/>').addClass('row').append(
+//         '<div class="col-md-3 col-sm-3 col-xs-3">'+
+//         channels[i].name+
+//         '</div><div class="col-md-3 col-sm-3 col-xs-3">'+
+//         '<select class="gain"></select></div><div class="col-md-6 col-sm-6 col-xs-6">'+
+//         channels[i].description+
+//         '</div>'));
+//     }
+
+//     $('.gain').each(function(i){
+//       ($(this) as any).selectBoxIt({
+//         autoWidth: false,
+//         copyClasses : "container",
+//       });
+//       channels[i].gainvalues.forEach((el,j)=>{
+//         $(this).data("selectBox-selectBoxIt").add({value: el,text : 'x'+channels[i].gainlabels[j]});
+//       });
+//       $(this).find('option[value='+channels[i].gain+']').attr('selected','selected');
+//       $(this).data('selectBox-selectBoxIt').refresh();
+//     });
+//   });
+
+//   modal.modal('show');
+// },200));
+
 $('[data-action="inputs"]').click(_.debounce(function(){
-  if(modal!==undefined)modal.modal('hide');
+  if(modal!==undefined) modal.modal('hide');
   modal=bootbox.dialog({
     message : '<div id="inputs-content"</div>',
-    title : 'Gains',
     buttons : {
       danger : {
         label : 'Cancel',
@@ -165,18 +223,42 @@ $('[data-action="inputs"]').click(_.debounce(function(){
     show : false,
     onEscape : true
   });
+
   modal.on('shown.bs.modal',function(){
-    let i;
-    $('#inputs-content').empty();
-    for(i=0;i<channels.length;i++){
-      $('#inputs-content').append($('<div/>').addClass('row').append(
-        '<div class="col-md-3 col-sm-3 col-xs-3">'+
-        channels[i].name+
-        '</div><div class="col-md-3 col-sm-3 col-xs-3">'+
-        '<select class="gain"></select></div><div class="col-md-6 col-sm-6 col-xs-6">'+
-        channels[i].description+
-        '</div>'));
-    }
+    let $iContent = $('#inputs-content');
+    $iContent.empty();
+    let html = '';
+    html += `<!-- Table -->
+              <table class="table">
+              <thead>
+                  <tr>
+                    <td>Variable</td>
+                    <td>Gain</td>
+                    <td>Description</td>
+                  </tr>
+              </thead>
+              <tbody>`;
+              for(let i=0; i < channels.length; i++){
+                html += `
+                  <tr>
+                    <td>${channels[i].name}</td>
+                    <td>
+                      <select class="gain">`
+                     for(let j = 0; j <= channels[i].gainlabels; j++){
+                       html += `<option value="${channels[i].gainvalues[j]}" >${channels[i].gainlabels[j]}</option>`;
+                     }   
+                html +=`</select>
+                    </td>
+                    <td>
+                     <div class='var-desc'>
+                     ${channels[i].description}
+                     </div>
+                    </td>
+                  </tr>
+                `;
+              }
+    html +=   `</tbody></table>`;
+    $iContent.html(html);
     $('.gain').each(function(i){
       ($(this) as any).selectBoxIt({
         autoWidth: false,
@@ -189,12 +271,7 @@ $('[data-action="inputs"]').click(_.debounce(function(){
       $(this).data('selectBox-selectBoxIt').refresh();
     });
   });
-  modal.on('hide.bs.modal',()=>{
-    if(parseFloat($('body').css('padding-right'))>0){
 
-      $('body').css('padding-right',0);
-    }
-  });
   modal.modal('show');
 },200));
 
@@ -202,7 +279,8 @@ $('[data-action="editequation"]').click(_.debounce(function() {
   if(modal!==undefined)modal.modal('hide');
   let editor;
   modal=bootbox.dialog({
-    message : '<div id=\'eqmodal\'>'+
+    className: 'math-sheet',
+    message : '<div class="eq-alert" style="display:none"></div>  <div id=\'eqmodal\'>'+
     '<div class="row d-flex flex-column " style="position:relative">'+
         '<textarea class="form-control"  id="equations"></textarea>'+
       '</div>'+
@@ -253,21 +331,37 @@ $('[data-action="editequation"]').click(_.debounce(function() {
         label:'Confirm',
         className: 'btn-primary',
         callback: function() {
-          let result = editor.getValue();
-          if(result !== null) mathsheet=result;
-            try{
-              if(ison){
-                math.eval(mathsheet,scope);
-                evaluate();
-              }
+          let $eqAlert = $(".eq-alert");
+          $eqAlert.removeClass("alert-success")
+                  .removeClass("alert-danger")
+          try{
+            let result = editor.getValue();
+            if(result !== null) mathsheet=result;
+            if(ison){
+              math.eval(mathsheet,scope);
+              evaluate();
             }
-            catch(err){
-              dialog.showMessageBox({type: 'error',title: 'Error in math', message : err.toString()});
+            updateTex();
+            ui.blocks.forEach(updatePopover);
+            $eqAlert
+              .addClass("alert alert-success")
+              .text("Equations has been successfully saved.")
+              .show();
+          }catch(e){
+            $eqAlert
+              .addClass("alert alert-danger")
+              .text(`Error in math: ${e.toString()}`)
+              .show();
+                // dialog.showMessageBox({type: 'error',title: 'Error in math', message : err.toString()});
+            
+          }
 
-            }
-          updateTex();
-          ui.blocks.forEach(updatePopover);
-        }
+          $(".bootbox").animate({
+            scrollTop: 0
+          }, 100);
+          return false;
+        },
+
         },
 
     },
@@ -437,9 +531,16 @@ function initpopover(block){
       title: 'Formula',
       html: true,
       placement: 'bottom',
-      content: '<div id="' + block.val + '_formula">$$' + tex[block.val] + '$$</div>'
+      content: '<div class="mathjax-formula" id="' + block.val + '_formula">$$' + tex[block.val] + '$$</div>'
     }).on('shown.bs.popover', function() {
-      mathjaxHelper.typesetMath(document.getElementById(block.val + '_formula'));
+      MathJax.Hub.Queue(function () {
+        mathjaxHelper.typesetMath(document.getElementById(block.val + '_formula'));
+        $(`#${block.val}_formula`).show();
+      });
+      
+    })
+    .on('hide.bs.popover', function() {
+      $(`#${block.val}_formula`).hide();
     });
   }
 }
