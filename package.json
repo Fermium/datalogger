@@ -16,7 +16,8 @@
     "dist:win": "electron-builder --win",
     "dockerdist:win": "docker run --rm -ti -v ${PWD}:/project -v ${PWD##*/}-node-modules:/project/node_modules -v ~/.electron:/root/.electron electronuserland/electron-builder:wine /bin/bash -c \"yarn && yarn dist:win\"",
     "dist:all": "electron-builder --linux --win",
-    "dockerdist:all": "docker run --rm -ti -v ${PWD}:/project -v ${PWD##*/}-node-modules:/project/node_modules -v ~/.electron:/root/.electron electronuserland/electron-builder:wine /bin/bash -c \"yarn && yarn dist:all\""
+    "dockerdist:all": "docker run --rm -ti -v ${PWD}:/project -v ${PWD##*/}-node-modules:/project/node_modules -v ~/.electron:/root/.electron electronuserland/electron-builder:wine /bin/bash -c \"yarn && yarn dist:all\"",
+    "patchlibusb": "cp -rf build/lib/macos/ node_modules/electron/dist/Electron.app/Contents/Frameworks/"
   },
   "postinstall": "install-app-deps",
   "repository": "https://github.com/fermiumlabs/datalogger",

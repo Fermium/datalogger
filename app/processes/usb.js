@@ -98,10 +98,11 @@ function send_command(command){
   if(datachan.datachan_device_is_enabled(usb.device)){
     switch(command.id){
       case "set_current_output" :
-        buf = new Buffer(8);
-        buf.writeFloatLE(a-command.value/b,0);
-        buf.writeFloatLE(a+command.value/b,4);
-        datachan.datachan_send_async_command(usb.device,1,buf,buf.length);
+        buf = new Buffer(4);
+        //buf.writeFloatLE(a-command.value/b,0);
+        //buf.writeFloatLE(a+command.value/b,4);
+        buf.writeFloatLE(a+command.value/b,0);
+        datachan.datachan_send_async_command(usb.device,2,buf,buf.length);
       break;
       case "set_heater_state" :
         buf = new Buffer([parseInt(command.value*255)]);

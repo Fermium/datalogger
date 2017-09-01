@@ -3,7 +3,9 @@
 import { isDev } from "../util"
 if(!isDev()){
   try{
-    Raven.config('https://ddbac24f695c4daaa9b91d254238d074@sentry1.dev.fermiumlabs.com/2').install()
+    Raven.config('https://d62ce425b8f346439bf694c9f36eae45@sentry.io/208461',{
+      release: electron.app.getVersion()
+  }).install()
   }
   catch(err){
     console.log('Error connecting to sentry');
