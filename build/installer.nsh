@@ -1,16 +1,4 @@
-!macro customHeader
-!macroend
-
-
-!macro preInit
-  ; This macro is inserted at the beginning of the NSIS .OnInit callback.
-  ; RequestExecutionLevel admin
-!macroend
-
-
-
 !macro customInstall
-  ;RequestExecutionLevel admin
   
   ;File "$BUILD_RESOURCES_DIR\wdi-simple.exe"
   ; Call wdi-simple
@@ -33,11 +21,7 @@
   ;                            an optional HWND can be specified
   ; -l, --log                  set log level (0 = debug, 4 = none)
   ; -h, --help                 display usage
+  
   nsExec::ExecToLog '"$INSTDIR\wdi-simple.exe" --vid 0x16D0 --pid 0x0C9B --name "Hall Effect Apparatus" --manufacturer "LabTrek srl" --type 0 --dest "$PLUGINSDIR/datalogger_libwdi" --progressbar=$HWNDPARENT'
-!macroend
 
-!macro customUnInstall
-!macroend
-
-!macro customRemoveFiles
 !macroend
