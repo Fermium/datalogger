@@ -45,6 +45,8 @@ If you want to develop without the vagrant images, install the required dependen
 
 You will need to have a working [node-gyp](https://github.com/nodejs/node-gyp) since this app uses many native extensions
 
+logs can be found following this [instructions](https://www.npmjs.com/package/electron-log)
+
 ## macOS
 
 If you're developing on macOS, run `yarn patchlibusb` after install, otherwise data-chan will not find libusb, since they're linked together for production and not for development
