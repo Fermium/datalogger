@@ -2,6 +2,7 @@
   "name": "Datalogger",
   "version": "1.0.0",
   "description": "A datalogger application",
+  "homepage": "https://fermiumlabs.com",
   "main": "app/init.js",
   "scripts": {
     "start": " electron .",
@@ -23,8 +24,8 @@
   "repository": "https://github.com/fermiumlabs/datalogger",
   "keywords": [],
   "author": {
-    "name": "Simone Tosato",
-    "email": "s@fermiumlabs.com",
+    "name": "Fermium LABS srl",
+    "email": "info@fermiumlabs.com",
     "url": "https://fermiumlabs.com"
   },
   "license": "CC0-1.0",
@@ -101,7 +102,14 @@
         "filter": [
           "**/*.dylib"
         ]
+      },
+      {
+        "from": "build/",
+        "filter": [
+          "wdi-simple.exe"
+        ]
       }
+      
     ],
     "asarUnpack": [
       "./app/devices/**/**",
@@ -112,7 +120,8 @@
       "category": "public.app-category.utilities"
     },
     "nsis": {
-      "oneClick": false,
+      "oneClick": true,
+      "perMachine": true,
       "allowElevation": true,
       "artifactName": "${productName}-Setup.${ext}",
       "deleteAppDataOnUninstall": true
