@@ -1,5 +1,8 @@
 # datalogger
 
+[![Build Status](https://travis-ci.com/ddavidebor/datalogger.svg?token=wpMBDd4yw5jYZj2bMMU7&branch=v1.1.1)](https://travis-ci.com/ddavidebor/datalogger)
+
+
 Datlogger (name needed!) is an application to control and acquire data from scientific instruments.
 
 ## Toggling DevTools

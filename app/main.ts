@@ -1,23 +1,28 @@
 /*jshint esversion: 6*/
+import { isDev, log } from "./util";
+
 import * as electron from 'electron';
 import {dialog} from 'electron';
+import {ipcMain} from 'electron';
+
 import {fork} from 'child_process';
 import * as math from 'mathjs';
 import * as dateFormat from 'dateformat';
 import * as fs from 'fs';
 import * as path from 'path';
 import * as http from 'https';
-import {ipcMain} from 'electron';
-import { isDev } from "./util"
 import * as PDFWindow from 'electron-pdf-window';
 import * as jsyaml from 'js-yaml';
-//import AppUpdater from './AppUpdater';
+
+import AppUpdater from "./updater"
 
 let usb;
 var _ = require('lodash');
 let logger;
 let usb_on : boolean =false;
 let corr  = {a:0,b:0};
+
+
 if(!isDev()){
   let  Raven = require('raven');
   try{
@@ -26,9 +31,16 @@ if(!isDev()){
     }).install();
   }
   catch(err){
-    console.log('Error connecting to sentry');
+    log('Error connecting to sentry');
   }
 }
+
+
+
+
+
+
+
 let dbfile;
 // Module to control application life.
 const app = electron.app;
@@ -62,7 +74,6 @@ function createWindow () {
     // when you should delete the corresponding element.
     mainWindow = null;
   });
-  //new AppUpdater();
 }
 
 function createSelectDevice () {
@@ -72,6 +83,8 @@ function createSelectDevice () {
   mainWindow.loadURL(`file://${__dirname}/selectdevice/index.html`);
   mainWindow.on('ready-to-show',()=>{
     mainWindow.show();
+    
+
   })
 
   // Emitted when the window is closed.
@@ -81,7 +94,7 @@ function createSelectDevice () {
     // when you should delete the corresponding element.
     mainWindow = null;
   });
-
+  
 }
 
 function createHandbookWindow(){
@@ -181,6 +194,7 @@ app.on('ready', function(){
     minHeight: 600
   });
   createSelectDevice();
+  new AppUpdater()
 });
 
 // Quit when all windows are closed.
@@ -279,10 +293,10 @@ ipcMain.on('on',(event,arg) => {
     }
   });
 usb.on('exit',(code,n)=>{
-  console.log('usb exited with code '+code);
+  log('usb exited with code '+code);
 });
  usb.on('disconnect',(code,n)=>{
-  console.log('usb disconnected with code '+code);
+  log('usb disconnected with code '+code);
 });
   usb.send({
     action:'on',
