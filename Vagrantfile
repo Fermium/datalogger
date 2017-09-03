@@ -52,6 +52,17 @@ Vagrant.configure(2) do |config|
       make
       sudo make install
 
+      #Install NVM (Node Version Manager)
+      curl -o- https://raw.githubusercontent.com/creationix/nvm/v0.33.2/install.sh | bash
+      export NVM_DIR="$HOME/.nvm"
+      [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"  # This loads nvm
+      [ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"  # This loads nvm bash_completion
+      
+      #Install NodeJS 6
+      nvm install 6
+      nvm use 6
+      nvm alias default 6
+
       # link volume to home user folder
       ln -s /vagrant /home/vagrant/datalogger
     SHELL
@@ -114,24 +125,25 @@ Vagrant.configure(2) do |config|
   
   config.vm.define 'ubuntu_desktop' do |ubuntu_desktop|
     ubuntu_desktop.vm.box = 'ubuntu/xenial64'
+
     ubuntu_desktop.vm.network 'private_network', type: 'dhcp'
     
     ubuntu_desktop.vm.provider 'virtualbox' do |vb|
       vb.gui = true
       vb.name = 'datalogger-ubuntu-desktops'
-      vb.memory = '1024'
+      vb.memory = '2048'
       vb.customize ['modifyvm', :id, '--cpuexecutioncap', '65']
+      vb.customize ["modifyvm", :id, "--accelerate3d", "on"]
     end
 
     ubuntu_desktop.vm.provision 'shell', privileged: false, inline: <<-SHELL
        export DEBIAN_FRONTEND=noninteractive
 
-
        printf "\n\nInstalling software\n"
 
        sudo apt-get update
        sudo apt-get -y install wget python python-dev curl build-essential
-       sudo apt-get -y install ubuntu-mate-cloudtop virtualbox-guest-x11
+       #sudo apt-get -y install ubuntu-mate-cloudtop virtualbox-guest-x11
 
        # Electron Builder requirements https://github.com/electron-userland/electron-builder/wiki/Multi-Platform-Build
        sudo apt-get -y install icnsutils rpm graphicsmagick xz-utils
@@ -161,7 +173,8 @@ Vagrant.configure(2) do |config|
        #Enable autologin
        sudo /bin/sh -c "echo autologin-user=ubuntu >> /usr/share/lightdm/lightdm.conf.d/60-lightdm-gtk-greeter.conf"
        # link volume to home user folder
-       ln -s /vagrant datalogger
+
+       ln -s /vagrant /home/vagrant/Desktop/datalogger
      SHELL
   end
   
@@ -205,7 +218,8 @@ Vagrant.configure(2) do |config|
       v.customize ['modifyvm', :id, '--vram', '256']
       v.customize ['modifyvm', :id, '--clipboard', 'bidirectional']
       v.customize ['setextradata', 'global', 'GUI/MaxGuestResolution', 'any']
-      v.customize ['setextradata', :id, 'CustomVideoMode1', '1024x768x32']
+      v.customize ['setextradata', :id, 'CustomVideoMode1', '2048x768x32']
+      v.customize ["modifyvm", :id, "--accelerate3d", "on"]
     end
 
     windows.vm.provision :shell, path: 'scripts/desktopShortcut.ps1'
@@ -224,16 +238,38 @@ Vagrant.configure(2) do |config|
     fedora_desktop.vm.provider 'virtualbox' do |vb|
       vb.gui = true
       vb.name = 'datalogger-fedora_desktop'
-      vb.memory = '1024'
+
+      vb.memory = '2048'
       vb.customize ['modifyvm', :id, '--cpuexecutioncap', '65']
+      vb.customize ["modifyvm", :id, "--accelerate3d", "on"]
     end
 
     fedora_desktop.vm.provision 'shell', privileged: false, inline: <<-SHELL
-       sudo yum -y update
-       printf "\n\nInstalling software\n"
-
        # link volume to home user folder
-       ln -s /vagrant datalogger
+       ln -s /vagrant /home/vagrant/Desktop/datalogger
+     SHELL
+  end
+  ########################################################################################################################################################################
+
+  config.vm.define 'centos_desktop' do |centos_desktop|
+
+    centos_desktop.vm.box = "boxcutter/centos73-desktop"
+
+    centos_desktop.vm.network 'private_network', type: 'dhcp'
+
+    centos_desktop.vm.provider 'virtualbox' do |vb|
+      vb.gui = true
+      vb.name = 'datalogger-centos_desktop'
+      vb.memory = '2048'
+      # Limit CPU usage
+      vb.customize ['modifyvm', :id, '--cpuexecutioncap', '65']
+      vb.customize ["modifyvm", :id, "--accelerate3d", "on"]
+    end
+
+    ###############################################################
+    centos_desktop.vm.provision 'shell', privileged: false, inline: <<-SHELL
+       # link volume to home user folder
+       ln -s /vagrant /home/vagrant/Desktop/datalogger
      SHELL
   end
 end
