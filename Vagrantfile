@@ -241,7 +241,16 @@ Vagrant.configure(2) do |config|
     windows.vm.box = 'eval-win2016-standard-ssh'
     windows.vm.box_url = 's3://fermiumlabs-vagrant-boxes/virtualbox/eval-win2016-standard-ssh-nocm-1.0.4.box'
     windows.vm.network 'private_network', type: 'dhcp'
-
+    
+    windows.vm.provider :parallels do |prl, _override|
+      _override.vm.box_url = 's3://fermiumlabs-vagrant-boxes/parallels/eval-win2016-standard-ssh-nocm-1.0.4.box'
+      prl.memory = 3072
+      prl.cpus = 3
+    end
+    windows.vm.provider :vmware do |vmw, _override|
+      _override.vm.box_url = 's3://fermiumlabs-vagrant-boxes/vmware/eval-win2016-standard-ssh-nocm-1.0.4.box'
+    end
+    
     # Let Vagrant know this is a windows box
     windows.vm.communicator = 'winrm'
     windows.vm.guest = :windows
@@ -252,8 +261,8 @@ Vagrant.configure(2) do |config|
     # Personalize VirtuabBox VM for windows
     windows.vm.provider :virtualbox do |v, _override|
       v.gui = true
-      v.customize ['modifyvm', :id, '--memory', 2048]
-      v.customize ['modifyvm', :id, '--cpus', 2]
+      v.customize ['modifyvm', :id, '--memory', 3072]
+      v.customize ['modifyvm', :id, '--cpus', 3]
       v.customize ['modifyvm', :id, '--vram', '256']
       v.customize ['modifyvm', :id, '--clipboard', 'bidirectional']
       v.customize ['setextradata', 'global', 'GUI/MaxGuestResolution', 'any']
