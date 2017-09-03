@@ -1,31 +1,45 @@
 # -*- mode: ruby -*-
 # vi: set ft=ruby :
 
+# install dependencies
+unless Vagrant.has_plugin?('vagrant-s3auth')
+  # Attempt to install ourself. Bail out on failure so we don't get stuck in an
+  # infinite loop.
+  system('vagrant plugin install vagrant-s3auth') || exit!
+
+  # Relaunch Vagrant so the plugin is detected. Exit with the same status code.
+  exit system('vagrant', *ARGV)
+end
+
+
+unless Vagrant.has_plugin?('vagrant-reload')
+  # Attempt to install ourself. Bail out on failure so we don't get stuck in an
+  # infinite loop.
+  system('vagrant plugin install vagrant-reload') || exit!
+
+  # Relaunch Vagrant so the plugin is detected. Exit with the same status code.
+  exit system('vagrant', *ARGV)
+end
+
+########################################################################################################################################################################
+
 Vagrant.configure(2) do |config|
   config.vm.define 'arch' do |arch|
-    # Every Vagrant development environment requires a box. You can search for
-    # boxes at https://atlas.hashicorp.com/search.
     arch.vm.box = 'terrywang/archlinux'
-
-    # Create a public network, which generally matched to bridged network.
-    # Bridged networks make the machine appear as another physical device on
-    # your network.
     arch.vm.network 'private_network', type: 'dhcp'
-
-    # Provider-specific configuration so you can fine-tune various
-    # backing providers for Vagrant. These expose provider-specific options.
+    
     arch.vm.provider 'virtualbox' do |vb|
-      # Display the VirtualBox GUI when booting the machine
       vb.gui = false
-
       vb.name = 'datalogger-arch'
+<<<<<<< HEAD
       # Customize the amount of memory on the VM:
       vb.memory = '2048'
 
+=======
+      vb.memory = '1024'
+>>>>>>> develop
       # Avoid ubuntu network problems at boot
       vb.customize ['modifyvm', :id, '--cableconnected1', 'on']
-
-      # Limit CPU usage
       vb.customize ['modifyvm', :id, '--cpuexecutioncap', '65']
     end
 
@@ -37,7 +51,6 @@ Vagrant.configure(2) do |config|
 
       #Install icnsutils from source
       sudo pacman --noconfirm -S openjpeg jasper
-
       wget https://downloads.sourceforge.net/project/icns/libicns-0.8.1.tar.gz
       tar -zxvf libicns-0.8.1.tar.gz
       cd libicns-0.8.1/
@@ -55,32 +68,27 @@ Vagrant.configure(2) do |config|
       nvm install 6
       nvm use 6
       nvm alias default 6
+<<<<<<< HEAD
 
+=======
+>>>>>>> develop
 
       # link volume to home user folder
       ln -s /vagrant /home/vagrant/datalogger
-
-      echo "WARNING! still can't build on arch!!!!"
     SHELL
   end
+  
+  ########################################################################################################################################################################
 
   config.vm.define 'ubuntu' do |ubuntu|
-    # Every Vagrant development environment requires a box. You can search for
-    # boxes at https://atlas.hashicorp.com/search.
+
     ubuntu.vm.box = 'ubuntu/xenial64'
-
-    # Create a public network, which generally matched to bridged network.
-    # Bridged networks make the machine appear as another physical device on
-    # your network.
     ubuntu.vm.network 'private_network', type: 'dhcp'
-
-    # Provider-specific configuration so you can fine-tune various
-    # backing providers for Vagrant. These expose provider-specific options.
+    
     ubuntu.vm.provider 'virtualbox' do |vb|
-      # Display the VirtualBox GUI when booting the machine
       vb.gui = false
-
       vb.name = 'datalogger-ubuntu'
+<<<<<<< HEAD
       # Customize the amount of memory on the VM:
       vb.memory = '2048'
 
@@ -89,6 +97,12 @@ Vagrant.configure(2) do |config|
     end
 
     ###############################################################
+=======
+      vb.memory = '1024'
+      vb.customize ['modifyvm', :id, '--cpuexecutioncap', '65']
+    end
+
+>>>>>>> develop
     ubuntu.vm.provision 'shell', privileged: false, inline: <<-SHELL
        export DEBIAN_FRONTEND=noninteractive
 
@@ -125,12 +139,11 @@ Vagrant.configure(2) do |config|
 
        # link volume to home user folder
        ln -s /vagrant datalogger
-
-
-       printf "\n\n\n\nThe box is ready. Now simply run \"vagrant ssh\" to connect! \n"
-
      SHELL
   end
+  
+  ########################################################################################################################################################################
+  
   config.vm.define 'ubuntu_desktop' do |ubuntu_desktop|
     # Every Vagrant development environment requires a box. You can search for
     # boxes at https://atlas.hashicorp.com/search.
@@ -140,24 +153,27 @@ Vagrant.configure(2) do |config|
     # Bridged networks make the machine appear as another physical device on
     # your network.
     ubuntu_desktop.vm.network 'private_network', type: 'dhcp'
-
-    # Provider-specific configuration so you can fine-tune various
-    # backing providers for Vagrant. These expose provider-specific options.
+    
     ubuntu_desktop.vm.provider 'virtualbox' do |vb|
-      # Display the VirtualBox GUI when booting the machine
       vb.gui = true
-
       vb.name = 'datalogger-ubuntu-desktops'
+<<<<<<< HEAD
       # Customize the amount of memory on the VM:
       vb.memory = '2048'
 
+=======
+      vb.memory = '2048'
+>>>>>>> develop
       # Limit CPU usage
       vb.customize ['modifyvm', :id, '--cpuexecutioncap', '65']
       vb.customize ["modifyvm", :id, "--accelerate3d", "on"]
     end
 
+<<<<<<< HEAD
 
     ###############################################################
+=======
+>>>>>>> develop
     ubuntu_desktop.vm.provision 'shell', privileged: false, inline: <<-SHELL
        export DEBIAN_FRONTEND=noninteractive
 
@@ -196,22 +212,34 @@ Vagrant.configure(2) do |config|
        sudo /bin/sh -c "echo autologin-user=ubuntu >> /usr/share/lightdm/lightdm.conf.d/60-lightdm-gtk-greeter.conf"
        # link volume to home user folder
        ln -s /vagrant /home/vagrant/Desktop/datalogger
-
-       printf "\n\n\n\nThe box is ready. Now run vagrant reload ubuntu_desktop && vagrant ssh ubuntu_desktop to connect! \n"
-
      SHELL
   end
+  
+  
+  ########################################################################################################################################################################
+  
   config.vm.define 'windows' do |windows|
+    
     # The following box is from a privte s3 bucket.
     # To use it you need to install this vagrant plugin: https://github.com/WhoopInc/vagrant-s3auth
     # You can build the box yourself following instructions from https://github.com/boxcutter/windows or https://github.com/fermiumlabs/boxcutter-windows
     # If you are a company access to the boxes can be given through the "requester pays" feature of AWS
     # If you're a nonprofit or an individual developing OSS, write to us at info (at) fermiumlabs (dot) com
     # This box is maintaned by Fermium LABS srl (https://fermiumlabs.com)
+    
     windows.vm.box = 'eval-win2016-standard-ssh'
     windows.vm.box_url = 's3://fermiumlabs-vagrant-boxes/virtualbox/eval-win2016-standard-ssh-nocm-1.0.4.box'
     windows.vm.network 'private_network', type: 'dhcp'
-
+    
+    windows.vm.provider :parallels do |prl, _override|
+      _override.vm.box_url = 's3://fermiumlabs-vagrant-boxes/parallels/eval-win2016-standard-ssh-nocm-1.0.4.box'
+      prl.memory = 3072
+      prl.cpus = 3
+    end
+    windows.vm.provider :vmware do |vmw, _override|
+      _override.vm.box_url = 's3://fermiumlabs-vagrant-boxes/vmware/eval-win2016-standard-ssh-nocm-1.0.4.box'
+    end
+    
     # Let Vagrant know this is a windows box
     windows.vm.communicator = 'winrm'
     windows.vm.guest = :windows
@@ -222,8 +250,8 @@ Vagrant.configure(2) do |config|
     # Personalize VirtuabBox VM for windows
     windows.vm.provider :virtualbox do |v, _override|
       v.gui = true
-      v.customize ['modifyvm', :id, '--memory', 2048]
-      v.customize ['modifyvm', :id, '--cpus', 2]
+      v.customize ['modifyvm', :id, '--memory', 3072]
+      v.customize ['modifyvm', :id, '--cpus', 3]
       v.customize ['modifyvm', :id, '--vram', '256']
       v.customize ['modifyvm', :id, '--clipboard', 'bidirectional']
       v.customize ['setextradata', 'global', 'GUI/MaxGuestResolution', 'any']
@@ -231,92 +259,44 @@ Vagrant.configure(2) do |config|
       v.customize ["modifyvm", :id, "--accelerate3d", "on"]
     end
 
-    ## Enable USB Controller on VirtualBox
-    # windows.vm.provider 'virtualbox' do |vb|
-    #  vb.customize ['modifyvm', :id, '--usb', 'on']
-    #  vb.customize ['modifyvm', :id, '--usbehci', 'on']
-    # end
-
-    ## Implement determined configuration attributes
-    # windows.vm.provider 'virtualbox' do |vb|
-    #  vb.customize ['usbfilter', 'add', '0',
-    #                '--target', :id,
-    #                '--name', 'datachan tester',
-    #                '--product', 'datachan tester']
-    # end
-
-    # windows.vm.provider 'virtualbox' do |vb|
-    #  vb.customize ['usbfilter', 'add', '0',
-    #                '--target', :id,
-    #                '--name', 'USBasp',
-    #                '--product', 'USBasp']
-    # end
-    ###############################################################
     windows.vm.provision :shell, path: 'scripts/desktopShortcut.ps1'
     windows.vm.provision :shell, path: 'scripts/InstallChocolatey.ps1'
     windows.vm.provision :shell, path: 'scripts/install.ps1'
-    windows.vm.provision :shell, path: 'scripts/windows-build-tools.ps1'
+    windows.vm.provision :reload
 
   end
   
+########################################################################################################################################################################
   config.vm.define 'fedora_desktop' do |fedora_desktop|
-    # Every Vagrant development environment requires a box. You can search for
-    # boxes at https://atlas.hashicorp.com/search.
     fedora_desktop.vm.box = "jhcook/fedora26"
 
-    # Create a public network, which generally matched to bridged network.
-    # Bridged networks make the machine appear as another physical device on
-    # your network.
     fedora_desktop.vm.network 'private_network', type: 'dhcp'
 
-    # Provider-specific configuration so you can fine-tune various
-    # backing providers for Vagrant. These expose provider-specific options.
     fedora_desktop.vm.provider 'virtualbox' do |vb|
-      # Display the VirtualBox GUI when booting the machine
       vb.gui = true
-
       vb.name = 'datalogger-fedora_desktop'
-      # Customize the amount of memory on the VM:
       vb.memory = '2048'
-
       # Limit CPU usage
       vb.customize ['modifyvm', :id, '--cpuexecutioncap', '65']
       vb.customize ["modifyvm", :id, "--accelerate3d", "on"]
     end
 
-    ###############################################################
     fedora_desktop.vm.provision 'shell', privileged: false, inline: <<-SHELL
-       #sudo yum -y update
-       printf "\n\nInstalling software\n"
-
        # link volume to home user folder
        ln -s /vagrant /home/vagrant/Desktop/datalogger
-
-
-       printf "\n\n\n\nThe box is ready. Now simply run \"vagrant ssh\" to connect! \n"
-
      SHELL
   end
+  
+  ########################################################################################################################################################################
+
   config.vm.define 'centos_desktop' do |centos_desktop|
-    # Every Vagrant development environment requires a box. You can search for
-    # boxes at https://atlas.hashicorp.com/search.
+  
     centos_desktop.vm.box = "boxcutter/centos73-desktop"
-
-    # Create a public network, which generally matched to bridged network.
-    # Bridged networks make the machine appear as another physical device on
-    # your network.
     centos_desktop.vm.network 'private_network', type: 'dhcp'
-
-    # Provider-specific configuration so you can fine-tune various
-    # backing providers for Vagrant. These expose provider-specific options.
     centos_desktop.vm.provider 'virtualbox' do |vb|
-      # Display the VirtualBox GUI when booting the machine
       vb.gui = true
-
       vb.name = 'datalogger-centos_desktop'
-      # Customize the amount of memory on the VM:
       vb.memory = '2048'
-
       # Limit CPU usage
       vb.customize ['modifyvm', :id, '--cpuexecutioncap', '65']
       vb.customize ["modifyvm", :id, "--accelerate3d", "on"]
@@ -324,15 +304,9 @@ Vagrant.configure(2) do |config|
 
     ###############################################################
     centos_desktop.vm.provision 'shell', privileged: false, inline: <<-SHELL
-       #sudo yum -y update
-       printf "\n\nInstalling software\n"
-
        # link volume to home user folder
        ln -s /vagrant /home/vagrant/Desktop/datalogger
-
-
-       printf "\n\n\n\nThe box is ready. Now simply run \"vagrant ssh\" to connect! \n"
-
      SHELL
   end
+  
 end

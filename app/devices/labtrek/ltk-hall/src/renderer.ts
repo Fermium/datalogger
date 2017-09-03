@@ -92,13 +92,14 @@ module.exports = {
       }
       $('#'+id+'-t').on('change',function(){
         var slider = $('#'+id).data('ionRangeSlider');
+        var sliderValue = $(this).val();
         slider.update({
           from : ($(this).val() as number)/(pretty*99+1)
         });
-        if($(this).val()>slider.result.max*pretty*100){
-          $(this).val(slider.result.max*pretty*100);
+        if(($(this).val() as number)>slider.result.max){
+          $(this).val(slider.result.max);
         }
-        if($(this).val()<slider.result.min*pretty*100){
+        if(($(this).val() as number)<slider.result.min){
           $(this).val(slider.result.min);
         }
       });
