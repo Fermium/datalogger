@@ -1,6 +1,18 @@
 # -*- mode: ruby -*-
 # vi: set ft=ruby :
 
+# install dependencies
+unless Vagrant.has_plugin?('vagrant-s3auth')
+  # Attempt to install ourself. Bail out on failure so we don't get stuck in an
+  # infinite loop.
+  system('vagrant plugin install vagrant-s3auth') || exit!
+
+  # Relaunch Vagrant so the plugin is detected. Exit with the same status code.
+  exit system('vagrant', *ARGV)
+end
+
+
+
 Vagrant.configure(2) do |config|
   config.vm.define 'arch' do |arch|
     # Every Vagrant development environment requires a box. You can search for
