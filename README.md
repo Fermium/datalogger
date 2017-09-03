@@ -51,7 +51,12 @@ If you're developing on macOS, run `yarn patchlibusb` after install, otherwise d
 
 ## Windows
 
-Developing on Windows is messy. As long as you get node-gyp to work correctly, you'll be fine
+Developing on Windows is messy. As long as you get node-gyp to work correctly (following ALL steps), you'll be fine.
+
+Common errors:
+
+* "%1 is not a win32 application" you've built the app using wine and mono. You need to use a native Windows environment.
+* "Win32 [...] error 126" You're missing pthread, check data-chan docs
 
 # Contributing
 
