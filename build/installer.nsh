@@ -1,7 +1,6 @@
 !macro customInstall
   
-  ;File "$BUILD_RESOURCES_DIR\wdi-simple.exe"
-  ; Call wdi-simple
+  ; wdi-simple.exe
   ;
   ; -n, --name <name>          set the device name
   ; -f, --inf <name>           set the inf name
@@ -22,6 +21,6 @@
   ; -l, --log                  set log level (0 = debug, 4 = none)
   ; -h, --help                 display usage
   
-  nsExec::ExecToLog '"$INSTDIR\wdi-simple.exe" --vid 0x16D0 --pid 0x0C9B --name "Hall Effect Apparatus" --manufacturer "LabTrek srl" --type 0 --dest "$PLUGINSDIR/datalogger_libwdi" --progressbar=$HWNDPARENT'
-
+  DetailPrint "Running automatic driver installation..."
+  nsExec::ExecToLog '"$INSTDIR\drivers\wdi-simple.exe" --vid 0x16D0 --pid 0x0C9B --name "Hall Effect Apparatus" --manufacturer "LabTrek srl" --dest "$INSTDIR\drivers\labtrek\ltk-hall" --progressbar=$HWNDPARENT'
 !macroend

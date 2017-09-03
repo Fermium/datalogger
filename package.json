@@ -104,9 +104,16 @@
         ]
       },
       {
-        "from": "build/",
+        "from": "build/lib/windows/",
         "filter": [
-          "wdi-simple.exe"
+          "**/*.dll"
+        ]
+      },
+      {
+        "from": "build/drivers/",
+        "to": "drivers",
+        "filter": [
+          "**/*.exe"
         ]
       }
       
