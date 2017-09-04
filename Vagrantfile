@@ -47,7 +47,7 @@ Vagrant.configure(2) do |config|
 
   config.vm.define 'ubuntu' do |ubuntu|
 
-    ubuntu.vm.box = 'ubuntu/xenial64'
+    ubuntu.vm.box = 'bento/ubuntu-16.04'
     ubuntu.vm.network 'private_network', type: 'dhcp'
     
     ubuntu.vm.provider 'virtualbox' do |vb|
@@ -63,7 +63,7 @@ Vagrant.configure(2) do |config|
   ########################################################################################################################################################################
   
   config.vm.define 'ubuntu_desktop' do |ubuntu_desktop|
-    ubuntu_desktop.vm.box = 'box-cutter/ubuntu1604-desktop'
+    ubuntu_desktop.vm.box = 'bento/ubuntu-16.04'
 
     ubuntu_desktop.vm.network 'private_network', type: 'dhcp'
     
@@ -74,8 +74,11 @@ Vagrant.configure(2) do |config|
       vb.customize ['modifyvm', :id, '--cpuexecutioncap', '65']
       vb.customize ["modifyvm", :id, "--accelerate3d", "on"]
     end
-
+    
+    ubuntu_desktop.vm.provision :shell, path: 'scripts/provision_ubuntu.sh'
     ubuntu_desktop.vm.provision :shell, path: 'scripts/provision_ubuntu_desktop.sh'
+    ubuntu_desktop.vm.provision :reload
+    
   end
   
     ########################################################################################################################################################################

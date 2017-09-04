@@ -36,6 +36,7 @@ cinst -y yarn --ignore-dependencies
 cinst -y vcbuildtools
 cinst -y python2
 npm config set msvs_version 2015
+refreshenv
 
 # git (required to publish to amazon s3)
-choco install git.install
+cinst -y git.install
