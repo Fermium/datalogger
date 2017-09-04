@@ -1,5 +1,8 @@
 # datalogger
 
+[![Build Status](https://travis-ci.com/ddavidebor/datalogger.svg?token=wpMBDd4yw5jYZj2bMMU7&branch=v1.1.1)](https://travis-ci.com/ddavidebor/datalogger)
+
+
 Datlogger (name needed!) is an application to control and acquire data from scientific instruments.
 
 ## Toggling DevTools
@@ -44,6 +47,8 @@ Please use included Vagrant images:
 If you want to develop without the vagrant images, install the required dependencies described [here](https://github.com/nodejs/node-gyp)
 
 You will need to have a working [node-gyp](https://github.com/nodejs/node-gyp) since this app uses many native extensions
+
+logs can be found following this [instructions](https://www.npmjs.com/package/electron-log)
 
 ## macOS
 

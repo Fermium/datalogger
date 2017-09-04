@@ -1,4 +1,6 @@
 /*jshint esversion: 6*/
+import { isDev, log } from "../util"
+
 import {remote} from 'electron';
 import * as fs from 'fs';
 import * as path from 'path';
@@ -12,7 +14,6 @@ $(document).keydown(function(e) {
 });
 $(document).ready(function(){
   var producers = getDirectories(path.normalize(path.join(__dirname,'devices').replace('app.asar','app.asar.unpacked').replace('selectdevice','')));
-  // console.log(producers);
   producers.forEach(function(pr){
     updateList(pr);
   });
@@ -33,7 +34,6 @@ function updateList(producer){
 }
 function appendProduct(producer,name){
   var product=jsyaml.safeLoad(fs.readFileSync(path.normalize(path.join(__dirname,'devices',producer,name,'config.yaml').replace('app.asar','app.asar.unpacked').replace('selectdevice','')))).product;
-  console.log(product);
   $('#devices').append($('<div/>')
     .addClass('col-lg-4 col-md-4 col-sm-4 col-xs-12')
     .append($('<div/>')
@@ -52,7 +52,6 @@ function appendProduct(producer,name){
     src :  path.normalize(path.join(__dirname,'devices',producer,name,product.image).replace('app.asar','app.asar.unpacked').replace('selectdevice','')),
     alt : product.name
   }));
-  console.log($mainCont)
   $mainCont.append($('<div/>').addClass('panel-body'));
   $mainCont.find('.panel-body').append($('<h4/>').text(product.name));
   $mainCont.find('.panel-body').find("h4").append($('<small/>').css('display', 'block').html(producer));

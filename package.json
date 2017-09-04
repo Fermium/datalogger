@@ -1,20 +1,21 @@
 {
   "name": "Datalogger",
-  "version": "1.0.0",
+  "version": "1.6.0",
   "description": "A datalogger application",
   "homepage": "https://fermiumlabs.com",
   "main": "app/init.js",
   "scripts": {
     "start": " electron .",
     "debug": " electron --debug=5858 .",
+    "release": "build --win",
     "postinstall": "electron-builder install-app-deps",
-    "pack": "electron-builder --dir",
-    "dist": "electron-builder",
-    "dist:linux": "electron-builder --linux",
+    "distpack": "build --dir",
+    "dist": "build",
+    "dist:linux": "build --linux",
     "dockerdist:linux": "docker run --rm -ti -v ${PWD}:/project -v ${PWD##*/}-node-modules:/project/node_modules -v ~/.electron:/root/.electron electronuserland/electron-builder:wine /bin/bash -c \"yarn && yarn dist:linux\"",
-    "dist:mac": "electron-builder --macos",
+    "dist:mac": "build --macos",
     "dockerdist:mac": "docker run --rm -ti -v ${PWD}:/project -v ${PWD##*/}-node-modules:/project/node_modules -v ~/.electron:/root/.electron electronuserland/electron-builder:wine /bin/bash -c \"yarn && yarn dist:mac\"",
-    "dist:win": "electron-builder --win",
+    "dist:win": "build --win",
     "dockerdist:win": "docker run --rm -ti -v ${PWD}:/project -v ${PWD##*/}-node-modules:/project/node_modules -v ~/.electron:/root/.electron electronuserland/electron-builder:wine /bin/bash -c \"yarn && yarn dist:win\"",
     "dist:all": "electron-builder --linux --win",
     "dockerdist:all": "docker run --rm -ti -v ${PWD}:/project -v ${PWD##*/}-node-modules:/project/node_modules -v ~/.electron:/root/.electron electronuserland/electron-builder:wine /bin/bash -c \"yarn && yarn dist:all\"",
@@ -39,7 +40,7 @@
     "babel-preset-react": "^6.23.0",
     "electron": "^1.6.6",
     "electron-builder": "^19.19.1",
-    "electron-builder-squirrel-windows": "^16.6.0",
+    "electron-builder-squirrel-windows": "^19.27.3",
     "electron-compilers": "^5.9.0",
     "gulp": "^3.9.1",
     "gulp-concat": "^2.6.0",
@@ -69,16 +70,18 @@
     "electron-is-dev": "^0.3.0",
     "electron-log": "^2.2.7",
     "electron-pdf-window": "^1.0.10",
+    "electron-publisher-s3": "^19.27.3",
     "electron-titlebar": "0.0.3",
+    "electron-updater": "^2.8.9",
     "fs-path": "0.0.23",
     "jquery": "^3.2.1",
     "js-yaml": "^3.8.2",
     "json2csv": "^3.7.3",
     "json2xls": "^0.1.2",
-    "jsonfile": "^2.4.0",
+    "jsonfile": "^3.0.1",
     "lodash": "^4.17.4",
-    "lowdb": "^0.16.0",
-    "mathjax-electron": "^1.2.0",
+    "lowdb": "^1.0.0",
+    "mathjax-electron": "^2.0.1",
     "mathjs": "^3.10.0",
     "mousetrap": "^1.6.1",
     "node-json-db": "^0.7.3",
@@ -88,7 +91,7 @@
     "ref": "^1.3.4",
     "ref-struct": "^1.1.0",
     "rickshaw": "^1.6.0",
-    "riot": "^2.3.15",
+    "riot": "^3.6.3",
     "selectboxit": "^3.8.2"
   },
   "build": {
@@ -124,15 +127,23 @@
       "./node_modules/data-chan/libDataChan*"
     ],
     "mac": {
-      "target": "dmg",
-      "category": "public.app-category.utilities"
+      "category": "public.app-category.utilities",
+      "publish": {
+        "provider": "s3",
+        "bucket": "fermiumlabs-datalogger-autoupdate"
+      }
     },
     "nsis": {
       "oneClick": true,
       "perMachine": true,
       "allowElevation": true,
+      "perMachine": true,
       "artifactName": "${productName}-Setup.${ext}",
-      "deleteAppDataOnUninstall": true
+      "deleteAppDataOnUninstall": true,
+      "publish": {
+        "provider": "s3",
+        "bucket": "fermiumlabs-datalogger-autoupdate"
+      }
     },
     "linux": {
       "target": [
@@ -141,7 +152,11 @@
         "AppImage"
       ],
       "desktop": {
-        "Category": "Science;Education;"
+        "Category": "Science;"
+      },
+      "publish": {
+        "provider": "s3",
+        "bucket": "fermiumlabs-datalogger-autoupdate"
       }
     },
     "deb": {
@@ -157,7 +172,9 @@
     },
     "win": {
       "target": [
-        "nsis"
+        "nsis",
+        "zip",
+        "squirrel"
       ]
     }
   }

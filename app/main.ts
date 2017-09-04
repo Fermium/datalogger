@@ -1,19 +1,21 @@
 /*jshint esversion: 6*/
+import { isDev, log } from "./util";
+
 import * as electron from 'electron';
 import {dialog} from 'electron';
+import {ipcMain} from 'electron';
+
 import {fork} from 'child_process';
 import * as math from 'mathjs';
 import * as dateFormat from 'dateformat';
 import * as fs from 'fs';
 import * as path from 'path';
 import * as http from 'https';
-import {ipcMain} from 'electron';
-import { isDev } from "./util"
 import * as PDFWindow from 'electron-pdf-window';
 import * as jsyaml from 'js-yaml';
-//import AppUpdater from './AppUpdater';
-import * as  Raven from 'raven';
 
+import AppUpdater from "./updater"
+import * as  Raven from 'raven';
 
 let usb;
 var _ = require('lodash');
@@ -21,7 +23,6 @@ let logger;
 let usb_on : boolean =false;
 let corr  = {a:0,b:0};
 
-//remote error acquisition
 if(!isDev()){
   try{
     Raven.config('https://d62ce425b8f346439bf694c9f36eae45:84b649383e3843d49d1e56561cff98b1@sentry.io/208461',{
@@ -29,9 +30,10 @@ if(!isDev()){
     }).install();
   }
   catch(err){
-    console.log('Error connecting to sentry');
+    log('Error connecting to sentry');
   }
 }
+
 
 let dbfile;
 // Module to control application life.
@@ -67,7 +69,6 @@ function createWindow () {
     // when you should delete the corresponding element.
     mainWindow = null;
   });
-  //new AppUpdater();
 }
 
 function createSelectDevice () {
@@ -77,6 +78,8 @@ function createSelectDevice () {
   mainWindow.loadURL(`file://${__dirname}/selectdevice/index.html`);
   mainWindow.on('ready-to-show',()=>{
     mainWindow.show();
+    
+
   })
 
   // Emitted when the window is closed.
@@ -86,7 +89,7 @@ function createSelectDevice () {
     // when you should delete the corresponding element.
     mainWindow = null;
   });
-
+  
 }
 
 //this shit is long, we could move it somewhere else ? 
@@ -187,6 +190,7 @@ app.on('ready', function(){
     minHeight: 600
   });
   createSelectDevice();
+  new AppUpdater()
 });
 
 // Quit when all windows are closed.
