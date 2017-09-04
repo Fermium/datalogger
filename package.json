@@ -2,6 +2,7 @@
   "name": "Datalogger",
   "version": "1.6.0",
   "description": "A datalogger application",
+  "homepage": "https://fermiumlabs.com",
   "main": "app/init.js",
   "scripts": {
     "start": " electron .",
@@ -18,14 +19,15 @@
     "dockerdist:win": "docker run --rm -ti -v ${PWD}:/project -v ${PWD##*/}-node-modules:/project/node_modules -v ~/.electron:/root/.electron electronuserland/electron-builder:wine /bin/bash -c \"yarn && yarn dist:win\"",
     "dist:all": "electron-builder --linux --win",
     "dockerdist:all": "docker run --rm -ti -v ${PWD}:/project -v ${PWD##*/}-node-modules:/project/node_modules -v ~/.electron:/root/.electron electronuserland/electron-builder:wine /bin/bash -c \"yarn && yarn dist:all\"",
-    "patchlibusb": "cp -rf build/lib/macos/ node_modules/electron/dist/Electron.app/Contents/Frameworks/"
+    "patchlibusb": "cp -rf build/lib/macos/ node_modules/electron/dist/Electron.app/Contents/Frameworks/",
+    "patchlibpthread": "cp .\\build\\lib\\windows\\libwinpthread-1.dll .\\node_modules\\electron\\dist\\"
   },
   "postinstall": "install-app-deps",
   "repository": "https://github.com/fermiumlabs/datalogger",
   "keywords": [],
   "author": {
-    "name": "Simone Tosato",
-    "email": "s@fermiumlabs.com",
+    "name": "Fermium LABS srl",
+    "email": "info@fermiumlabs.com",
     "url": "https://fermiumlabs.com"
   },
   "license": "CC0-1.0",
@@ -104,7 +106,21 @@
         "filter": [
           "**/*.dylib"
         ]
+      },
+      {
+        "from": "build/lib/windows/",
+        "filter": [
+          "**/*.dll"
+        ]
+      },
+      {
+        "from": "build/drivers/",
+        "to": "drivers",
+        "filter": [
+          "**/*.exe"
+        ]
       }
+      
     ],
     "asarUnpack": [
       "./app/devices/**/**",
@@ -118,7 +134,8 @@
       }
     },
     "nsis": {
-      "oneClick": false,
+      "oneClick": true,
+      "perMachine": true,
       "allowElevation": true,
       "perMachine": true,
       "artifactName": "${productName}-Setup.${ext}",

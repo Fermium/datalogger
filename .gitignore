@@ -24,7 +24,7 @@ coverage
 .lock-wscript
 
 # Compiled binary addons (http://nodejs.org/api/addons.html)
-build/Release
+#build/Release
 
 # Dependency directories
 node_modules
@@ -47,3 +47,5 @@ yarn.*
 .vagrant
 
 _docs/
+
+!build
