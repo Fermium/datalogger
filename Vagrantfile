@@ -38,41 +38,16 @@ Vagrant.configure(2) do |config|
     end
 
     ###############################################################
-    arch.vm.provision 'shell', privileged: false, inline: <<-SHELL
-      echo "WARNING! still can't build on arch!!!!"
-      sudo pacman --noconfirm -Syu
-      sudo pacman --noconfirm -S git python-pip nodejs npm yarn
+    arch.vm.provision :shell, path: 'scripts/provision_arch.sh'
 
-      #Install icnsutils from source
-      sudo pacman --noconfirm -S openjpeg jasper
-      wget https://downloads.sourceforge.net/project/icns/libicns-0.8.1.tar.gz
-      tar -zxvf libicns-0.8.1.tar.gz
-      cd libicns-0.8.1/
-      ./configure
-      make
-      sudo make install
-      
-      #Install NVM (Node Version Manager)
-      curl -o- https://raw.githubusercontent.com/creationix/nvm/v0.33.2/install.sh | bash
-      export NVM_DIR="$HOME/.nvm"
-      [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"  # This loads nvm
-      [ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"  # This loads nvm bash_completion
-      
-      #Install NodeJS 6
-      nvm install 6
-      nvm use 6
-      nvm alias default 6
-
-      # link volume to home user folder
-      ln -s /vagrant /home/vagrant/datalogger
-    SHELL
+    
   end
   
   ########################################################################################################################################################################
 
   config.vm.define 'ubuntu' do |ubuntu|
 
-    ubuntu.vm.box = 'ubuntu/xenial64'
+    ubuntu.vm.box = 'bento/ubuntu-16.04'
     ubuntu.vm.network 'private_network', type: 'dhcp'
     
     ubuntu.vm.provider 'virtualbox' do |vb|
@@ -82,109 +57,31 @@ Vagrant.configure(2) do |config|
       vb.customize ['modifyvm', :id, '--cpuexecutioncap', '65']
     end
 
-    ubuntu.vm.provision 'shell', privileged: false, inline: <<-SHELL
-       export DEBIAN_FRONTEND=noninteractive
-
-       printf "\n\nInstalling software\n"
-
-       sudo apt-get update
-       sudo apt-get -y install wget python python-dev curl build-essential
-
-       # Electron Builder requirements https://github.com/electron-userland/electron-builder/wiki/Multi-Platform-Build
-       sudo apt-get -y install icnsutils rpm graphicsmagick xz-utils
-
-       # Wine
-       sudo add-apt-repository ppa:ubuntu-wine/ppa -y
-       sudo apt-get update
-       sudo apt-get install --no-install-recommends -y wine1.8
-
-       # Mono
-       sudo apt-key adv --keyserver hkp://keyserver.ubuntu.com:80 --recv-keys 3FA7E0328081BFF6A14DA29AA6A19B38D3D831EF
-       echo "deb http://download.mono-project.com/repo/debian wheezy main" | sudo tee /etc/apt/sources.list.d/mono-xamarin.list
-       sudo apt-get update
-       sudo apt-get install --no-install-recommends -y mono-devel ca-certificates-mono
-
-       # Build 32 bit app from 64 bit image
-       sudo apt-get install --no-install-recommends -y gcc-multilib g++-multilib
-
-       # NodeJS
-       curl -sL https://deb.nodesource.com/setup_6.x | sudo -E bash -
-       sudo apt-get install -y nodejs
-
-       # Yarn
-       curl -sS https://dl.yarnpkg.com/debian/pubkey.gpg | sudo apt-key add -
-       echo "deb https://dl.yarnpkg.com/debian/ stable main" | sudo tee /etc/apt/sources.list.d/yarn.list
-       sudo apt-get update && sudo apt-get install yarn
-
-       # link volume to home user folder
-       ln -s /vagrant datalogger
-     SHELL
+    ubuntu.vm.provision :shell, path: 'scripts/provision_ubuntu.sh'
   end
   
   ########################################################################################################################################################################
   
   config.vm.define 'ubuntu_desktop' do |ubuntu_desktop|
-    # Every Vagrant development environment requires a box. You can search for
-    # boxes at https://atlas.hashicorp.com/search.
-    ubuntu_desktop.vm.box = 'boxcutter/ubuntu1604-desktop'
+    ubuntu_desktop.vm.box = 'bento/ubuntu-16.04'
 
-    # Create a public network, which generally matched to bridged network.
-    # Bridged networks make the machine appear as another physical device on
-    # your network.
     ubuntu_desktop.vm.network 'private_network', type: 'dhcp'
     
     ubuntu_desktop.vm.provider 'virtualbox' do |vb|
       vb.gui = true
       vb.name = 'datalogger-ubuntu-desktops'
       vb.memory = '2048'
-      # Limit CPU usage
       vb.customize ['modifyvm', :id, '--cpuexecutioncap', '65']
       vb.customize ["modifyvm", :id, "--accelerate3d", "on"]
     end
-
-    ubuntu_desktop.vm.provision 'shell', privileged: false, inline: <<-SHELL
-       export DEBIAN_FRONTEND=noninteractive
-
-       printf "\n\nInstalling software\n"
-
-       sudo apt-get update
-       sudo apt-get -y install wget python python-dev curl build-essential
-       #sudo apt-get -y install ubuntu-mate-cloudtop virtualbox-guest-x11
-
-       # Electron Builder requirements https://github.com/electron-userland/electron-builder/wiki/Multi-Platform-Build
-       sudo apt-get -y install icnsutils rpm graphicsmagick xz-utils
-
-       # Wine
-       sudo add-apt-repository ppa:ubuntu-wine/ppa -y
-       sudo apt-get update
-       sudo apt-get install --no-install-recommends -y wine1.8
-
-       # Mono
-       sudo apt-key adv --keyserver hkp://keyserver.ubuntu.com:80 --recv-keys 3FA7E0328081BFF6A14DA29AA6A19B38D3D831EF
-       echo "deb http://download.mono-project.com/repo/debian wheezy main" | sudo tee /etc/apt/sources.list.d/mono-xamarin.list
-       sudo apt-get update
-       sudo apt-get install --no-install-recommends -y mono-devel ca-certificates-mono
-
-       # Build 32 bit app from 64 bit image
-       sudo apt-get install --no-install-recommends -y gcc-multilib g++-multilib
-
-       # NodeJS
-       curl -sL https://deb.nodesource.com/setup_6.x | sudo -E bash -
-       sudo apt-get install -y nodejs
-
-       # Yarn
-       curl -sS https://dl.yarnpkg.com/debian/pubkey.gpg | sudo apt-key add -
-       echo "deb https://dl.yarnpkg.com/debian/ stable main" | sudo tee /etc/apt/sources.list.d/yarn.list
-       sudo apt-get update && sudo apt-get install yarn
-       #Enable autologin
-       sudo /bin/sh -c "echo autologin-user=ubuntu >> /usr/share/lightdm/lightdm.conf.d/60-lightdm-gtk-greeter.conf"
-       # link volume to home user folder
-       ln -s /vagrant /home/vagrant/Desktop/datalogger
-     SHELL
+    
+    ubuntu_desktop.vm.provision :shell, path: 'scripts/provision_ubuntu.sh'
+    ubuntu_desktop.vm.provision :shell, path: 'scripts/provision_ubuntu_desktop.sh'
+    ubuntu_desktop.vm.provision :reload
+    
   end
   
-  
-  ########################################################################################################################################################################
+    ########################################################################################################################################################################
   
   config.vm.define 'windows' do |windows|
     
@@ -227,9 +124,7 @@ Vagrant.configure(2) do |config|
       v.customize ["modifyvm", :id, "--accelerate3d", "on"]
     end
 
-    windows.vm.provision :shell, path: 'scripts/desktopShortcut.ps1'
-    windows.vm.provision :shell, path: 'scripts/InstallChocolatey.ps1'
-    windows.vm.provision :shell, path: 'scripts/install.ps1'
+    windows.vm.provision :shell, path: 'scripts/provision_windows.ps1'
     windows.vm.provision :reload
 
   end
@@ -244,15 +139,12 @@ Vagrant.configure(2) do |config|
       vb.gui = true
       vb.name = 'datalogger-fedora_desktop'
       vb.memory = '2048'
-      # Limit CPU usage
       vb.customize ['modifyvm', :id, '--cpuexecutioncap', '65']
       vb.customize ["modifyvm", :id, "--accelerate3d", "on"]
     end
 
-    fedora_desktop.vm.provision 'shell', privileged: false, inline: <<-SHELL
-       # link volume to home user folder
-       ln -s /vagrant /home/vagrant/Desktop/datalogger
-     SHELL
+    fedora_desktop.vm.provision :shell, path: 'scripts/provision_fedora_desktop.sh'
+
   end
   ########################################################################################################################################################################
 
@@ -271,10 +163,6 @@ Vagrant.configure(2) do |config|
       vb.customize ["modifyvm", :id, "--accelerate3d", "on"]
     end
 
-    ###############################################################
-    centos_desktop.vm.provision 'shell', privileged: false, inline: <<-SHELL
-       # link volume to home user folder
-       ln -s /vagrant /home/vagrant/Desktop/datalogger
-     SHELL
+    centos_desktop.vm.provision :shell, path: 'scripts/provision_centos_desktop.sh'
   end
 end
