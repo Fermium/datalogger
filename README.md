@@ -64,3 +64,23 @@ Common errors:
 # Contributing
 
 Please open pull requests against develop, not master. 
+
+# OS status
+
+## macOS
+
+With the latest fixes should work like a charm. Still work to do on scidavis
+
+## Linux
+
+### Ubuntu
+
+We build everything on ubuntu on travis so it should work quite well. Some script should be provided for usb permission.
+
+### Centos, fedora, etc etc
+
+There seems to be issues with finding libusb, needs to be checked.
+
+## Windows
+
+Still needs the dll

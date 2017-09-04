@@ -39,7 +39,7 @@ interface Obj {
 }
 let channels : Obj;
 let unit = {};
-let ison : boolean = false;
+let is_on : boolean = false;
 let modal;
 
 let pnotifyStack = {dir1: "up", dir2: "left"};
@@ -77,8 +77,9 @@ $(document).ready(function(){
 });
 
 /* Events */
-ipcRenderer.on('usb-fail',function(event,args){
+ipcRenderer.on('usb-error',function(event,args){
   $("[name='on-off']").bootstrapSwitch('state', false);
+  //Hey WILCO, you can attach a notification here ^^^
 });
 
 ipcRenderer.on('measure',function(event,args){
@@ -343,7 +344,7 @@ $('[data-action="editequation"]').click(_.debounce(function() {
           try{
             let result = editor.getValue();
             if(result !== null) mathsheet=result;
-            if(ison){
+            if(is_on){
               math.eval(mathsheet,scope);
               evaluate();
             }
@@ -489,7 +490,7 @@ function init(){
     Raven.showReportDialog();*/
   }
 }
-ipcRenderer.on('init',init);
+ipcRenderer.on('usb-init',init);
 
 
 
@@ -562,7 +563,7 @@ function updatePopover(block){
 
 
 ipcRenderer.on('on',(event,args)=>{
-  ison = args.st;
+  is_on = args.st;
   if(args.st){
     bootbox.prompt({
       size: 'small',
@@ -626,7 +627,7 @@ function off(){
     e.enabled=false;
   });
   ui.init();
-  ison=false;
+  is_on=false;
   ipcRenderer.send('off');
 }
 

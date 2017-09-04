@@ -31,16 +31,16 @@ Vagrant.configure(2) do |config|
     arch.vm.provider 'virtualbox' do |vb|
       vb.gui = false
       vb.name = 'datalogger-arch'
+
+      vb.memory = '2048'
       vb.memory = '1024'
       # Avoid ubuntu network problems at boot
       vb.customize ['modifyvm', :id, '--cableconnected1', 'on']
       vb.customize ['modifyvm', :id, '--cpuexecutioncap', '65']
     end
 
-    ###############################################################
     arch.vm.provision :shell, path: 'scripts/provision_arch.sh'
 
-    
   end
   
   ########################################################################################################################################################################
@@ -53,7 +53,8 @@ Vagrant.configure(2) do |config|
     ubuntu.vm.provider 'virtualbox' do |vb|
       vb.gui = false
       vb.name = 'datalogger-ubuntu'
-      vb.memory = '1024'
+      vb.memory = '2048'
+      # Limit CPU usage
       vb.customize ['modifyvm', :id, '--cpuexecutioncap', '65']
     end
 
@@ -71,6 +72,8 @@ Vagrant.configure(2) do |config|
       vb.gui = true
       vb.name = 'datalogger-ubuntu-desktops'
       vb.memory = '2048'
+
+      # Limit CPU usage
       vb.customize ['modifyvm', :id, '--cpuexecutioncap', '65']
       vb.customize ["modifyvm", :id, "--accelerate3d", "on"]
     end
@@ -146,14 +149,13 @@ Vagrant.configure(2) do |config|
     fedora_desktop.vm.provision :shell, path: 'scripts/provision_fedora_desktop.sh'
 
   end
+  
   ########################################################################################################################################################################
 
   config.vm.define 'centos_desktop' do |centos_desktop|
-
+  
     centos_desktop.vm.box = "boxcutter/centos73-desktop"
-
     centos_desktop.vm.network 'private_network', type: 'dhcp'
-
     centos_desktop.vm.provider 'virtualbox' do |vb|
       vb.gui = true
       vb.name = 'datalogger-centos_desktop'
@@ -165,4 +167,5 @@ Vagrant.configure(2) do |config|
 
     centos_desktop.vm.provision :shell, path: 'scripts/provision_centos_desktop.sh'
   end
+  
 end
