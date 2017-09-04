@@ -1,9 +1,58 @@
 # datalogger
 
-To avoid node-gyp rebuild to fail
+Datlogger (name needed!) is an application to control and acquire data from scientific instruments.
 
-* Run PowerShell as administrator and npm install -g windows-build-tools
-* Add python.exe to your path (should be in %UserProfile%.windows-build-tools\python27)
-* npm config set python python2.7
-* npm config set python %UserProfile%\.windows-build-tools\python27\python.exe
-* set VCTargetsPath="C:\Program Files (x86)\MSBuild\Microsoft.Cpp\v4.0\v140"
+## Toggling DevTools
+
+Toggle DevTools.
+
+- macOS: <kbd>Cmd</kbd> <kbd>Alt</kbd> <kbd>I</kbd> or <kbd>F12</kbd>
+- Linux: <kbd>Ctrl</kbd> <kbd>Shift</kbd> <kbd>I</kbd> or <kbd>F12</kbd>
+- Windows: <kbd>Ctrl</kbd> <kbd>Shift</kbd> <kbd>I</kbd> or <kbd>F12</kbd>
+
+### Reload
+
+Force reload the window.
+
+- macOS: <kbd>Cmd</kbd> <kbd>R</kbd> or <kbd>F5</kbd>
+- Linux: <kbd>Ctrl</kbd> <kbd>R</kbd> or <kbd>F5</kbd>
+- Windows: <kbd>Ctrl</kbd> <kbd>R</kbd> or <kbd>F5</kbd>
+
+### Element Inspector
+
+Open DevTools and focus the Element Inspector tool.
+
+- macOS: <kbd>Cmd</kbd> <kbd>Shift</kbd> <kbd>C</kbd>
+- Linux: <kbd>Ctrl</kbd> <kbd>Shift</kbd> <kbd>C</kbd>
+- Windows: <kbd>Ctrl</kbd> <kbd>Shift</kbd> <kbd>C</kbd>
+
+# developing
+
+This application is designed to run on node 6. Please use [nvm](https://github.com/creationix/nvm) to install node 6 and use it:
+
+* nvm install 6
+* nmv use 6
+* nmv alias default 6
+
+Please use included Vagrant images:
+* ubuntu 
+* ubuntu_desktop
+* windows
+* arch (still not working)
+* fedora (test only)
+
+If you want to develop without the vagrant images, install the required dependencies described [here](https://github.com/nodejs/node-gyp)
+
+You will need to have a working [node-gyp](https://github.com/nodejs/node-gyp) since this app uses many native extensions
+
+## macOS
+
+If you're developing on macOS, run `yarn patchlibusb` after install, otherwise data-chan will not find libusb, since they're linked together for production and not for development
+
+## Windows
+
+Developing on Windows is messy. As long as you get node-gyp to work correctly, you'll be fine
+
+# Contributing
+
+Please open pull requests against develop, not master. 
