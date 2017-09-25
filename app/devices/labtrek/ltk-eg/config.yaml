@@ -7,4 +7,4 @@ product:
   model: "ltk-eg"
   description: "Energy gap measurement in semiconductors, with advanced lock-in amplifier"
   image: "pic.png"
-  enable: false
+  disabled: true

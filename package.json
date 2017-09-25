@@ -102,7 +102,6 @@
     "asar": true,
     "appId": "com.fermiumlabs.datalogger",
     "asarUnpack": [
-      "./app/devices/**/**",
       "./node_modules/data-chan/libDataChan*"
     ],
     "mac": {

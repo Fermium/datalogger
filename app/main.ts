@@ -271,7 +271,7 @@ ipcMain.on('stop',(event,arg) => {
 
 ipcMain.on('on',(event,arg) => {
 
-  usb = fork(path.normalize(path.join(__dirname,'devices',config.product.manufacturercode,config.product.model,'src','usb.js')).replace('app.asar','app.asar.unpacked'),[],{
+  usb = fork(path.normalize(path.join(__dirname,'devices',config.product.manufacturercode,config.product.model,'src','usb.js')),[],{
     env: {},
     stdio: ["ipc","inherit", "inherit", "inherit"]
   });

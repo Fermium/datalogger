@@ -7,4 +7,4 @@ product:
   model: "ltk-rdt"
   description: "Resistanza Vs temperature in Germanium, Platinum and Nickel"
   image: "pic.png"
-  enable: false
+  disabled: true
