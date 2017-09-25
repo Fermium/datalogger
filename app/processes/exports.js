@@ -52,7 +52,7 @@ function init_math(mathsh,to_export){
                   scidavis_path='scidavis';
                 break;
                 case 'win32':
-                  scidavis_path='%programfiles(x86)%\\scidavis\\scidavis.exe'
+                  scidavis_path='%programfiles(x86)%\\scidavis\\scidavis.exe';
                 break;
               }
               require('child_process').exec(scidavis_path+' '+name,function(e, stdout, stderr) {

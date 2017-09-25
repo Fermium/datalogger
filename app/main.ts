@@ -270,7 +270,7 @@ ipcMain.on('stop',(event,arg) => {
 
 
 ipcMain.on('on',(event,arg) => {
-  usb = fork(path.normalize(path.join(__dirname,'processes','usb.js')),[],{
+  usb = fork(path.normalize(path.join('.','devices',config.product.manufacturercode,config.product.model,'src','usb.js'))),[],{
     env: {},
     stdio: ["ipc","inherit", "inherit", "inherit"]
   });
@@ -318,8 +318,6 @@ usb.on('exit',(code,n)=>{
     action:'on',
     message:
       {
-        //a:config.config.calibration.a,
-        //b:config.config.calibration.b,
         vid:config.product.usb.vid,
         pid:config.product.usb.pid
       }
