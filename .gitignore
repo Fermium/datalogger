@@ -49,3 +49,4 @@ yarn.*
 _docs/
 
 !build
+*.p12
