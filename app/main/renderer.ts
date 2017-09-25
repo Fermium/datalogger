@@ -11,7 +11,7 @@ import * as mathjaxHelper from 'mathjax-electron';
 import * as easytimer from 'easytimer';
 import * as codemirror from 'codemirror';
 import * as fs from 'fs';
-let pjson = require(path.normalize(path.join('..','..','package.json'))); 
+let pjson = require(path.normalize(path.join('..','..','package.json')));
 require('codemirror/mode/javascript/javascript');
 require('codemirror/addon/edit/matchbrackets');
 let recording;
@@ -119,12 +119,12 @@ $('[data-action="handbook"]').click(function() {
 $('[data-export]').click(function(){
   ipcRenderer.send('export',{ex:$(this).data('export'),math:mathsheet});
   waitingDialog.show("Exporting...",{dialogSize: 'sm'});
-  $.blockUI({message:null});  
+  $.blockUI({message:null});
 });
 ipcRenderer.on('exported',()=>{
   waitingDialog.hide();
   $.unblockUI();
-  
+
 });
 $('[data-action="save-file"]').click(function(){
   let p= path.join(require('os').homedir(),'.datalogger','sessions',session._name+"_"+session._date+'.json');
@@ -177,7 +177,7 @@ $('[data-action="plot"]').click(function(){
 //     let i;
 //     let $iContent = $('#inputs-content');
 //     $iContent.empty();
-    
+
 //     for(i=0;i<channels.length;i++){
 //       console.log(channels[i]);
 //       $iContent.append($('<div/>').addClass('row').append(
@@ -253,7 +253,7 @@ $('[data-action="inputs"]').click(_.debounce(function(){
                       <select class="gain">`
                      for(let j = 0; j <= channels[i].gainlabels; j++){
                        html += `<option value="${channels[i].gainvalues[j]}" >${channels[i].gainlabels[j]}</option>`;
-                     }   
+                     }
                 html +=`</select>
                     </td>
                     <td>
@@ -360,7 +360,7 @@ $('[data-action="editequation"]').click(_.debounce(function() {
               .text(`Error in math: ${e.toString()}`)
               .show();
                 // dialog.showMessageBox({type: 'error',title: 'Error in math', message : err.toString()});
-            
+
           }
 
           $(".bootbox").animate({
@@ -544,7 +544,7 @@ function initpopover(block){
         mathjaxHelper.typesetMath(document.getElementById(block.val + '_formula'));
         $(`#${block.val}_formula`).show();
       });
-      
+
     })
     .on('hide.bs.popover', function() {
       $(`#${block.val}_formula`).hide();
@@ -809,5 +809,9 @@ const template = [
 
 
 const menu = Menu.buildFromTemplate(template);
-console.log(app.getCurrentWindow());
-app.getCurrentWindow().setMenu(menu);
+if(process.platform === 'darwin'){
+  Menu.setApplicationMenu(menu);
+}
+else{
+  app.getCurrentWindow().setMenu(menu);
+}
