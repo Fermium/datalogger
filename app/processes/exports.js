@@ -36,19 +36,26 @@ function init_math(mathsh,to_export){
     }
   }
   function scidavis(file){
-    var data = JSON.parse(fs.readFileSync(file, 'utf8'));
-    var name = path.normalize(path.join(path.dirname(file),path.basename(file,'.json'),'tmp.tsv'));
+    var data = JSON.parse(fs.readFileSync(file.source, 'utf8'));
+    var name = path.normalize(path.join(path.dirname(file.source),path.basename(file.source,'.json'),'tmp.tsv'));
   	json2csv({ data: data._data ,fields:cols,del: '\t'}, (err,csv) => {
     		if (err) throw err;
         fsPath.writeFile(name, csv, function(err) {
             if(err) throw err;
             else{
-              try{
-              require('child_process').exec('scidavis '+name);
-              }
+              //try{
+              require('child_process').exec('scidavis '+name,function(e, stdout, stderr) {
+              console.log(stdout);
+              console.log(stderr);
+              if (e) process.send({action:'error',message:'Scidavis error'});
+              });
+              //console.log('try')
+
+              /*}
               catch(e){
+                console.log('catch')
                 process.send({action:'error',message:'Scidavis error'});
-              }
+              }*/
             }
         });
   	});

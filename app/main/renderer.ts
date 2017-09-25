@@ -705,12 +705,14 @@ ipcRenderer.on('rec',(event,data)=>{
   recording=data.rec;
 });
 ipcRenderer.on('scidavis-error',(event,data)=>{
-  bootbox.confirm({
+  console.log('error');
+  bootbox.alert({
     size: 'small',
-    title : 'Unable to find the instrument',
-    message: 'Please verify it is connected to the USB and powered on.<br>On Unix, also check for access permissions',
+    title : 'Unable to find SciDAVis',
+    message: 'SciDAVis is not installed or not in the default installation path.',
     callback : function(){
-      
+      waitingDialog.hide();
+      $.unblockUI();
     }
   });
     });
