@@ -11,14 +11,14 @@ var _ = require('lodash');
 var values={};
 var cols = [];
 function export_data(file,sep,extension){
-  var data = JSON.parse(fs.readFileSync(file.source, 'utf8'));
-  var name = path.normalize(path.join(path.dirname(file.source),path.basename(file.source,'.json'),'experiment_data.'+extension));
+  var data = JSON.parse(fs.readFileSync(file, 'utf8'));
+  var name = path.normalize(path.join(path.dirname(file),path.basename(file,'.json'),'experiment_data.'+extension));
 
 	json2csv({ data: data._data , fields:cols,del: sep}, (err,csv) => {
   		if (err) console.log(err);
       fsPath.writeFile(name, csv, function(err) {
           if(err) console.log(err);
-          else process.send({action:'end'});
+          else process.send({action:'end',message:name});
       });
 	});
 }
@@ -36,8 +36,8 @@ function init_math(mathsh,to_export){
     }
   }
   function scidavis(file){
-    var data = JSON.parse(fs.readFileSync(file.source, 'utf8'));
-    var name = path.normalize(path.join(path.dirname(file.source),path.basename(file.source,'.json'),'tmp.tsv'));
+    var data = JSON.parse(fs.readFileSync(file, 'utf8'));
+    var name = path.normalize(path.join(path.dirname(file),path.basename(file,'.json'),'tmp.tsv'));
   	json2csv({ data: data._data ,fields:cols,del: '\t'}, (err,csv) => {
     		if (err) throw err;
         fsPath.writeFile(name, csv, function(err) {

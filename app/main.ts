@@ -366,12 +366,12 @@ ipcMain.on('device-select',(event,arg)=>{
 
 ipcMain.on('export',(event,args)=>{
     args.to_export=['Vh','temp','Vr','I','R','B'];
-    args.file=dbfile;
+    args.file=dbfile.source;
     var exprt=fork(path.normalize(path.join(__dirname,'processes','exports.js')),[JSON.stringify(args)],{env: {'ATOM_SHELL_INTERNAL_RUN_AS_NODE':'0'},stdio: ['ipc', 'inherit', 'inherit','inherit']});
     exprt.on('message',(data)=>{
       switch (data.action) {
         case 'end':
-          mainWindow.webContents.send('exported');
+          mainWindow.webContents.send('exported',{path:data.message});
           exprt.kill();
           break;
         case 'error':

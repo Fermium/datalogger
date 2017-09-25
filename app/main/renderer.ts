@@ -6,6 +6,7 @@
 /// <reference types='jquery.pnotify' />
 import * as path from 'path';
 let _ = require('lodash');
+const {shell} = require('electron')
 import * as math from 'mathjs';
 import * as mathjaxHelper from 'mathjax-electron';
 import * as easytimer from 'easytimer';
@@ -127,8 +128,9 @@ function enableExport(){
 function disableExport(){
   $('[data-export]').unbind('click');
 }
-ipcRenderer.on('exported',()=>{
+ipcRenderer.on('exported',(ev,args)=>{
   waitingDialog.hide();
+  shell.showItemInFolder(args.path);
   $.unblockUI();
 
 });
