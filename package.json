@@ -94,33 +94,13 @@
     "riot": "^3.6.3",
     "selectboxit": "^3.8.2"
   },
+
+
   "build": {
     "productName": "Datalogger",
     "artifactName": "${productName}.${ext}",
     "asar": true,
     "appId": "com.fermiumlabs.datalogger",
-    "extraFiles": [
-      {
-        "from": "build/lib/macos/",
-        "to": "Frameworks",
-        "filter": [
-          "**/*.dylib"
-        ]
-      },
-      {
-        "from": "build/lib/windows/",
-        "filter": [
-          "**/*.dll"
-        ]
-      },
-      {
-        "from": "build/drivers/",
-        "to": "drivers",
-        "filter": [
-          "**/*.exe"
-        ]
-      }
-    ],
     "asarUnpack": [
       "./app/devices/**/**",
       "./node_modules/data-chan/libDataChan*"
@@ -130,7 +110,14 @@
       "publish": {
         "provider": "s3",
         "bucket": "fermiumlabs-datalogger-autoupdate"
-      }
+      },
+      "extraFiles": [{
+        "from": "build/lib/macos/",
+        "to": "Frameworks",
+        "filter": [
+          "**/*.dylib"
+        ]
+      }]
     },
     "nsis": {
       "oneClick": true,
@@ -173,6 +160,20 @@
         "nsis",
         "zip",
         "squirrel"
+      ],
+      "extraFiles": [{
+          "from": "build/lib/windows/",
+          "filter": [
+            "**/*.dll"
+          ]
+        },
+        {
+          "from": "build/drivers/",
+          "to": "drivers",
+          "filter": [
+            "**/*.exe"
+          ]
+        }
       ]
     }
   }
