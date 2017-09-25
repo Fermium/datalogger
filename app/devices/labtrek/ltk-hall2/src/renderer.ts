@@ -108,11 +108,7 @@ module.exports = {
     });
     $('input[id*="input-"]').each(function(i){
       $(this).change(_.debounce(function(){
-          let _value= $(this).val();
-          if($(this).data('function')==='set_current_output'){
-            _value = parseFloat($('#input-intercept').val())+parseFloat(_value)*parseFloat($('#input-slope').val());
-          }
-          handler.emit('input-change',{id:$(this).data('function'),value:_value,hardware:$(this).data('hardware')});
+          handler.emit('input-change',{id:$(this).data('function'),value:$(this).val(),hardware:$(this).data('hardware')});
       },1000));
     });
 
