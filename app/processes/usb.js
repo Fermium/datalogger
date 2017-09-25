@@ -13,7 +13,8 @@ var datachan = require('data-chan').lib;
 var dc_search_results = require('data-chan').search_enum;
 var MAX_MEASURE_NUM = require('data-chan').MAX_MEASURE_NUM;
 
-
+var dvid;
+var dpid;
 var ref = require('ref');
 var arr = require('ref-array');
 var f_arr = arr('float');
@@ -33,8 +34,7 @@ var device;
 var thread;
 
 function on(vid, pid) {
-  console.log("USB on with VID", vid, "and PID", pid)
-
+  console.log("USB on with VID", vid, "and PID", pid);
   datachan.datachan_init();
 
   device = datachan.datachan_device_acquire(vid, pid);
@@ -45,6 +45,8 @@ function on(vid, pid) {
     process.send({
       action: 'usb-init'
     });
+    dvid=vid;
+    dpid=pid;
     thread = setInterval(read, 200);
   }
   return (device.result === dc_search_results.success);
@@ -52,7 +54,7 @@ function on(vid, pid) {
 
 
 function off() {
-  console.log("USB off")
+  console.log("USB off");
   if (device.result === dc_search_results.success) {
     datachan.datachan_device_disable(device.device);
     clearInterval(thread);
@@ -62,7 +64,7 @@ function off() {
 }
 
 function send_command(command) {
-  console.log("sending USB command ", command)
+  console.log("sending USB command ", command);
   var buf;
   if (datachan.datachan_device_is_enabled(device.device)) {
     switch (command.id) {
@@ -89,7 +91,11 @@ function is_on()
 }
 
 function read() {
-
+  if(datachan.datachan_device_acquire(dvid,dpid).result !== dc_search_results.cannot_claim){
+    dispatch_error('Device disconnected or clamed by another program',new Error('cannot_claim'));
+    clearInterval(thread);
+    return;
+  }
   var scope = {
     'time': 0,
     'ch1': 0,
@@ -126,7 +132,7 @@ function read() {
         datachan.datachan_clean_measure(mes);
         meas_index--;
       } catch (e) {
-        dispatch_error('Error reading measure', e)
+        dispatch_error('Error reading measure', e);
         return;
       }
     }
