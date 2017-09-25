@@ -43,19 +43,23 @@ function init_math(mathsh,to_export){
         fsPath.writeFile(name, csv, function(err) {
             if(err) throw err;
             else{
-              //try{
-              require('child_process').exec('scidavis '+name,function(e, stdout, stderr) {
+              let scidavis_path = '';
+              switch(process.platform){
+                case 'darwin':
+                  scidavis_path='/Applications/scidavis.app/Contents/MacOS/scidavis';
+                break;
+                case 'linux':
+                  scidavis_path='scidavis';
+                break;
+                case 'win32':
+                  scidavis_path='%programfiles(x86)%\\scidavis\\scidavis.exe'
+                break;
+              }
+              require('child_process').exec(scidavis_path+' '+name,function(e, stdout, stderr) {
               console.log(stdout);
               console.log(stderr);
               if (e) process.send({action:'error',message:'Scidavis error'});
               });
-              //console.log('try')
-
-              /*}
-              catch(e){
-                console.log('catch')
-                process.send({action:'error',message:'Scidavis error'});
-              }*/
             }
         });
   	});
