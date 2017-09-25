@@ -4,7 +4,7 @@ product:
   manufacturer: "LabTrek"
   manufacturercode : "labtrek"
   name: "Hall effect apparatus"
-  model: "ltk-hall"
+  model: "ltk-hall2"
   description: "Measure the Hall effect over a broad range of temperatures, magnetic fields and current"
   image: "pic.jpg"
   usb:
@@ -20,6 +20,9 @@ manual:
   #  tag: "latest"
   #  filename: "Hall_Handbook.pdf" #PDF is the only filetype supported
 config:
+  calibration:
+    a: 0.008019432
+    b: 0.9397528
   mathsheet: |
     # Temporarely used CH6 (not amplified) as ch7 appears to not work correctly
     Vh = ch6 V
@@ -94,18 +97,6 @@ config:
         default: 0
         pretty : true
         sendtohardware : true
-      - name: "Current correction intercept"
-        function : 'intercept'
-        type: "number"
-        default: 0.008019432
-        pretty : false
-        sendtohardware : false
-      - name: "Current correction slope"
-        function : 'slope'
-        type: "number"
-        default: 0.9397528
-        pretty : false
-        sendtohardware : false
       - name: "Sample Current [A]"
         function : 'set_current_output'
         type: "slider"

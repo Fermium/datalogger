@@ -39,6 +39,7 @@ interface Obj {
   [k:string]:any
 }
 let channels : Obj;
+let calibration : Obj;
 let unit = {};
 let is_on : boolean = false;
 let modal;
@@ -483,6 +484,7 @@ function init(){
   mathjaxHelper.loadMathJax(document);
   var tmp=ipcRenderer.sendSync('ready');
   channels = tmp.config.channels;
+  calibration = tmp.config.calibration;
   if(mathsheet===''){
     mathsheet = tmp.config.mathsheet.trim();
   }
