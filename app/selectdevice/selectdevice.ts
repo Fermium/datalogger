@@ -27,7 +27,7 @@ function getDirectories (srcpath) {
 
 function updateList(producer){
   var products = getDirectories(path.normalize(path.join(__dirname,'devices',producer).replace('app.asar','app.asar.unpacked').replace('selectdevice','')));
-  
+
   products.forEach(function(x){
     appendProduct(producer,x);
   });
@@ -56,23 +56,26 @@ function appendProduct(producer,name){
   $mainCont.find('.panel-body').append($('<h4/>').text(product.name));
   $mainCont.find('.panel-body').find("h4").append($('<small/>').css('display', 'block').html(producer));
   $mainCont.find('.panel-body').append($('<p/>').text(product.description));
-  $mainCont.find('.panel-body').append($('<a/>').addClass('btn btn-primary select-device').attr({
+  $mainCont.find('.panel-body').append($('<a/>').addClass('btn btn-primary select-device ').attr({
     href : '#',
-    'data-device' :   path.normalize(path.join(__dirname,'devices',producer,name).replace('app.asar','app.asar.unpacked').replace('selectdevice',''))
-  }).text('Next'));
-  $('.select-device').each(function(x){
+    'data-device' : (product.disabled)? null :  path.normalize(path.join(__dirname,'devices',producer,name).replace('app.asar','app.asar.unpacked').replace('selectdevice','')),
+    disabled : product.disabled
+  }).text((product.disabled)?'Coming Soon' : 'Next'));
 
+  $('.select-device').each(function(x){
+    if(!product.disabled){
     $(this).click(function(){
       ipcRenderer.send('device-select',{device:$(this).data('device')});
     });
+  }
   });
 }
 $('#search').change(function(){
   var str = ( $(this).val() as any).split(' ');
   var $products = $('.product');
-  
+
   $products.map((idx, elem) => $(elem).parent().fadeIn(100));
-  
+
   if($(this).val() != ''){
     $products.map((idx, elem) => {
       let productInfo: any = Object.assign({}, elem.dataset);
