@@ -80,7 +80,14 @@ $(document).ready(function(){
 /* Events */
 ipcRenderer.on('usb-error',function(event,args){
   $("[name='on-off']").bootstrapSwitch('state', false);
-  //Hey WILCO, you can attach a notification here ^^^
+  bootbox.alert({
+    size: 'small',
+    title : 'USB device disconnected',
+    message: 'USB device has been disconnected or powered off.',
+    callback : function(){
+    }
+  });
+
 });
 
 ipcRenderer.on('measure',function(event,args){
