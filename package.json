@@ -1,179 +1,180 @@
 {
-	"name": "Datalogger",
-	"version": "1.6.0",
-	"description": "A datalogger application",
-	"homepage": "https://fermiumlabs.com",
-	"main": "app/init.js",
-	"scripts": {
-		"start": " electron .",
-		"debug": " electron --debug=5858 .",
-		"release": "build --win",
-		"postinstall": "electron-builder install-app-deps",
-		"distpack": "build --dir",
-		"dist": "build",
-		"dist:linux": "build --linux",
-		"dockerdist:linux": "docker run --rm -ti -v ${PWD}:/project -v ${PWD##*/}-node-modules:/project/node_modules -v ~/.electron:/root/.electron electronuserland/electron-builder:wine /bin/bash -c \"yarn && yarn dist:linux\"",
-		"dist:mac": "build --macos",
-		"dockerdist:mac": "docker run --rm -ti -v ${PWD}:/project -v ${PWD##*/}-node-modules:/project/node_modules -v ~/.electron:/root/.electron electronuserland/electron-builder:wine /bin/bash -c \"yarn && yarn dist:mac\"",
-		"dist:win": "build --win",
-		"dockerdist:win": "docker run --rm -ti -v ${PWD}:/project -v ${PWD##*/}-node-modules:/project/node_modules -v ~/.electron:/root/.electron electronuserland/electron-builder:wine /bin/bash -c \"yarn && yarn dist:win\"",
-		"dist:all": "electron-builder --linux --win",
-		"dockerdist:all": "docker run --rm -ti -v ${PWD}:/project -v ${PWD##*/}-node-modules:/project/node_modules -v ~/.electron:/root/.electron electronuserland/electron-builder:wine /bin/bash -c \"yarn && yarn dist:all\"",
-		"patchlibusb": "cp -rf build/lib/macos/ node_modules/electron/dist/Electron.app/Contents/Frameworks/",
-		"patchlibpthread": "cp .\\build\\lib\\windows\\libwinpthread-1.dll .\\node_modules\\electron\\dist\\"
-	},
-	"postinstall": "install-app-deps",
-	"repository": "https://github.com/fermiumlabs/datalogger",
-	"keywords": [],
-	"author": {
-		"name": "Fermium LABS srl",
-		"email": "info@fermiumlabs.com",
-		"url": "https://fermiumlabs.com"
-	},
-	"license": "CC0-1.0",
-	"devDependencies": {
-		"@types/bootstrap": "^3.3.35",
-		"@types/jquery": "^3.2.11",
-		"@types/node": "^8.0.22",
-		"babel-plugin-transform-async-to-generator": "^6.24.1",
-		"babel-preset-env": "^1.6.0",
-		"babel-preset-react": "^6.23.0",
-		"electron": "1.7.8",
-		"electron-builder": "^19.19.1",
-		"electron-builder-squirrel-windows": "^19.27.3",
-		"electron-compilers": "^5.9.0",
-		"gulp": "^3.9.1",
-		"gulp-concat": "^2.6.0",
-		"gulp-typedoc": "^2.0.3",
-		"typedoc": "^0.8.0"
-	},
-	"dependencies": {
-		"@types/bootbox": "^4.4.33",
-		"@types/bootstrap-select": "^1.11.1",
-		"@types/bootstrap-switch": "^0.0.31",
-		"@types/ion.rangeslider": "^2.0.29",
-		"@types/jquery.blockui": "^0.0.28",
-		"@types/jquery.pnotify": "^3.0.35",
-		"bootbox": "^4.4.0",
-		"bootstrap": "^3.3.7",
-		"bootstrap-slider": "^9.7.2",
-		"chart.js": "^2.5.0",
-		"codemirror": "^5.25.0",
-		"d3": "^4.7.3",
-		"data-chan": "^0.3.7",
-		"dateformat": "^2.0.0",
-		"devtron": "^1.4.0",
-		"easytimer": "^1.1.1",
-		"echarts": "^3.4.0",
-		"electron-compile": "^6.4.1",
-		"electron-debug": "^1.3.0",
-		"electron-is-dev": "^0.3.0",
-		"electron-log": "^2.2.7",
-		"electron-pdf-window": "^1.0.10",
-		"electron-publisher-s3": "^19.27.3",
-		"electron-titlebar": "0.0.3",
-		"electron-updater": "^2.8.9",
-		"fs-path": "0.0.23",
-		"jquery": "^3.2.1",
-		"js-yaml": "^3.8.2",
-		"json2csv": "^3.7.3",
-		"json2xls": "^0.1.2",
-		"jsonfile": "^3.0.1",
-		"lodash": "^4.17.4",
-		"lowdb": "^1.0.0",
-		"mathjax-electron": "^2.0.1",
-		"mathjs": "^3.10.0",
-		"mousetrap": "^1.6.1",
-		"node-json-db": "^0.7.3",
-		"os": "^0.1.1",
-		"pnotify": "^3.2.1",
-		"raven": "^2.1.1",
-		"ref": "^1.3.4",
-		"ref-struct": "^1.1.0",
-		"rickshaw": "^1.6.0",
-		"riot": "^3.6.3",
-		"selectboxit": "^3.8.2"
-	},
+  "name": "Datalogger",
+  "version": "1.6.0",
+  "description": "A datalogger application",
+  "homepage": "https://fermiumlabs.com",
+  "main": "app/init.js",
+  "scripts": {
+    "start": " electron .",
+    "debug": " electron --debug=5858 .",
+    "release": "build --win",
+    "postinstall": "electron-builder install-app-deps",
+    "distpack": "build --dir",
+    "dist": "build",
+    "dist:linux": "build --linux",
+    "dockerdist:linux": "docker run --rm -ti -v ${PWD}:/project -v ${PWD##*/}-node-modules:/project/node_modules -v ~/.electron:/root/.electron electronuserland/electron-builder:wine /bin/bash -c \"yarn && yarn dist:linux\"",
+    "dist:mac": "build --macos",
+    "dockerdist:mac": "docker run --rm -ti -v ${PWD}:/project -v ${PWD##*/}-node-modules:/project/node_modules -v ~/.electron:/root/.electron electronuserland/electron-builder:wine /bin/bash -c \"yarn && yarn dist:mac\"",
+    "dist:win": "build --win",
+    "dockerdist:win": "docker run --rm -ti -v ${PWD}:/project -v ${PWD##*/}-node-modules:/project/node_modules -v ~/.electron:/root/.electron electronuserland/electron-builder:wine /bin/bash -c \"yarn && yarn dist:win\"",
+    "dist:all": "electron-builder --linux --win",
+    "dockerdist:all": "docker run --rm -ti -v ${PWD}:/project -v ${PWD##*/}-node-modules:/project/node_modules -v ~/.electron:/root/.electron electronuserland/electron-builder:wine /bin/bash -c \"yarn && yarn dist:all\"",
+    "patchlibusb": "cp -rf build/lib/macos/ node_modules/electron/dist/Electron.app/Contents/Frameworks/",
+    "patchlibpthread": "cp .\\build\\lib\\windows\\libwinpthread-1.dll .\\node_modules\\electron\\dist\\"
+  },
+  "postinstall": "install-app-deps",
+  "repository": "https://github.com/fermiumlabs/datalogger",
+  "keywords": [],
+  "author": {
+    "name": "Fermium LABS srl",
+    "email": "info@fermiumlabs.com",
+    "url": "https://fermiumlabs.com"
+  },
+  "license": "CC0-1.0",
+  "devDependencies": {
+    "@types/bootstrap": "^3.3.35",
+    "@types/jquery": "^3.2.11",
+    "@types/node": "^8.0.22",
+    "babel-plugin-transform-async-to-generator": "^6.24.1",
+    "babel-preset-env": "^1.6.0",
+    "babel-preset-react": "^6.23.0",
+    "electron": "1.7.8",
+    "electron-builder": "^19.19.1",
+    "electron-builder-squirrel-windows": "^19.27.3",
+    "electron-compilers": "^5.9.0",
+    "gulp": "^3.9.1",
+    "gulp-concat": "^2.6.0",
+    "gulp-typedoc": "^2.0.3",
+    "typedoc": "^0.8.0"
+  },
+  "dependencies": {
+    "@types/bootbox": "^4.4.33",
+    "@types/bootstrap-select": "^1.11.1",
+    "@types/bootstrap-switch": "^0.0.31",
+    "@types/ion.rangeslider": "^2.0.29",
+    "@types/jquery.blockui": "^0.0.28",
+    "@types/jquery.pnotify": "^3.0.35",
+    "bootbox": "^4.4.0",
+    "bootstrap": "^3.3.7",
+    "bootstrap-slider": "^9.7.2",
+    "chart.js": "^2.5.0",
+    "codemirror": "^5.25.0",
+    "d3": "^4.7.3",
+    "data-chan": "^0.3.7",
+    "dateformat": "^2.0.0",
+    "devtron": "^1.4.0",
+    "easytimer": "^1.1.1",
+    "echarts": "^3.4.0",
+    "electron-compile": "^6.4.1",
+    "electron-debug": "^1.3.0",
+    "electron-is-dev": "^0.3.0",
+    "electron-log": "^2.2.7",
+    "electron-pdf-window": "^1.0.10",
+    "electron-publisher-s3": "^19.27.3",
+    "electron-titlebar": "0.0.3",
+    "electron-updater": "^2.8.9",
+    "fs-path": "0.0.23",
+    "jquery": "^3.2.1",
+    "js-yaml": "^3.8.2",
+    "json2csv": "^3.7.3",
+    "json2xls": "^0.1.2",
+    "jsonfile": "^3.0.1",
+    "lodash": "^4.17.4",
+    "lowdb": "^1.0.0",
+    "mathjax-electron": "^2.0.1",
+    "mathjs": "^3.10.0",
+    "mousetrap": "^1.6.1",
+    "node-json-db": "^0.7.3",
+    "os": "^0.1.1",
+    "pnotify": "^3.2.1",
+    "raven": "^2.1.1",
+    "ref": "^1.3.4",
+    "ref-struct": "^1.1.0",
+    "rickshaw": "^1.6.0",
+    "riot": "^3.6.3",
+    "selectboxit": "^3.8.2"
+  },
 
 
-	"build": {
-		"productName": "Datalogger",
-		"artifactName": "${productName}.${ext}",
-		"asar": true,
-		"appId": "com.fermiumlabs.datalogger",
-		"asarUnpack": [
-			"./app/devices/**/**",
-			"./node_modules/data-chan/libDataChan*"
-		],
-		"mac": {
-			"category": "public.app-category.utilities",
-			"publish": {
-				"provider": "s3",
-				"bucket": "fermiumlabs-datalogger-autoupdate"
-			},
-			"extraFiles": [{
-				"from": "build/lib/macos/",
-				"to": "Frameworks",
-				"filter": [
-					"**/*.dylib"
-				]
-			}]},
-			"nsis": {
-				"oneClick": true,
-				"perMachine": true,
-				"allowElevation": true,
-				"artifactName": "${productName}-Setup.${ext}",
-				"deleteAppDataOnUninstall": true,
-				"publish": {
-					"provider": "s3",
-					"bucket": "fermiumlabs-datalogger-autoupdate"
-				}
-			},
-			"linux": {
-				"target": [
-					"rpm",
-					"deb",
-					"AppImage"
-				],
-				"desktop": {
-					"Category": "Science;"
-				},
-				"publish": {
-					"provider": "s3",
-					"bucket": "fermiumlabs-datalogger-autoupdate"
-				}
-			},
-			"deb": {
-				"depends": [
-					"libusb-1.0-0-dev"
-				]
-			},
-			"rpm": {
-				"depends": [
-					"libXScrnSaver",
-					"libusb"
-				]
-			},
-			"win": {
-				"target": [
-					"nsis",
-					"zip",
-					"squirrel"
-				],
-				"extraFiles": [{
-						"from": "build/lib/windows/",
-						"filter": [
-							"**/*.dll"
-						]
-					},
-					{
-						"from": "build/drivers/",
-						"to": "drivers",
-						"filter": [
-							"**/*.exe"
-						]
-					}
-				]
-			}
-		}
-	}
+  "build": {
+    "productName": "Datalogger",
+    "artifactName": "${productName}.${ext}",
+    "asar": true,
+    "appId": "com.fermiumlabs.datalogger",
+    "asarUnpack": [
+      "./app/devices/**/**",
+      "./node_modules/data-chan/libDataChan*"
+    ],
+    "mac": {
+      "category": "public.app-category.utilities",
+      "publish": {
+        "provider": "s3",
+        "bucket": "fermiumlabs-datalogger-autoupdate"
+      },
+      "extraFiles": [{
+        "from": "build/lib/macos/",
+        "to": "Frameworks",
+        "filter": [
+          "**/*.dylib"
+        ]
+      }]
+    },
+    "nsis": {
+      "oneClick": true,
+      "perMachine": true,
+      "allowElevation": true,
+      "artifactName": "${productName}-Setup.${ext}",
+      "deleteAppDataOnUninstall": true,
+      "publish": {
+        "provider": "s3",
+        "bucket": "fermiumlabs-datalogger-autoupdate"
+      }
+    },
+    "linux": {
+      "target": [
+        "rpm",
+        "deb",
+        "AppImage"
+      ],
+      "desktop": {
+        "Category": "Science;"
+      },
+      "publish": {
+        "provider": "s3",
+        "bucket": "fermiumlabs-datalogger-autoupdate"
+      }
+    },
+    "deb": {
+      "depends": [
+        "libusb-1.0-0-dev"
+      ]
+    },
+    "rpm": {
+      "depends": [
+        "libXScrnSaver",
+        "libusb"
+      ]
+    },
+    "win": {
+      "target": [
+        "nsis",
+        "zip",
+        "squirrel"
+      ],
+      "extraFiles": [{
+          "from": "build/lib/windows/",
+          "filter": [
+            "**/*.dll"
+          ]
+        },
+        {
+          "from": "build/drivers/",
+          "to": "drivers",
+          "filter": [
+            "**/*.exe"
+          ]
+        }
+      ]
+    }
+  }
+}
