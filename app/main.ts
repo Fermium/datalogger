@@ -59,7 +59,7 @@ function createWindow () {
   mainWindow.on('ready-to-show',()=>{
     mainWindow.show();
   })
-  
+
   // Emitted when the window is closed.
   mainWindow.on('closed', function () {
     if(logger !== undefined && logger !== null) logger.kill();
@@ -78,7 +78,7 @@ function createSelectDevice () {
   mainWindow.loadURL(`file://${__dirname}/selectdevice/index.html`);
   mainWindow.on('ready-to-show',()=>{
     mainWindow.show();
-    
+
 
   })
 
@@ -89,10 +89,10 @@ function createSelectDevice () {
     // when you should delete the corresponding element.
     mainWindow = null;
   });
-  
+
 }
 
-//this shit is long, we could move it somewhere else ? 
+//this shit is long, we could move it somewhere else ?
 function createHandbookWindow(){
   var manual = config.manual;
   handbookWindow = new PDFWindow({width: 800, height: 600,show:false});
@@ -274,7 +274,7 @@ ipcMain.on('on',(event,arg) => {
     env: {},
     stdio: ["ipc","inherit", "inherit", "inherit"]
   });
-  
+
   usb.on('message',(data)=>{
     switch(data.action){
       case 'error':
@@ -287,7 +287,7 @@ ipcMain.on('on',(event,arg) => {
        else{
          console.log(data.e);
        }
-        
+
         break;
       case 'usb-init':
         mainWindow.webContents.send('init', {});
@@ -303,7 +303,7 @@ ipcMain.on('on',(event,arg) => {
         break;
     }
   });
-  
+
 usb.on('exit',(code,n)=>{
   mainWindow.webContents.send('usb-error', {});
   console.log('usb exited with exit code', code);
@@ -374,6 +374,9 @@ ipcMain.on('export',(event,args)=>{
           mainWindow.webContents.send('exported');
           exprt.kill();
           break;
+        case 'error':
+          mainWindow.webContents.send('scidavis-error');
+          exprt.kill();
       }
     });
 });

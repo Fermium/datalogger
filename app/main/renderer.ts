@@ -116,11 +116,17 @@ $('[data-unit]').change(function(){
 $('[data-action="handbook"]').click(function() {
   ipcRenderer.send('handbook');
 });
-$('[data-export]').click(function(){
+function enableExport(){
+  $('[data-export]').click(function(){
   ipcRenderer.send('export',{ex:$(this).data('export'),math:mathsheet});
   waitingDialog.show("Exporting...",{dialogSize: 'sm'});
   $.blockUI({message:null});
 });
+}
+
+function disableExport(){
+  $('[data-export]').unbind('click');
+}
 ipcRenderer.on('exported',()=>{
   waitingDialog.hide();
   $.unblockUI();
@@ -489,6 +495,7 @@ function init(){
     /*Raven.captureException(err);
     Raven.showReportDialog();*/
   }
+  disableExport();
 }
 ipcRenderer.on('usb-init',init);
 
@@ -660,6 +667,7 @@ function rec(){
   timer.addEventListener('secondsUpdated', function(e) {
     $('#timer').html(timer.getTimeValues().toString());
   });
+  enableExport();
   $.unblockUI();
 }
 
@@ -679,6 +687,7 @@ function pause(){
     stack: pnotifyStack,
     delay: 2500
   });
+  disableExport();
 }
 function check_temp(){
   if(math.eval('abs(temp)>=65 degC',scope)){
@@ -695,6 +704,16 @@ function check_temp(){
 ipcRenderer.on('rec',(event,data)=>{
   recording=data.rec;
 });
+ipcRenderer.on('scidavis-error',(event,data)=>{
+  bootbox.confirm({
+    size: 'small',
+    title : 'Unable to find the instrument',
+    message: 'Please verify it is connected to the USB and powered on.<br>On Unix, also check for access permissions',
+    callback : function(){
+      
+    }
+  });
+    });
 /**********************************/
 
 const Menu = app.Menu;
