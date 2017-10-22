@@ -38,14 +38,23 @@ config:
     R = abs( Vr / I )
     # Magnetic field probe. The signal from a Hall sensor is amplified with a gain of about G=9.82
     # The sensor output voltage is about 0.2V/Tesla
-    B = (ch5-0.0245) V / (0.2 V / T)
+    B = (ch7-0.0245) V / (0.2 V / T)
   channels:
+    # ADS1115 Full-Scale Range and Corresponding LSB Size
+    # | FSR      | LSB SIZE  | FIRMWARE VALUE
+    # | ---      | ---       | --- 
+    # | ±6.144 V | 187.5 μV  | 6
+    # | ±4.096 V | 125 μV    | 5
+    # | ±2.048 V | 62.5 μV   | 4
+    # | ±1.024 V | 31.25 μV  | 3
+    # | ±0.512 V | 15.625 μV | 2
+    # | ±0.256 V | 7.8125 μV | 1
       - name: "ch1"
         code: 1  #unique data-chan identifier
         gain: 6  #default gain
         gainvalues: [1, 2, 3, 4, 5, 6] #mapped to a 0-N array
         gainlabels: [16, 8, 4, 2, 1, 2/3] #mapped to a 0-N array
-        description: "Voltage at the sample top and bottom ends, to measure resistance"
+        description: "Voltage at the sample top and bottom ends, to measure the sample resistance"
       - name: "ch2"
         code: 2  #unique data-chan identifier
         gain: 6  #default gain
@@ -54,28 +63,28 @@ config:
         description: "Voltage on the thermocouple, to measure the sample Temperature"
       - name: "ch3"
         code: 3  #unique data-chan identifier
-        gain: 6  #default gain
+        gain: 2  #default gain. Aassuming max 100mA on a 4ohm resistor is 100mV. Range is +-256mV
         gainvalues: [1, 2, 3, 4, 5, 6] #mapped to a 0-N array
         gainlabels: [16, 8, 4, 2, 1, 2/3] #mapped to a 0-N array
-        description: "Voltage on the 4ohm precision current-sensing resistor"
-      - name: "ch5"
-        code: 5  #unique data-chan identifier
-        gain: 6  #default gain
-        gainvalues: [1, 2, 3, 4, 5, 6] #mapped to a 0-N array
-        gainlabels: [16, 8, 4, 2, 1, 2/3] #mapped to a 0-N array
-        description: "Voltage on the gaussmeter's Hall sensor. (not the sample)"
+        description: "Voltage on the 4ohm precision current-sensing resistor of the current generator"
+      #- name: "ch5"
+      #  code: 5  #unique data-chan identifier
+      #  gain: 6  #default gain
+      #  gainvalues: [1, 2, 3, 4, 5, 6] #mapped to a 0-N array
+      #  gainlabels: [16, 8, 4, 2, 1, 2/3] #mapped to a 0-N array
+      #  description: "Not used. Reads ground"
       - name: "ch6"
         code: 6  #unique data-chan identifier
         gain: 6  #default gain
         gainvalues: [1, 2, 3, 4, 5, 6] #mapped to a 0-N array
         gainlabels: [16, 8, 4, 2, 1, 2/3] #mapped to a 0-N array
-        description: "Un-amplified Hall voltage"
+        description: "Amplified Hall voltage"
       - name: "ch7"
         code: 7  #unique data-chan identifier
-        gain: 6  #default gain
+        gain: 2  #default gain
         gainvalues: [1, 2, 3, 4, 5, 6] #mapped to a 0-N array
         gainlabels: [16, 8, 4, 2, 1, 2/3] #mapped to a 0-N array
-        description: "Amplified Hall voltage"
+        description: "Voltage on the gaussmeter's Hall sensor. (not the sample)"
 
   inputs :
       #- name: the name of the input
