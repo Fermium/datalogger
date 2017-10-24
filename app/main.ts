@@ -286,7 +286,7 @@ ipcMain.on('on',(event,arg) => {
         Raven.captureException(data.payload)
        }
        else{
-         console.log(data.e);
+         console.log(data.message);
        }
 
         break;

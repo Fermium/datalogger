@@ -39,7 +39,7 @@ function on(vid, pid) {
 
   device = datachan.datachan_device_acquire(vid, pid);
 
-
+  console.log(device.result);
   if (device.result === dc_search_results.success) {
     datachan.datachan_device_enable(device.device);
     process.send({
@@ -91,11 +91,12 @@ function is_on()
 }
 
 function read() {
-  if(datachan.datachan_device_acquire(dvid,dpid).result !== dc_search_results.cannot_claim){
+  if(datachan.datachan_device_acquire(dvid,dpid).result !== dc_search_results.cannot_claim || datachan.datachan_device_acquire(dvid,dpid).result === dc_search_results.not_found_or_inaccessible){
     dispatch_error('Device disconnected or clamed by another program',new Error('cannot_claim'));
     clearInterval(thread);
     return;
   }
+  console.log(datachan.datachan_device_acquire(dvid,dpid).result);
   var scope = {
     'time': 0,
     'ch1': 0,
