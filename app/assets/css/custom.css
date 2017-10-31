@@ -15,7 +15,13 @@
   animation-direction: alternate;
   -webkit-animation:fadeIn 1500ms infinite; /* Safari and Chrome */
 }
+@media (min-width: 1025px) {
+ .irs {
+   margin-top:40px;
+ }
+}
 
+  
 .icon-heater {
   font-size: 50px;
 }
