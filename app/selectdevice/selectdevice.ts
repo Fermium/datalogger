@@ -1,4 +1,5 @@
 /*jshint esversion: 6*/
+import * as _ from 'lodash';
 import { isDev, log } from "../util"
 import {remote} from 'electron';
 import * as fs from 'fs';
@@ -33,7 +34,7 @@ function updateList(producer){
 function appendProduct(producer,name){
   var product=jsyaml.safeLoad(fs.readFileSync(path.normalize(path.join(__dirname,'devices',producer,name,'config.yaml').replace('selectdevice','')))).product;
   $('#devices').append($('<div/>')
-    .addClass('col-lg-4 col-md-4 col-sm-4 col-xs-12')
+    .addClass('col-lg-4 col-md-4 col-sm-4 col-xs-12 product-panel')
     .append($('<div/>')
     .addClass('panel panel-default product')
     .attr({
@@ -128,13 +129,8 @@ let equalheight = function(container: string){
   }
   
   $(window).load(function() {
-    equalheight('.product');
+    equalheight('.product-panel');
     equalheight('.panel-heading');
   });
   
-  
-  $(window).resize(function(){
-    equalheight('.product');
-    equalheight('.panel-heading');
-  });
   
