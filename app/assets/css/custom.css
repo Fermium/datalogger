@@ -21,7 +21,10 @@
  }
 }
 
-  
+.navbar-inverse {
+  background-color: #284052;
+  border-color: #284052;
+}
 .icon-heater {
   font-size: 50px;
 }
