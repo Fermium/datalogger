@@ -22,7 +22,7 @@ var _ = require('lodash');
 let logger;
 let usb_on : boolean =false;
 let corr  = {a:0,b:0};
-
+let exported:boolean=true;
 if(!isDev()){
   try{
     Raven.config('https://d62ce425b8f346439bf694c9f36eae45:84b649383e3843d49d1e56561cff98b1@sentry.io/208461',{
@@ -60,7 +60,22 @@ function createWindow () {
   mainWindow.on('ready-to-show',()=>{
     mainWindow.show();
   })
-
+  mainWindow.on('close', (e) => {
+    if (!exported) {
+        e.preventDefault() // Prevents the window from closing 
+        dialog.showMessageBox({
+            type: 'question',
+            buttons: ['Yes', 'No'],
+            title: 'Confirm',
+            message: 'Data not exported. Are you sure you want to quit?'
+        }, function (response) {
+            if (response === 0) { // Runs the following if 'Yes' is clicked
+                exported = true
+                mainWindow.close()
+            }
+        })
+    }
+})
   // Emitted when the window is closed.
   mainWindow.on('closed', function () {
     if(logger !== undefined && logger !== null) logger.kill();
@@ -263,6 +278,7 @@ ipcMain.on('save-file',(event,arg)=>{
 
 ipcMain.on('start',(event,arg) => {
 if(logger!==undefined && logger !== null) logger.send({action:'start'});
+exported=false;
 mainWindow.webContents.send('started',  {'return':'a'});
 });
 
@@ -372,6 +388,7 @@ ipcMain.on('export',(event,args)=>{
     exprt.on('message',(data)=>{
       switch (data.action) {
         case 'end':
+        exported=true;
           mainWindow.webContents.send('exported',{path:data.message});
           exprt.kill();
           break;
