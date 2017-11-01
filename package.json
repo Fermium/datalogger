@@ -95,7 +95,7 @@
     "selectboxit": "^3.8.2"
   },
   "build": {
-    "productName": "Datalogger",
+    "productName": "NNG Logger",
     "artifactName": "${productName}.${ext}",
     "asar": true,
     "appId": "com.fermiumlabs.datalogger",
