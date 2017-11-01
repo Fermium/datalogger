@@ -107,13 +107,13 @@ config:
       - name: "Current correction intercept"
         function : 'intercept'
         type: "number"
-        default: 0.008019432
+        default: 0
         pretty : false
         sendtohardware : false
       - name: "Current correction slope"
         function : 'slope'
         type: "number"
-        default: 0.9397528
+        default: 1
         pretty : false
         sendtohardware : false
       - name: "Sample Current [A]"

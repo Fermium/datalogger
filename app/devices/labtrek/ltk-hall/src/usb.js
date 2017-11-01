@@ -47,6 +47,7 @@ function on(vid, pid) {
     });
     dvid=vid;
     dpid=pid;
+    reset();
     thread = setInterval(read, 200);
   }
   return (device.result === dc_search_results.success);
@@ -84,19 +85,22 @@ function send_command(command) {
     }
   }
 }
-
+function reset(){
+  send_command({id:'set_current_output',value:0});
+  send_command({id:'set_heater_state',value:0})
+}
 function is_on()
 {
   return datachan.datachan_device_is_enabled(device.device);
 }
 
 function read() {
-  if(datachan.datachan_device_acquire(dvid,dpid).result !== dc_search_results.cannot_claim || datachan.datachan_device_acquire(dvid,dpid).result === dc_search_results.not_found_or_inaccessible){
+  /*if(datachan.datachan_device_acquire(dvid,dpid).result !== dc_search_results.cannot_claim || datachan.datachan_device_acquire(dvid,dpid).result === dc_search_results.not_found_or_inaccessible){
     dispatch_error('Device disconnected or clamed by another program',new Error('cannot_claim'));
     clearInterval(thread);
     return;
-  }
-  console.log(datachan.datachan_device_acquire(dvid,dpid).result);
+  }*/
+  //console.log(datachan.datachan_device_acquire(dvid,dpid).result);
   var scope = {
     'time': 0,
     'ch1': 0,

@@ -494,7 +494,7 @@ function init(){
       scope[input.name]=input.default;
     }
     else{
-      ipcRenderer.send('send-to-hardware',{name:input.name,value:input.default});
+      ipcRenderer.send('send-to-hardware',{id:input.name,value:input.default});
     }
   });
   ui.init(inputs);

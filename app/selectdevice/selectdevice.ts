@@ -6,6 +6,49 @@ import * as fs from 'fs';
 import * as path from 'path';
 import {ipcRenderer} from 'electron';
 const jsyaml = require('js-yaml');
+let pjson = require(path.normalize(path.join('..','..','package.json')));
+const Menu = remote.Menu;
+const template = [
+  {
+    label: 'Help',
+    submenu: [
+      {
+        label: `About ${pjson.name}`,
+        click () {
+          let html = `
+            <div style="text-align:center">
+              <img src="../assets/images/fermiumlabs.svg" />
+              <p>${pjson.name} v${pjson.version}</p>
+              <p>Copyright &#9400;	 2017-2018 Fermium LABS srl. All rights reserved</p>
+              <p>Website: <a href="https://www.fermiumlabs.com" onclick="myFunction(this.href)">https://www.fermiumlabs.com</a></p>
+              <p>Technical Support: <a href="mailto:support@fermiumlabs.com" onclick="myFunction(this.href)">support@fermiumlabs.com</a></p>
+            </div>
+          `;
+          bootbox.dialog({
+            message : html,
+            title : 'About Datalogger',
+            show : true,
+            onEscape : true
+          });
+        }
+      }
+    ]
+  },
+  {
+    label: 'Debug',
+    submenu: [
+      {
+        role:'toggledevtools'
+      }
+    ]
+  }
+];
+
+
+const menu = Menu.buildFromTemplate(template);
+
+
+
 $(document).keydown(function(e) {
     // ESCAPE key pressed
     if (e.keyCode == 27) {
@@ -13,6 +56,9 @@ $(document).keydown(function(e) {
     }
 });
 $(document).ready(function(){
+  if(process.platform === 'darwin'){
+    Menu.setApplicationMenu(menu);
+  }
   var producers = getDirectories(path.normalize(path.join(__dirname,'devices').replace('selectdevice','')));
   producers.forEach(function(pr){
     updateList(pr);
@@ -34,7 +80,7 @@ function updateList(producer){
 function appendProduct(producer,name){
   var product=jsyaml.safeLoad(fs.readFileSync(path.normalize(path.join(__dirname,'devices',producer,name,'config.yaml').replace('selectdevice','')))).product;
   $('#devices').append($('<div/>')
-    .addClass('col-lg-4 col-md-4 col-sm-4 col-xs-12 product-panel')
+    .addClass('col-lg-3 col-md-4 col-sm-4 col-xs-12 product-panel')
     .append($('<div/>')
     .addClass('panel panel-default product')
     .attr({
@@ -45,12 +91,12 @@ function appendProduct(producer,name){
     'data-name':product.name.toLowerCase(),
     'data-model':product.model.toLowerCase()
   })));
- 
+
   var $mainCont = $(`#${product.model}`);
   if(!product.disabled){
     $mainCont.parent().addClass('enabled');
   }
-  $mainCont.append($('<img/>').addClass('panel-heading').attr({
+  $mainCont.append($('<img/>').addClass('panel-heading thmb').attr({
     src : 'file://'+path.normalize(path.join(__dirname,'devices',producer,name,product.image).replace('selectdevice','')),
     alt : product.name
   }));
@@ -98,18 +144,18 @@ $('#search').change(function(){
 
 
 let equalheight = function(container: string){
-  
+
   var currentTallest = 0,
        currentRowStart = 0,
        rowDivs = new Array(),
        $el,
        topPosition = 0;
    $(container).each(function() {
-  
+
      $el = $(this);
      $($el).height('auto')
      let topPostion = $el.position().top;
-  
+
      if (currentRowStart != topPostion) {
        for (let currentDiv = 0 ; currentDiv < rowDivs.length ; currentDiv++) {
          rowDivs[currentDiv].height(currentTallest);
@@ -127,10 +173,8 @@ let equalheight = function(container: string){
      }
    });
   }
-  
+
   $(window).load(function() {
     equalheight('.product-panel');
     equalheight('.panel-heading');
   });
-  
-  
