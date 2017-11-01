@@ -34,7 +34,7 @@ function updateList(producer){
 function appendProduct(producer,name){
   var product=jsyaml.safeLoad(fs.readFileSync(path.normalize(path.join(__dirname,'devices',producer,name,'config.yaml').replace('selectdevice','')))).product;
   $('#devices').append($('<div/>')
-    .addClass('col-lg-4 col-md-4 col-sm-4 col-xs-12 product-panel')
+    .addClass('col-lg-3 col-md-4 col-sm-4 col-xs-12 product-panel')
     .append($('<div/>')
     .addClass('panel panel-default product')
     .attr({
@@ -45,12 +45,12 @@ function appendProduct(producer,name){
     'data-name':product.name.toLowerCase(),
     'data-model':product.model.toLowerCase()
   })));
- 
+
   var $mainCont = $(`#${product.model}`);
   if(!product.disabled){
     $mainCont.parent().addClass('enabled');
   }
-  $mainCont.append($('<img/>').addClass('panel-heading').attr({
+  $mainCont.append($('<img/>').addClass('panel-heading thmb').attr({
     src : 'file://'+path.normalize(path.join(__dirname,'devices',producer,name,product.image).replace('selectdevice','')),
     alt : product.name
   }));
@@ -98,18 +98,18 @@ $('#search').change(function(){
 
 
 let equalheight = function(container: string){
-  
+
   var currentTallest = 0,
        currentRowStart = 0,
        rowDivs = new Array(),
        $el,
        topPosition = 0;
    $(container).each(function() {
-  
+
      $el = $(this);
      $($el).height('auto')
      let topPostion = $el.position().top;
-  
+
      if (currentRowStart != topPostion) {
        for (let currentDiv = 0 ; currentDiv < rowDivs.length ; currentDiv++) {
          rowDivs[currentDiv].height(currentTallest);
@@ -127,10 +127,8 @@ let equalheight = function(container: string){
      }
    });
   }
-  
+
   $(window).load(function() {
     equalheight('.product-panel');
     equalheight('.panel-heading');
   });
-  
-  

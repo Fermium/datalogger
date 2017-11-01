@@ -56,6 +56,7 @@ function createWindow () {
 
   // and load the index.html of the app.
   mainWindow.loadURL(`file://${__dirname}/main/index.html`);
+  mainWindow.setResizable(true);
   mainWindow.on('ready-to-show',()=>{
     mainWindow.show();
   })
@@ -76,6 +77,7 @@ function createSelectDevice () {
   // and load the index.html of the app.
 
   mainWindow.loadURL(`file://${__dirname}/selectdevice/index.html`);
+  mainWindow.setResizable(false);
   mainWindow.on('ready-to-show',()=>{
     mainWindow.show();
 

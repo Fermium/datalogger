@@ -2,9 +2,14 @@
 @-moz-keyframes fadeIn { from { opacity:0.3; } to { opacity:1; } }
 @keyframes fadeIn { from { opacity:0.3; } to { opacity:1; } }
 
+.thmb{
 
-::-webkit-scrollbar { 
-  display: none; 
+  width: 100%;
+  height: auto;
+}
+
+::-webkit-scrollbar {
+  display: none;
   }
 .hot {
   color : rgb(255,14,14) !important;
