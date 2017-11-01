@@ -493,9 +493,6 @@ function init(){
     if(!input.sendtohardware){
       scope[input.name]=input.default;
     }
-    else{
-      ipcRenderer.send('send-to-hardware',{id:input.name,value:input.default});
-    }
   });
   ui.init(inputs);
   ui.handler.on('input-change',inputhandler);
