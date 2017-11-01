@@ -6,6 +6,49 @@ import * as fs from 'fs';
 import * as path from 'path';
 import {ipcRenderer} from 'electron';
 const jsyaml = require('js-yaml');
+let pjson = require(path.normalize(path.join('..','..','package.json')));
+const Menu = remote.Menu;
+const template = [
+  {
+    label: 'Help',
+    submenu: [
+      {
+        label: `About ${pjson.name}`,
+        click () {
+          let html = `
+            <div style="text-align:center">
+              <img src="../assets/images/fermiumlabs.svg" />
+              <p>${pjson.name} v${pjson.version}</p>
+              <p>Copyright &#9400;	 2017-2018 Fermium LABS srl. All rights reserved</p>
+              <p>Website: <a href="https://www.fermiumlabs.com" onclick="myFunction(this.href)">https://www.fermiumlabs.com</a></p>
+              <p>Technical Support: <a href="mailto:support@fermiumlabs.com" onclick="myFunction(this.href)">support@fermiumlabs.com</a></p>
+            </div>
+          `;
+          bootbox.dialog({
+            message : html,
+            title : 'About Datalogger',
+            show : true,
+            onEscape : true
+          });
+        }
+      }
+    ]
+  },
+  {
+    label: 'Debug',
+    submenu: [
+      {
+        role:'toggledevtools'
+      }
+    ]
+  }
+];
+
+
+const menu = Menu.buildFromTemplate(template);
+
+
+
 $(document).keydown(function(e) {
     // ESCAPE key pressed
     if (e.keyCode == 27) {
@@ -13,6 +56,9 @@ $(document).keydown(function(e) {
     }
 });
 $(document).ready(function(){
+  if(process.platform === 'darwin'){
+    Menu.setApplicationMenu(menu);
+  }
   var producers = getDirectories(path.normalize(path.join(__dirname,'devices').replace('selectdevice','')));
   producers.forEach(function(pr){
     updateList(pr);
