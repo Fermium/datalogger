@@ -12,7 +12,7 @@ function dispatch_error(message, e) {
 var datachan = require('data-chan').lib;
 var dc_search_results = require('data-chan').search_enum;
 var MAX_MEASURE_NUM = require('data-chan').MAX_MEASURE_NUM;
-
+var err=0;
 var dvid;
 var dpid;
 var ref = require('ref');
@@ -114,16 +114,18 @@ function read() {
   };
 
   var measure = new Buffer(52);
-
   if (datachan.datachan_device_is_enabled(device.device)) {
     meas_index = datachan.datachan_device_enqueued_measures(device.device);
-
     if (meas_index === 0) {
-      //dispatch_error('No measure available to read', e)
+      err++;
+    }
+    console.log(err);
+    if(err>10){
+      dispatch_error('Device disconnected or clamed by another program',new Error('cannot_claim'));
       return;
     }
-
     while (meas_index > 0 || meas_index < 0) {
+      err=0;
       try {
         mes = datachan.datachan_device_dequeue_measure(device.device);
         mes.type = measure_t;
