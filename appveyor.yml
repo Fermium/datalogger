@@ -17,5 +17,5 @@ test_script:
   - yarn --version
 
 # Don't actually build.
-build:
+build_script:
   - yarn dist:win
