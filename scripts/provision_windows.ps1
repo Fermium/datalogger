@@ -40,3 +40,7 @@ refreshenv
 
 # git (required to publish to amazon s3)
 cinst -y git.install
+
+# Confirure node-gyp
+npm install -g node-gyp
+npm config set msvs_version 2015
