@@ -98,7 +98,7 @@
     "productName": "NNG Logger",
     "artifactName": "${productName}.${ext}",
     "asar": true,
-    "appId": "com.fermiumlabs.datalogger",
+    "appId": "com.fermiumlabs.nnglogger",
     "asarUnpack": [
       "./node_modules/data-chan/libDataChan*"
     ],
@@ -106,7 +106,8 @@
       "category": "public.app-category.utilities",
       "publish": {
         "provider": "s3",
-        "bucket": "fermiumlabs-datalogger-autoupdate"
+        "path": "nng-logger/",
+        "bucket": "fermiumlabs-software"
       },
       "extraFiles": [
         {
@@ -126,7 +127,8 @@
       "deleteAppDataOnUninstall": true,
       "publish": {
         "provider": "s3",
-        "bucket": "fermiumlabs-datalogger-autoupdate"
+        "path": "nng-logger/",
+        "bucket": "fermiumlabs-software"
       }
     },
     "linux": {
@@ -140,7 +142,8 @@
       },
       "publish": {
         "provider": "s3",
-        "bucket": "fermiumlabs-datalogger-autoupdate"
+        "path": "nng-logger/",
+        "bucket": "fermiumlabs-software"
       }
     },
     "deb": {
