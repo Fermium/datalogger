@@ -7,7 +7,7 @@
   "scripts": {
     "start": " electron .",
     "debug": " electron --debug=5858 .",
-    "release": "build --win",
+    "release": "build",
     "postinstall": "electron-builder install-app-deps",
     "distpack": "build --dir",
     "dist": "build",
@@ -45,7 +45,7 @@
     "gulp": "^3.9.1",
     "gulp-concat": "^2.6.0",
     "gulp-typedoc": "^2.0.3",
-    "typedoc": "^0.8.0"
+    "typedoc": "^0.9.0"
   },
   "dependencies": {
     "@types/bootbox": "^4.4.33",
@@ -106,7 +106,7 @@
       "category": "public.app-category.utilities",
       "publish": {
         "provider": "s3",
-        "path": "nng-logger/",
+        "path": "nng-logger",
         "bucket": "fermiumlabs-software"
       },
       "extraFiles": [
@@ -127,7 +127,7 @@
       "deleteAppDataOnUninstall": true,
       "publish": {
         "provider": "s3",
-        "path": "nng-logger/",
+        "path": "nng-logger",
         "bucket": "fermiumlabs-software"
       }
     },
@@ -137,12 +137,10 @@
         "deb",
         "AppImage"
       ],
-      "desktop": {
-        "Category": "Science;"
-      },
+      "category": "Science",
       "publish": {
         "provider": "s3",
-        "path": "nng-logger/",
+        "path": "nng-logger",
         "bucket": "fermiumlabs-software"
       }
     },
@@ -162,6 +160,7 @@
         "nsis",
         "zip"
       ],
+      "publisherName": "Fermium LABS srl",
       "extraFiles": [
         {
           "from": "build/lib/windows/",
