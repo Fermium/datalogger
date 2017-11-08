@@ -124,7 +124,7 @@ Vagrant.configure(2) do |config|
       v.customize ['modifyvm', :id, '--clipboard', 'bidirectional']
       v.customize ['setextradata', 'global', 'GUI/MaxGuestResolution', 'any']
       v.customize ['setextradata', :id, 'CustomVideoMode1', '2048x768x32']
-      v.customize ["modifyvm", :id, "--accelerate3d", "off"]
+      #v.customize ["modifyvm", :id, "--accelerate3d", "on"]
     end
 
     windows.vm.provision :shell, path: 'scripts/provision_windows.ps1'

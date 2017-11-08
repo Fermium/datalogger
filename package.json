@@ -7,7 +7,7 @@
   "scripts": {
     "start": " electron .",
     "debug": " electron --debug=5858 .",
-    "release": "build --win",
+    "release": "build",
     "postinstall": "electron-builder install-app-deps",
     "distpack": "build --dir",
     "dist": "build",
@@ -39,13 +39,13 @@
     "babel-preset-env": "^1.6.0",
     "babel-preset-react": "^6.23.0",
     "electron": "1.7.8",
-    "electron-builder": "19.19.1",
-    "electron-builder-squirrel-windows": "^19.27.3",
+    "electron-builder": "19.30",
+    "electron-publisher-s3": "19.30",
     "electron-compilers": "^5.9.0",
     "gulp": "^3.9.1",
     "gulp-concat": "^2.6.0",
     "gulp-typedoc": "^2.0.3",
-    "typedoc": "^0.8.0"
+    "typedoc": "^0.9.0"
   },
   "dependencies": {
     "@types/bootbox": "^4.4.33",
@@ -70,9 +70,8 @@
     "electron-is-dev": "^0.3.0",
     "electron-log": "^2.2.7",
     "electron-pdf-window": "^1.0.10",
-    "electron-publisher-s3": "^19.27.3",
     "electron-titlebar": "0.0.3",
-    "electron-updater": "^2.8.9",
+    "electron-updater": "^2.16.2",
     "fs-path": "0.0.23",
     "jquery": "^3.2.1",
     "js-yaml": "^3.8.2",
@@ -98,7 +97,7 @@
     "productName": "NNG Logger",
     "artifactName": "${productName}.${ext}",
     "asar": true,
-    "appId": "com.fermiumlabs.datalogger",
+    "appId": "com.fermiumlabs.nnglogger",
     "asarUnpack": [
       "./node_modules/data-chan/libDataChan*"
     ],
@@ -106,7 +105,8 @@
       "category": "public.app-category.utilities",
       "publish": {
         "provider": "s3",
-        "bucket": "fermiumlabs-datalogger-autoupdate"
+        "path": "nng-logger",
+        "bucket": "fermiumlabs-software"
       },
       "extraFiles": [
         {
@@ -126,7 +126,8 @@
       "deleteAppDataOnUninstall": true,
       "publish": {
         "provider": "s3",
-        "bucket": "fermiumlabs-datalogger-autoupdate"
+        "path": "nng-logger",
+        "bucket": "fermiumlabs-software"
       }
     },
     "linux": {
@@ -135,12 +136,11 @@
         "deb",
         "AppImage"
       ],
-      "desktop": {
-        "Category": "Science;"
-      },
+      "category": "Science",
       "publish": {
         "provider": "s3",
-        "bucket": "fermiumlabs-datalogger-autoupdate"
+        "path": "nng-logger",
+        "bucket": "fermiumlabs-software"
       }
     },
     "deb": {
@@ -159,6 +159,7 @@
         "nsis",
         "zip"
       ],
+      "publisherName": "Fermium LABS srl",
       "extraFiles": [
         {
           "from": "build/lib/windows/",

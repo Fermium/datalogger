@@ -1,7 +1,5 @@
 osx_image: xcode8.3
-
 dist: trusty
-
 sudo: required
 
 services:
@@ -9,6 +7,7 @@ services:
 
 language: node_js
 node_js: '6'
+
 os:
 - linux
 - osx
@@ -17,32 +16,25 @@ env:
   global:
   - ELECTRON_CACHE=$HOME/.cache/electron
   - ELECTRON_BUILDER_CACHE=$HOME/.cache/electron-builder
-
+  
 cache:
   directories:
   - "$HOME/.yarn-cache"
-
-
+  
 before_install:
-- if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then sudo apt-key adv --keyserver pgp.mit.edu  --recv D101F7899D41F3C3; fi
-- if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then echo "deb http://dl.yarnpkg.com/debian/  stable main" | sudo tee /etc/apt/sources.list.d/yarn.list; fi
+- openssl aes-256-cbc -K $encrypted_33866e2c6dd4_key -iv $encrypted_33866e2c6dd4_iv -in build/certs/apple.p12.enc -out build/certs/apple.p12 -d
+- if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then sudo apt-key adv --keyserver pgp.mit.edu --recv D101F7899D41F3C3; fi
+- if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then echo "deb http://dl.yarnpkg.com/debian/ stable main" | sudo tee /etc/apt/sources.list.d/yarn.list; fi
 - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then sudo apt-get update -qq; fi
 - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then sudo apt-get install -y -qq yarn; fi
 - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then docker pull electronuserland/electron-builder:wine; fi
-- if [[ "$TRAVIS_OS_NAME" == "osx"  ]]; then brew install --ignore-dependencies yarn; fi
-
+- if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then brew install --ignore-dependencies yarn; fi
 install:
-- if [[ "$TRAVIS_OS_NAME" == "osx"   ]]; then yarn install; fi
-
+- if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then yarn install; fi
 script:
-- if [[ "$TRAVIS_OS_NAME" == "linux"   ]]; then docker run --rm -ti -e AWS_ACCESS_KEY_ID=$AWS_ACCESS_KEY_ID -e AWS_SECRET_ACCESS_KEY=$AWS_SECRET_ACCESS_KEY --env-file <(env | grep TRAVIS) -v ${PWD}:/project -v ${PWD##*/}-node-modules:/project/node_modules -v ~/.electron:/root/.electron electronuserland/electron-builder:wine /bin/bash -c "yarn && yarn dist:linux"; fi
-- if [[ "$TRAVIS_OS_NAME" == "linux"   ]]; then docker run --rm -ti -e AWS_ACCESS_KEY_ID=$AWS_ACCESS_KEY_ID -e AWS_SECRET_ACCESS_KEY=$AWS_SECRET_ACCESS_KEY --env-file <(env | grep TRAVIS) -v ${PWD}:/project -v ${PWD##*/}-node-modules:/project/node_modules -v ~/.electron:/root/.electron electronuserland/electron-builder:wine /bin/bash -c "yarn && yarn dist:win"; fi
-- if [[ "$TRAVIS_OS_NAME" == "osx"   ]]; then yarn dist:mac; fi
-
-
+- if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then docker run --rm -ti -e AWS_ACCESS_KEY_ID=$AWS_ACCESS_KEY_ID -e AWS_SECRET_ACCESS_KEY=$AWS_SECRET_ACCESS_KEY --env-file <(env | grep TRAVIS) -v ${PWD}:/project -v ${PWD##*/}-node-modules:/project/node_modules -v ~/.electron:/root/.electron electronuserland/electron-builder:wine /bin/bash -c "yarn && yarn dist:linux"; fi
+- if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then yarn dist:mac; fi
 before_cache:
 - rm -rf $HOME/.cache/electron-builder/wine
-
-
 notifications:
   email: false

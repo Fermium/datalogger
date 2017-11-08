@@ -41,7 +41,6 @@ data
 out
 .cache
 dist
-yarn.*
 
 # Vagrant
 .vagrant
@@ -49,3 +48,7 @@ yarn.*
 _docs/
 
 !build
+
+#certs
+*.pfx
+*.p12
