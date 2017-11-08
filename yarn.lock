@@ -14,7 +14,7 @@
   version "2.1.1"
   resolved "https://registry.yarnpkg.com/7zip-bin-win/-/7zip-bin-win-2.1.1.tgz#8acfc28bb34e53a9476b46ae85a97418e6035c20"
 
-"7zip-bin@^2.2.7":
+"7zip-bin@^2.1.0", "7zip-bin@^2.2.7":
   version "2.2.7"
   resolved "https://registry.yarnpkg.com/7zip-bin/-/7zip-bin-2.2.7.tgz#724802b8d6bda0bf2cfe61a4b86a820efc8ece93"
   optionalDependencies:
@@ -379,7 +379,7 @@ autoprefixer@^6.3.1:
     postcss "^5.2.16"
     postcss-value-parser "^3.2.3"
 
-aws-sdk@^2.135.0:
+aws-sdk@^2.94.0:
   version "2.147.0"
   resolved "https://registry.yarnpkg.com/aws-sdk/-/aws-sdk-2.147.0.tgz#a0d168ad1f8fd5d15ee9bb537fdddfdf63a205c1"
   dependencies:
@@ -986,7 +986,7 @@ block-stream@*:
   dependencies:
     inherits "~2.0.0"
 
-bluebird-lst@^1.0.3, bluebird-lst@^1.0.4, bluebird-lst@^1.0.5:
+bluebird-lst@^1.0.2, bluebird-lst@^1.0.3, bluebird-lst@^1.0.4, bluebird-lst@^1.0.5:
   version "1.0.5"
   resolved "https://registry.yarnpkg.com/bluebird-lst/-/bluebird-lst-1.0.5.tgz#bebc83026b7e92a72871a3dc599e219cbfb002a9"
   dependencies:
@@ -1096,7 +1096,7 @@ builder-util-runtime@2.2.0:
     fs-extra-p "^4.4.4"
     sax "^1.2.4"
 
-builder-util-runtime@^2.0.1, builder-util-runtime@^2.2.0, builder-util-runtime@^2.3.0:
+builder-util-runtime@^2.0.1, builder-util-runtime@^2.2.0:
   version "2.5.0"
   resolved "https://registry.yarnpkg.com/builder-util-runtime/-/builder-util-runtime-2.5.0.tgz#22373d4faab8d89e0b077630aef76538deb38476"
   dependencies:
@@ -1135,7 +1135,7 @@ builder-util@3.0.12:
     temp-file "^2.0.3"
     tunnel-agent "^0.6.0"
 
-builder-util@^3.0.12, builder-util@^3.0.13:
+builder-util@^3.0.12:
   version "3.2.2"
   resolved "https://registry.yarnpkg.com/builder-util/-/builder-util-3.2.2.tgz#9660f74f168f6d4e175ca3c25c8e0d0ed7ff965c"
   dependencies:
@@ -1214,14 +1214,6 @@ center-align@^0.1.1:
   dependencies:
     align-text "^0.1.3"
     lazy-cache "^1.0.3"
-
-chalk@2.1.0:
-  version "2.1.0"
-  resolved "https://registry.yarnpkg.com/chalk/-/chalk-2.1.0.tgz#ac5becf14fa21b99c6c92ca7a7d7cfd5b17e743e"
-  dependencies:
-    ansi-styles "^3.1.0"
-    escape-string-regexp "^1.0.5"
-    supports-color "^4.0.0"
 
 chalk@^1.0.0, chalk@^1.1.1, chalk@^1.1.3:
   version "1.1.3"
@@ -1939,10 +1931,6 @@ dateformat@^2.0.0:
   version "2.2.0"
   resolved "https://registry.yarnpkg.com/dateformat/-/dateformat-2.2.0.tgz#4065e2013cf9fb916ddfd82efb506ad4c6769062"
 
-dateformat@^3.0.2:
-  version "3.0.2"
-  resolved "https://registry.yarnpkg.com/dateformat/-/dateformat-3.0.2.tgz#9a4df4bff158ac2f34bc637abdb15471607e1659"
-
 de-indent@^1.0.2:
   version "1.0.2"
   resolved "https://registry.yarnpkg.com/de-indent/-/de-indent-1.0.2.tgz#b2038e846dc33baa5796128d0804b455b8c1e21d"
@@ -2164,6 +2152,33 @@ ejs@^2.5.7:
   version "2.5.7"
   resolved "https://registry.yarnpkg.com/ejs/-/ejs-2.5.7.tgz#cc872c168880ae3c7189762fd5ffc00896c9518a"
 
+electron-builder-http@~19.19.0:
+  version "19.19.0"
+  resolved "https://registry.yarnpkg.com/electron-builder-http/-/electron-builder-http-19.19.0.tgz#20f908fcd1bbe202fd44a9623abd9e4d7bc98825"
+  dependencies:
+    bluebird-lst "^1.0.2"
+    debug "^2.6.8"
+    fs-extra-p "^4.4.0"
+
+electron-builder-util@~19.19.0:
+  version "19.19.0"
+  resolved "https://registry.yarnpkg.com/electron-builder-util/-/electron-builder-util-19.19.0.tgz#96082aff13bfda8f40a62739f10718c9c42f6d4c"
+  dependencies:
+    "7zip-bin" "^2.1.0"
+    bluebird-lst "^1.0.2"
+    chalk "^2.0.1"
+    debug "^2.6.8"
+    electron-builder-http "~19.19.0"
+    fcopy-pre-bundled "0.3.4"
+    fs-extra-p "^4.4.0"
+    ini "^1.3.4"
+    is-ci "^1.0.10"
+    node-emoji "^1.8.1"
+    semver "^5.4.1"
+    source-map-support "^0.4.15"
+    stat-mode "^0.2.2"
+    tunnel-agent "^0.6.0"
+
 electron-builder@19.38:
   version "19.38.0"
   resolved "https://registry.yarnpkg.com/electron-builder/-/electron-builder-19.38.0.tgz#5af22e566116aaf6120d7c552ca9af6a36969150"
@@ -2339,27 +2354,27 @@ electron-publish@19.37.0:
     fs-extra-p "^4.4.4"
     mime "^2.0.3"
 
-electron-publish@~19.39.0:
-  version "19.39.0"
-  resolved "https://registry.yarnpkg.com/electron-publish/-/electron-publish-19.39.0.tgz#e355a375d0fbd462256931424f5d338d9bcdf07a"
+electron-publish@~19.19.0:
+  version "19.19.1"
+  resolved "https://registry.yarnpkg.com/electron-publish/-/electron-publish-19.19.1.tgz#ae53ccf9a90f77184c2add3d74b8b60850378b76"
   dependencies:
-    bluebird-lst "^1.0.5"
-    builder-util "^3.0.13"
-    builder-util-runtime "^2.3.0"
-    chalk "2.1.0"
-    fs-extra-p "^4.4.4"
-    mime "^2.0.3"
+    bluebird-lst "^1.0.2"
+    chalk "^2.0.1"
+    electron-builder-http "~19.19.0"
+    electron-builder-util "~19.19.0"
+    fs-extra-p "^4.4.0"
+    mime "^1.3.6"
 
-electron-publisher-s3@^19.39.0:
-  version "19.39.0"
-  resolved "https://registry.yarnpkg.com/electron-publisher-s3/-/electron-publisher-s3-19.39.0.tgz#66eaf3a60244ed4eb0503881d54308c37b037f5d"
+electron-publisher-s3@19.19.0:
+  version "19.19.0"
+  resolved "https://registry.yarnpkg.com/electron-publisher-s3/-/electron-publisher-s3-19.19.0.tgz#b1bc1c97a04b7dc74117883410ad91e0a439d695"
   dependencies:
-    aws-sdk "^2.135.0"
-    bluebird-lst "^1.0.4"
-    builder-util "^3.0.13"
-    electron-publish "~19.39.0"
-    fs-extra-p "^4.4.4"
-    mime "^2.0.3"
+    aws-sdk "^2.94.0"
+    bluebird-lst "^1.0.2"
+    electron-builder-util "~19.19.0"
+    electron-publish "~19.19.0"
+    fs-extra-p "^4.4.0"
+    mime "^1.3.6"
 
 electron-titlebar@0.0.3:
   version "0.0.3"
@@ -2383,9 +2398,9 @@ electron-updater@^2.16.1:
     semver "^5.4.1"
     source-map-support "^0.5.0"
 
-electron@1.7.9:
-  version "1.7.9"
-  resolved "https://registry.yarnpkg.com/electron/-/electron-1.7.9.tgz#add54e9f8f83ed02f6519ec10135f698b19336cf"
+electron@1.7.8:
+  version "1.7.8"
+  resolved "https://registry.yarnpkg.com/electron/-/electron-1.7.8.tgz#27b791a6895171a7d52991b99442cdbd10a3539d"
   dependencies:
     "@types/node" "^7.0.18"
     electron-download "^3.0.1"
@@ -2622,6 +2637,10 @@ fast-json-stable-stringify@^2.0.0:
 fast-levenshtein@~2.0.4:
   version "2.0.6"
   resolved "https://registry.yarnpkg.com/fast-levenshtein/-/fast-levenshtein-2.0.6.tgz#3d8a5c66883a16a30ca8643e851f19baa7797917"
+
+fcopy-pre-bundled@0.3.4:
+  version "0.3.4"
+  resolved "https://registry.yarnpkg.com/fcopy-pre-bundled/-/fcopy-pre-bundled-0.3.4.tgz#7ff1a1c339e877baa86b0856bebb33621cd5620b"
 
 fd-slicer@~1.0.1:
   version "1.0.1"
@@ -3777,6 +3796,12 @@ jsonfile@^2.1.0:
   optionalDependencies:
     graceful-fs "^4.1.6"
 
+jsonfile@^3.0.1:
+  version "3.0.1"
+  resolved "https://registry.yarnpkg.com/jsonfile/-/jsonfile-3.0.1.tgz#a5ecc6f65f53f662c4415c7675a0331d0992ec66"
+  optionalDependencies:
+    graceful-fs "^4.1.6"
+
 jsonfile@^4.0.0:
   version "4.0.0"
   resolved "https://registry.yarnpkg.com/jsonfile/-/jsonfile-4.0.0.tgz#8771aae0799b64076b76640fca058f9c10e33ecb"
@@ -4206,7 +4231,7 @@ mime-types@^2.1.12, mime-types@~2.1.17, mime-types@~2.1.7:
   dependencies:
     mime-db "~1.30.0"
 
-mime@^1.2.11:
+mime@^1.2.11, mime@^1.3.6:
   version "1.4.1"
   resolved "https://registry.yarnpkg.com/mime/-/mime-1.4.1.tgz#121f9ebc49e3766f311a76e1fa1c8003c4b03aa6"
 
