@@ -36,7 +36,6 @@ install:
 
 script:
 - if [[ "$TRAVIS_OS_NAME" == "linux"   ]]; then docker run --rm -ti -e AWS_ACCESS_KEY_ID=$AWS_ACCESS_KEY_ID -e AWS_SECRET_ACCESS_KEY=$AWS_SECRET_ACCESS_KEY --env-file <(env | grep TRAVIS) -v ${PWD}:/project -v ${PWD##*/}-node-modules:/project/node_modules -v ~/.electron:/root/.electron electronuserland/electron-builder:wine /bin/bash -c "yarn && yarn dist:linux"; fi
-- if [[ "$TRAVIS_OS_NAME" == "linux"   ]]; then docker run --rm -ti -e AWS_ACCESS_KEY_ID=$AWS_ACCESS_KEY_ID -e AWS_SECRET_ACCESS_KEY=$AWS_SECRET_ACCESS_KEY --env-file <(env | grep TRAVIS) -v ${PWD}:/project -v ${PWD##*/}-node-modules:/project/node_modules -v ~/.electron:/root/.electron electronuserland/electron-builder:wine /bin/bash -c "yarn && yarn dist:win"; fi
 - if [[ "$TRAVIS_OS_NAME" == "osx"   ]]; then yarn dist:mac; fi
 
 
