@@ -52,3 +52,16 @@ _docs/
 #certs
 *.pfx
 *.p12
+
+app/*.js
+app/*.map
+app/gulpfile.js
+app/main/*.js
+app/main/*.map
+app/selectdevice/*.js
+app/selectdevice/*.map
+app/plot/*.js
+app/plot/*.map
+app/devices/*/*/src/*.js
+app/devices/*/*/src/*.map
+!app/devices/*/*/src/usb.js

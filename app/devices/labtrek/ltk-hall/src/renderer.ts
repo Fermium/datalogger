@@ -110,7 +110,7 @@ module.exports = {
       $(this).change(_.debounce(function(){
           let _value= $(this).val();
           if($(this).data('function')==='set_current_output'){
-            _value = parseFloat($('#input-intercept').val())+parseFloat(_value)*parseFloat($('#input-slope').val());
+            _value = parseFloat((<any>$('#input-intercept').val()))+parseFloat(<any>_value)*parseFloat(<any>$('#input-slope').val());
           }
           handler.emit('input-change',{id:$(this).data('function'),value:_value,hardware:$(this).data('hardware')});
       },1000));

@@ -174,7 +174,7 @@ let equalheight = function(container: string){
    });
   }
 
-  $(window).load(function() {
+  $(window).on('load',function() {
     equalheight('.product-panel');
     equalheight('.panel-heading');
   });
