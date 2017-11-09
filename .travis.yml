@@ -49,4 +49,5 @@ deploy:
   skip_cleanup: true
   local_dir: dist
   upload-dir: nng-logger/$TRAVIS_COMMIT/
-  all_branches: true
+  on:
+    all_branches: true
