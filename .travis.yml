@@ -44,6 +44,8 @@ notifications:
   email: false
   slack:
     secure: X431PD8pKZ1xMXOwit6yd0k7vc3vX20nAQtvHs7oE7sWVsP0oneyaZA0WpoYCAhi37sJGtg8gnjyEQv3MVvsixwcHON09cqdWCp8p/36hoY2Ud+YNHBCOVL9/TIlYEnGAQRjJEfnQBpN/TP6wIdOLJ0ZBROJPmqpaFtBfqfs6zybUeP64DKhY2KWt44Ak/NqfpaCC7DmC/gLj9Ayh1QCUW0SKCsVtrsTvRUzEotMThzp6brTX3osXaKc9HYTk+zRPH594o8LpG21Pz+rkIx0XQGApjftTqAL91/x3DywPZ3d/vwMHNzCZryX1Ljrs208XjY/bCrdpY1V99xdDC7tk1fFmUGVLYhYX4L7W2upIKq4KRRZn3vyRtlPmYsD6H3iBW4mlUEpn08X6eF4o/bT7yODE7S5TwhjwPV3Qj1CnlEe11rlOv4SMIZihsxqJC1oHD9z+030lPX0nZ7oirWhHWYMiy/gcmYoWcrCAstTNoyODVuD00+nEw+1KmCKR2WuUdkCY9H4wY1wOyTAuEsTDIdk+QVL61qh1L8ZezpIWd2rEAA4S4MeGGhVX9Oa8GdbhVte5k0JYO2Pu4O6kHjTFoDLuj/o9he8eOJUxWVJ1JR+NcWgj5zz4i57MZangveUE17ug47o8jS32LlpCvrJIs69Vb/VHGqUqlZsUJFS9pA=
+
+before_deploy: rm -rf dist/mac/ && rm -rf dist/linux-unpacked/
 deploy:
   provider: s3
   access_key_id: "$AWS_ACCESS_KEY_ID"
