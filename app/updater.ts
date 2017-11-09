@@ -1,5 +1,5 @@
 import { BrowserWindow as BrowserWindowElectron, dialog } from "electron";
-import { autoUpdater } from "electron-updater";
+let autoUpdater = require('electron-updater').autoUpdater;
 import * as os from "os";
 import { log, isDev } from "./util";
 
@@ -11,6 +11,11 @@ export default class AppUpdater {
       log("dev mode, skipping Update check")
       return
     }
+    autoUpdater.setFeedURL({
+      "provider": "s3",
+      "path": "nng-logger",
+      "bucket": "fermiumlabs-software"
+    });
     autoUpdater.autoDownload = false
     autoUpdater.on('checking-for-update', () => {
       log('Checking for update...');
@@ -42,7 +47,7 @@ export default class AppUpdater {
 
     autoUpdater.on('error', (err) => {
       log('Error in auto-updater.', err);
-      if (!isDev) {
+      if (!isDev()) {
         //Raven.captureException(err)
       }
     })

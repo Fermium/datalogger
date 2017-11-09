@@ -150,7 +150,7 @@ $('[data-action="save-file"]').click(function(){
   if(pp!==undefined){
     ipcRenderer.send('save-file',{'path' : pp});
     if($("[name='start-stop']").prop("disabled") && $("[name='on-off']").bootstrapSwitch('state')){
-      menu.items[1].submenu.items[1].enabled=true;
+      (<any>menu.items[1]).submenu.items[1].enabled=true;
       $("[name='start-stop']").bootstrapSwitch('toggleDisabled');
     }
   }
@@ -596,7 +596,7 @@ ipcRenderer.on('on',(event,args)=>{
         $('#date').text(' - ' + session._date);
         if(recording && $("[name='start-stop']").prop("disabled")){
           $("[name='start-stop']").bootstrapSwitch('toggleDisabled');
-          menu.items[1].submenu.items[1].enabled=true;
+          (<any>menu.items[1]).submenu.items[1].enabled=true;
         }
       }
     });
@@ -638,7 +638,7 @@ function off(){
   $("[name='start-stop']").bootstrapSwitch('disabled',true);
   $('#experiment').text('Unnamed Experiment');
   $('#date').text('');
-  menu.items[2].submenu.items.forEach((e)=>{
+  (<any>menu.items[2]).submenu.items.forEach((e)=>{
     e.enabled=false;
   });
   ui.init();
@@ -648,7 +648,7 @@ function off(){
 
 function rec(){
   $.blockUI({message:null});
-  menu.items[2].submenu.items.forEach((e)=>{
+  (<any>menu.items[2]).submenu.items.forEach((e)=>{
     e.enabled=true;
   });
   ipcRenderer.send('start');
