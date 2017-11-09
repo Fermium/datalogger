@@ -1,51 +1,54 @@
 osx_image: xcode8.3
 dist: trusty
 sudo: required
-
 services:
 - docker
-
 language: node_js
 node_js: '6'
-
 os:
 - linux
 - osx
-
 env:
   global:
   - ELECTRON_CACHE=$HOME/.cache/electron
   - ELECTRON_BUILDER_CACHE=$HOME/.cache/electron-builder
-  
 cache:
   directories:
   - "$HOME/.yarn-cache"
-  
 before_install:
-  #disable code signing on branches different from master
 - if [[ $TRAVIS_BRANCH != 'master' ]]; then CSC_LINK=""; fi
-- if [[ $TRAVIS_BRANCH == 'master' ]]; then openssl aes-256-cbc -K $encrypted_33866e2c6dd4_key -iv $encrypted_33866e2c6dd4_iv -in build/certs/apple.p12.enc -out build/certs/apple.p12 -d ; fi
-- if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then sudo apt-key adv --keyserver pgp.mit.edu --recv D101F7899D41F3C3; fi
-- if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then echo "deb http://dl.yarnpkg.com/debian/ stable main" | sudo tee /etc/apt/sources.list.d/yarn.list; fi
+- if [[ $TRAVIS_BRANCH == 'master' ]]; then openssl aes-256-cbc -K $encrypted_33866e2c6dd4_key
+  -iv $encrypted_33866e2c6dd4_iv -in build/certs/apple.p12.enc -out build/certs/apple.p12
+  -d ; fi
+- if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then sudo apt-key adv --keyserver pgp.mit.edu
+  --recv D101F7899D41F3C3; fi
+- if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then echo "deb http://dl.yarnpkg.com/debian/
+  stable main" | sudo tee /etc/apt/sources.list.d/yarn.list; fi
 - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then sudo apt-get update -qq; fi
 - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then sudo apt-get install -y -qq yarn; fi
-- if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then docker pull electronuserland/electron-builder:wine; fi
-- if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then brew install --ignore-dependencies yarn; fi
+- if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then docker pull electronuserland/electron-builder:wine;
+  fi
+- if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then brew install --ignore-dependencies yarn;
+  fi
 install:
 - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then yarn install; fi
 script:
-- if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then docker run --rm -ti -e AWS_ACCESS_KEY_ID=$AWS_ACCESS_KEY_ID -e AWS_SECRET_ACCESS_KEY=$AWS_SECRET_ACCESS_KEY --env-file <(env | grep TRAVIS) -v ${PWD}:/project -v ${PWD##*/}-node-modules:/project/node_modules -v ~/.electron:/root/.electron electronuserland/electron-builder:6 /bin/bash -c "yarn && yarn dist:linux"; fi
+- if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then docker run --rm -ti -e AWS_ACCESS_KEY_ID=$AWS_ACCESS_KEY_ID
+  -e AWS_SECRET_ACCESS_KEY=$AWS_SECRET_ACCESS_KEY --env-file <(env | grep TRAVIS)
+  -v ${PWD}:/project -v ${PWD##*/}-node-modules:/project/node_modules -v ~/.electron:/root/.electron
+  electronuserland/electron-builder:6 /bin/bash -c "yarn && yarn dist:linux"; fi
 - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then yarn dist:mac; fi
 before_cache:
 - rm -rf $HOME/.cache/electron-builder/wine
 notifications:
   email: false
-
+  slack:
+    secure: X431PD8pKZ1xMXOwit6yd0k7vc3vX20nAQtvHs7oE7sWVsP0oneyaZA0WpoYCAhi37sJGtg8gnjyEQv3MVvsixwcHON09cqdWCp8p/36hoY2Ud+YNHBCOVL9/TIlYEnGAQRjJEfnQBpN/TP6wIdOLJ0ZBROJPmqpaFtBfqfs6zybUeP64DKhY2KWt44Ak/NqfpaCC7DmC/gLj9Ayh1QCUW0SKCsVtrsTvRUzEotMThzp6brTX3osXaKc9HYTk+zRPH594o8LpG21Pz+rkIx0XQGApjftTqAL91/x3DywPZ3d/vwMHNzCZryX1Ljrs208XjY/bCrdpY1V99xdDC7tk1fFmUGVLYhYX4L7W2upIKq4KRRZn3vyRtlPmYsD6H3iBW4mlUEpn08X6eF4o/bT7yODE7S5TwhjwPV3Qj1CnlEe11rlOv4SMIZihsxqJC1oHD9z+030lPX0nZ7oirWhHWYMiy/gcmYoWcrCAstTNoyODVuD00+nEw+1KmCKR2WuUdkCY9H4wY1wOyTAuEsTDIdk+QVL61qh1L8ZezpIWd2rEAA4S4MeGGhVX9Oa8GdbhVte5k0JYO2Pu4O6kHjTFoDLuj/o9he8eOJUxWVJ1JR+NcWgj5zz4i57MZangveUE17ug47o8jS32LlpCvrJIs69Vb/VHGqUqlZsUJFS9pA=
 deploy:
   provider: s3
-  access_key_id: $AWS_ACCESS_KEY_ID
-  secret_access_key: $AWS_SECRET_ACCESS_KEY
-  bucket: "fermiumlabs-software-builds"
+  access_key_id: "$AWS_ACCESS_KEY_ID"
+  secret_access_key: "$AWS_SECRET_ACCESS_KEY"
+  bucket: fermiumlabs-software-builds
   skip_cleanup: true
   local_dir: dist
   upload-dir: nng-logger/$TRAVIS_COMMIT/
