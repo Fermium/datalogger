@@ -31,10 +31,10 @@ artifacts:
     
 deploy:
   provider: S3
-  access_key_id: "$AWS_ACCESS_KEY_ID"
-  secret_access_key: "$AWS_SECRET_ACCESS_KEY"
+  access_key_id: "$env:AWS_ACCESS_KEY_ID"
+  secret_access_key: "$env:AWS_SECRET_ACCESS_KEY"
   bucket: fermiumlabs-software-builds
   region: us-east-1	
-  folder: "nng-logger/$APPVEYOR_REPO_COMMIT"
+  folder: "nng-logger/$env:APPVEYOR_REPO_COMMIT"
   artifact: dist
     
