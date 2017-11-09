@@ -55,7 +55,7 @@ _docs/
 
 app/*.js
 app/*.map
-app/gulpfile.js
+!app/gulpfile.js
 app/main/*.js
 app/main/*.map
 app/selectdevice/*.js
