@@ -1,7 +1,7 @@
 <script src="./libs/raven.min.js"></script>
 <script>
-import { isDev } from "../util"
-if(!isDev()){
+
+if(!require('./util').isDev()){
   try{
     Raven.config('https://d62ce425b8f346439bf694c9f36eae45@sentry.io/208461',{
       release: electron.app.getVersion()
