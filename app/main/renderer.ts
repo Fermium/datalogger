@@ -782,7 +782,7 @@ const template = [
       {
         label: 'Open in SciDAVis',
         enabled: false,
-        click () {  $.blockUI({message:null});  ipcRenderer.send('export',{ex:{"extension": "scidavis"},math:mathsheet});
+        click () {   ipcRenderer.send('export',{ex:{"extension": "scidavis"},math:mathsheet});
         waitingDialog.show("Exporting...",{dialogSize: 'sm'});
         $.blockUI({message:null});
         }
