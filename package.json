@@ -20,7 +20,9 @@
     "dist:all": "electron-builder --linux --win",
     "dockerdist:all": "docker run --rm -ti -v ${PWD}:/project -v ${PWD##*/}-node-modules:/project/node_modules -v ~/.electron:/root/.electron electronuserland/electron-builder:wine /bin/bash -c \"yarn && yarn dist:all\"",
     "patchlibusb": "cp -rf build/lib/macos/ node_modules/electron/dist/Electron.app/Contents/Frameworks/",
-    "patchlibpthread": "cp .\\build\\lib\\windows\\libwinpthread-1.dll .\\node_modules\\electron\\dist\\"
+    "patchlibpthread": "cp .\\build\\lib\\windows\\libwinpthread-1.dll .\\node_modules\\electron\\dist\\",
+    "snyk-protect": "snyk protect",
+    "prepublish": "npm run snyk-protect"
   },
   "postinstall": "install-app-deps",
   "repository": "https://github.com/fermiumlabs/datalogger",
@@ -91,7 +93,8 @@
     "ref-struct": "^1.1.0",
     "rickshaw": "^1.6.0",
     "riot": "^3.6.3",
-    "selectboxit": "^3.8.2"
+    "selectboxit": "^3.8.2",
+    "snyk": "^1.62.0"
   },
   "build": {
     "productName": "NNG Logger",
@@ -176,5 +179,6 @@
         }
       ]
     }
-  }
+  },
+  "snyk": true
 }
