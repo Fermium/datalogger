@@ -41,7 +41,7 @@ Please use included Vagrant images:
 * ubuntu 
 * ubuntu_desktop
 * windows
-* arch (still not working)
+* arch (still not working, misses a few dependencies to build)
 * fedora (test only)
 
 If you want to develop without the vagrant images, install the required dependencies described [here](https://github.com/nodejs/node-gyp)
@@ -55,6 +55,7 @@ logs can be found following this [instructions](https://www.npmjs.com/package/el
 If you're developing on macOS, run `yarn patchlibusb` after install, otherwise data-chan will not find libusb, since they're linked together for production and not for development
 
 ## Windows
+
 If you're developing on macOS, run `yarn patchlibpthread` after install, otherwise data-chan will not find libwinpthread-1, since it's not included inside windows by default.
 
 Developing on Windows is messy. As long as you get node-gyp to work correctly (following ALL steps), you'll be fine.
@@ -68,7 +69,7 @@ Common errors:
 
 # Contributing
 
-Please open pull requests against develop, not master. 
+Please open pull requests against develop, not master.
 
 # OS status
 
@@ -78,14 +79,6 @@ With the latest fixes should work like a charm. Still work to do on scidavis
 
 ## Linux
 
-### Ubuntu
-
-We build everything on ubuntu on travis so it should work quite well. Some script should be provided for usb permission.
-
 ### Centos, fedora, etc etc
 
-There seems to be issues with finding libusb, needs to be checked.
-
-## Windows
-
-Still needs the dll
+USB permission fixed
