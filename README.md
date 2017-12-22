@@ -1,5 +1,8 @@
 # datalogger
 
+[![Build Status](https://travis-ci.com/ddavidebor/datalogger.svg?token=wpMBDd4yw5jYZj2bMMU7&branch=v1.1.1)](https://travis-ci.com/ddavidebor/datalogger)
+
+
 Datlogger (name needed!) is an application to control and acquire data from scientific instruments.
 
 ## Toggling DevTools
@@ -45,14 +48,44 @@ If you want to develop without the vagrant images, install the required dependen
 
 You will need to have a working [node-gyp](https://github.com/nodejs/node-gyp) since this app uses many native extensions
 
+logs can be found following this [instructions](https://www.npmjs.com/package/electron-log)
+
 ## macOS
 
 If you're developing on macOS, run `yarn patchlibusb` after install, otherwise data-chan will not find libusb, since they're linked together for production and not for development
 
 ## Windows
+If you're developing on macOS, run `yarn patchlibpthread` after install, otherwise data-chan will not find libwinpthread-1, since it's not included inside windows by default.
 
-Developing on Windows is messy. As long as you get node-gyp to work correctly, you'll be fine
+Developing on Windows is messy. As long as you get node-gyp to work correctly (following ALL steps), you'll be fine.
+
+Common errors:
+
+* "%1 is not a win32 application" you've built the app using wine and mono. You need to use a native Windows environment.
+* "Win32 [...] error 126" You're missing pthread, check data-chan docs or run `yarn patchlibpthread`
+* MSBUILD> error MSB4132> The tools version "2.0" is unrecognizes. run `npm config set msvs_version 2015`
+
 
 # Contributing
 
 Please open pull requests against develop, not master. 
+
+# OS status
+
+## macOS
+
+With the latest fixes should work like a charm. Still work to do on scidavis
+
+## Linux
+
+### Ubuntu
+
+We build everything on ubuntu on travis so it should work quite well. Some script should be provided for usb permission.
+
+### Centos, fedora, etc etc
+
+There seems to be issues with finding libusb, needs to be checked.
+
+## Windows
+
+Still needs the dll

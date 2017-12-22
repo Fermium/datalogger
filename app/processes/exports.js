@@ -18,7 +18,7 @@ function export_data(file,sep,extension){
   		if (err) console.log(err);
       fsPath.writeFile(name, csv, function(err) {
           if(err) console.log(err);
-          else process.send({action:'end'});
+          else process.send({action:'end',message:name});
       });
 	});
 }
@@ -38,12 +38,28 @@ function init_math(mathsh,to_export){
   function scidavis(file){
     var data = JSON.parse(fs.readFileSync(file, 'utf8'));
     var name = path.normalize(path.join(path.dirname(file),path.basename(file,'.json'),'tmp.tsv'));
-  	json2csv({ data: data._data ,fields:cols,del: '\t'}, (err,csv) => {
+  	json2csv({ data: data._data ,fields:cols,del: '\t',quotes:''}, (err,csv) => {
     		if (err) throw err;
         fsPath.writeFile(name, csv, function(err) {
             if(err) throw err;
             else{
-              require('child_process').exec('scidavis '+name);
+              let scidavis_path = '';
+              switch(process.platform){
+                case 'darwin':
+                  scidavis_path='/Applications/scidavis.app/Contents/MacOS/scidavis';
+                break;
+                case 'linux':
+                  scidavis_path='scidavis';
+                break;
+                case 'win32':
+                  scidavis_path='%programfiles(x86)%\\scidavis\\scidavis.exe';
+                break;
+              }
+              require('child_process').exec(scidavis_path+' '+name,function(e, stdout, stderr) {
+              console.log(stdout);
+              console.log(stderr);
+              if (e) process.send({action:'error',message:'Scidavis error'});
+              });
             }
         });
   	});

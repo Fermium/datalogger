@@ -1,5 +1,6 @@
 /*jshint esversion: 6*/
 var low = require('lowdb'); //db .json
+var FileSync = require('lowdb/adapters/FileSync'); //db .json
 var db;
 var dbfile= '';
 const _ = require('lodash');
@@ -32,7 +33,7 @@ process.on('message',(data)=>{
 
   function createdb (file){
     try{
-      dbfile = (file.endsWith('.json')) ? file : file+'.json' ;
+      dbfile = new FileSync((file.endsWith('.json')) ? file : file+'.json') ;
       db = low(dbfile);
     }
     catch(e){

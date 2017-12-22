@@ -1,0 +1,10 @@
+---
+# File di configurazione
+product:
+  manufacturer: "LabTrek"
+  manufacturercode : "labtrek"
+  name: "Energy gap"
+  model: "ltk-eg"
+  description: "Energy gap measurement in semiconductors, with advanced lock-in amplifier"
+  image: "pic.png"
+  disabled: true
