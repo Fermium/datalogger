@@ -1,24 +1,21 @@
-# Test against the latest version of this Node.js version
 environment:
   nodejs_version: "6"
 
 # Install scripts. (runs after repo cloning)
 install:
-  # Get the latest stable version of Node.js or io.js
+  # Get the latest stable version of Node.js
   - ps: Install-Product node $env:nodejs_version
   - nuget install secure-file -ExcludeVersion
   - secure-file\tools\secure-file -decrypt build/certs/windows.pfx.enc -secret %PFX_SECRET%
   # install modules
   - yarn install
 
-# Post-install test scripts.
 test_script:
   # Output useful info for debugging.
   - node --version
   - npm --version
   - yarn --version
 
-# Don't actually build.
 build_script:
   - yarn dist:win
 
@@ -26,3 +23,18 @@ notifications:
   - provider: Slack
     auth_token:
       secure: tgfAywGzsu+zVWYFGXBDtf0op9TtFlP/u/oIc/kx9EkPZHhpF/u+GDsRUcPm305pRPNYC9WVpQsMGdx2wzJ/wuzLmuQ0NtTr/zE/s2x0pDo=
+    channel: '#project-hall-flux'
+
+artifacts:
+  - path: dist/**
+    name: dist
+    
+deploy:
+  provider: S3
+  access_key_id: $(AWS_ACCESS_KEY_ID)
+  secret_access_key: $(AWS_SECRET_ACCESS_KEY)
+  bucket: fermiumlabs-software-builds
+  region: us-east-1	
+  folder: nng-logger/$(APPVEYOR_REPO_COMMIT)
+  artifact: dist
+    
