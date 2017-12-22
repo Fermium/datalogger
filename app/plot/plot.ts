@@ -48,6 +48,7 @@ var xAxes = new Rickshaw.Graph.Axis.X( {
 xAxes.render();
 var yAxis = new Rickshaw.Graph.Axis.Y({
     graph: graph,
+		tickFormat: Rickshaw.Fixtures.Number.formatKMBT,
 });
 
 yAxis.render();
