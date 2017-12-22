@@ -125,17 +125,7 @@ $('[data-unit]').change(function(){
 $('[data-action="handbook"]').click(function() {
   ipcRenderer.send('handbook');
 });
-function enableExport(){
-  $('[data-export]').click(function(){
-  ipcRenderer.send('export',{ex:$(this).data('export'),math:mathsheet});
-  waitingDialog.show("Exporting...",{dialogSize: 'sm'});
-  $.blockUI({message:null});
-});
-}
 
-function disableExport(){
-  $('[data-export]').unbind('click');
-}
 ipcRenderer.on('exported',(ev,args)=>{
   waitingDialog.hide();
   shell.showItemInFolder(args.path);
@@ -503,7 +493,6 @@ function init(){
     /*Raven.captureException(err);
     Raven.showReportDialog();*/
   }
-  disableExport();
 }
 ipcRenderer.on('usb-init',init);
 
@@ -675,7 +664,6 @@ function rec(){
   timer.addEventListener('secondsUpdated', function(e) {
     $('#timer').html(timer.getTimeValues().toString());
   });
-  enableExport();
   $.unblockUI();
 }
 
@@ -695,7 +683,6 @@ function pause(){
     stack: pnotifyStack,
     delay: 2500
   });
-  disableExport();
 }
 function check_temp(){
   if(math.eval('abs(temp)>=65 degC',scope)){
@@ -779,19 +766,25 @@ const template = [
       {
         label: 'Export to CSV',
         enabled: false,
-        click () {    ipcRenderer.send('export',{ex:{"extension": "csv","sep": ","},math:mathsheet});
+        click () {  $.blockUI({message:null});  ipcRenderer.send('export',{ex:{"extension": "csv","sep": ","},math:mathsheet}); 
+        waitingDialog.show("Exporting...",{dialogSize: 'sm'});
+        $.blockUI({message:null});
         }
       },
       {
         label: 'Export to TSV',
         enabled: false,
-        click () {    ipcRenderer.send('export',{ex:{"extension": "tsv","sep": "\t"},math:mathsheet});
+        click () {  $.blockUI({message:null});  ipcRenderer.send('export',{ex:{"extension": "tsv","sep": "\t"},math:mathsheet});
+        waitingDialog.show("Exporting...",{dialogSize: 'sm'});
+        $.blockUI({message:null});
         }
       },
       {
         label: 'Open in SciDAVis',
         enabled: false,
-        click () {   ipcRenderer.send('export',{ex:{"extension": "scidavis"},math:mathsheet});
+        click () {  $.blockUI({message:null});  ipcRenderer.send('export',{ex:{"extension": "scidavis"},math:mathsheet});
+        waitingDialog.show("Exporting...",{dialogSize: 'sm'});
+        $.blockUI({message:null});
         }
       }
     ]
