@@ -1,0 +1,10 @@
+---
+# File di configurazione
+product:
+  manufacturer: "LabTrek"
+  manufacturercode : "labtrek"
+  name: "Resistance Vs Temperature"
+  model: "ltk-rdt"
+  description: "Resistanza Vs temperature in Germanium, Platinum and Nickel"
+  image: "pic.png"
+  disabled: true

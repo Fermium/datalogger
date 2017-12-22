@@ -1,34 +1,40 @@
 /*jshint esversion: 6*/
+import { isDev, log } from "./util";
+
 import * as electron from 'electron';
 import {dialog} from 'electron';
+import {ipcMain} from 'electron';
+
 import {fork} from 'child_process';
 import * as math from 'mathjs';
 import * as dateFormat from 'dateformat';
 import * as fs from 'fs';
 import * as path from 'path';
 import * as http from 'https';
-import {ipcMain} from 'electron';
-import { isDev } from "./util"
 import * as PDFWindow from 'electron-pdf-window';
 import * as jsyaml from 'js-yaml';
-//import AppUpdater from './AppUpdater';
+
+import AppUpdater from "./updater"
+import * as  Raven from 'raven';
 
 let usb;
 var _ = require('lodash');
 let logger;
 let usb_on : boolean =false;
 let corr  = {a:0,b:0};
+let exported:boolean=true;
 if(!isDev()){
-  let  Raven = require('raven');
   try{
     Raven.config('https://d62ce425b8f346439bf694c9f36eae45:84b649383e3843d49d1e56561cff98b1@sentry.io/208461',{
       release: electron.app.getVersion()
     }).install();
   }
   catch(err){
-    console.log('Error connecting to sentry');
+    log('Error connecting to sentry');
   }
 }
+
+
 let dbfile;
 // Module to control application life.
 const app = electron.app;
@@ -36,6 +42,7 @@ const Menu = electron.Menu;
 // Module to create native browser window.
 const BrowserWindow = electron.BrowserWindow;
 let config;
+
 // Keep a global reference of the window object, if you don't, the window will
 // be closed automatically when the JavaScript object is garbage collected.
 let mainWindow;
@@ -46,13 +53,29 @@ const glob : any = global;
 glob.session = {'_name':'','_date':dateFormat(Date.now(), 'yyyy_mm_dd')};
 function createWindow () {
 
-  // Create the browser window.
 
   // and load the index.html of the app.
   mainWindow.loadURL(`file://${__dirname}/main/index.html`);
+  mainWindow.setResizable(true);
   mainWindow.on('ready-to-show',()=>{
     mainWindow.show();
   })
+  mainWindow.on('close', (e) => {
+    if (!exported) {
+        e.preventDefault() // Prevents the window from closing 
+        dialog.showMessageBox({
+            type: 'question',
+            buttons: ['Yes', 'No'],
+            title: 'Confirm',
+            message: 'Data not exported. Are you sure you want to quit?'
+        }, function (response) {
+            if (response === 0) { // Runs the following if 'Yes' is clicked
+                exported = true
+                mainWindow.close()
+            }
+        })
+    }
+})
   // Emitted when the window is closed.
   mainWindow.on('closed', function () {
     if(logger !== undefined && logger !== null) logger.kill();
@@ -62,7 +85,6 @@ function createWindow () {
     // when you should delete the corresponding element.
     mainWindow = null;
   });
-  //new AppUpdater();
 }
 
 function createSelectDevice () {
@@ -70,8 +92,11 @@ function createSelectDevice () {
   // and load the index.html of the app.
 
   mainWindow.loadURL(`file://${__dirname}/selectdevice/index.html`);
+  mainWindow.setResizable(false);
   mainWindow.on('ready-to-show',()=>{
     mainWindow.show();
+
+
   })
 
   // Emitted when the window is closed.
@@ -84,6 +109,7 @@ function createSelectDevice () {
 
 }
 
+//this shit is long, we could move it somewhere else ?
 function createHandbookWindow(){
   var manual = config.manual;
   handbookWindow = new PDFWindow({width: 800, height: 600,show:false});
@@ -181,6 +207,7 @@ app.on('ready', function(){
     minHeight: 600
   });
   createSelectDevice();
+  new AppUpdater()
 });
 
 // Quit when all windows are closed.
@@ -188,11 +215,12 @@ app.on('ready', function(){
 app.on('window-all-closed', function () {
   // On OS X it is common for applications and their menu bar
   // to stay active until the user quits explicitly with Cmd + Q
-  if (process.platform !== 'darwin') {
+  //if (process.platform !== 'darwin') {
     app.quit();
-  }
+  //}
 });
 
+/*
 app.on('activate', function () {
   // On OS X it's common to re-create a window in the app when the
   // dock icon is clicked and there are no other windows open.
@@ -202,19 +230,21 @@ app.on('activate', function () {
   }
 
 });
+*/
 app.on('web-contents-created',function(ev,wc){
   wc.on('will-navigate',ev=>{
     ev.preventDefault();
   });
 });
-// In this file you can include the rest of your app's specific main process
-// code. You can also put them in separate files and require them here.
+
 ipcMain.on('plot',(event,arg) => {
   createPlotWindow(arg.name);
 });
+
 ipcMain.on('relaunch',(event,arg) => {
   createSelectDevice();
 });
+
 ipcMain.on('handbook',(event,arg) => {
   createHandbookWindow();
 
@@ -248,23 +278,37 @@ ipcMain.on('save-file',(event,arg)=>{
 
 ipcMain.on('start',(event,arg) => {
 if(logger!==undefined && logger !== null) logger.send({action:'start'});
+exported=false;
 mainWindow.webContents.send('started',  {'return':'a'});
 });
 
 ipcMain.on('stop',(event,arg) => {
   if(logger!==undefined && logger !== null) logger.send({action:'stop'});
 });
+
+
 ipcMain.on('on',(event,arg) => {
-  usb = fork(path.normalize(path.join(__dirname,'processes','usb.js')),[],{
+
+  usb = fork(path.normalize(path.join(__dirname,'devices',config.product.manufacturercode,config.product.model,'src','usb.js')),[],{
     env: {},
     stdio: ["ipc","inherit", "inherit", "inherit"]
   });
+
   usb.on('message',(data)=>{
     switch(data.action){
-      case 'usb-fail':
-        mainWindow.webContents.send('usb-fail', {});
+      case 'error':
+        mainWindow.webContents.send('usb-error', {});
+        //report to sentry
+        console.log("Error in USB:", data.message);
+        if(!isDev()){
+        Raven.captureException(data.payload)
+       }
+       else{
+         console.log(data.message);
+       }
+
         break;
-      case 'init':
+      case 'usb-init':
         mainWindow.webContents.send('init', {});
         break;
       case 'mes':
@@ -278,63 +322,79 @@ ipcMain.on('on',(event,arg) => {
         break;
     }
   });
+
 usb.on('exit',(code,n)=>{
-  console.log('usb exited with code '+code);
+  mainWindow.webContents.send('usb-error', {});
+  console.log('usb exited with exit code', code);
 });
+
  usb.on('disconnect',(code,n)=>{
-  console.log('usb disconnected with code '+code);
+  mainWindow.webContents.send('usb-error', {});
+  console.log('usb disconnected with exit code', code);
 });
+
   usb.send({
     action:'on',
     message:
       {
-        a:config.config.calibration.a,
-        b:config.config.calibration.b,
         vid:config.product.usb.vid,
         pid:config.product.usb.pid
       }
     });
 });
+
+
 ipcMain.on('off',(event,arg) => {
   if(usb_on){
   usb.send({action:'off',message:''});
   if(logger!==undefined && logger !== null) logger.send({action:'close'});
   }
 });
+
 ipcMain.on('update',(event,arg)=>{
   for(var name in plotWindow){
     plotWindow[name].webContents.send('update',{'val':arg.scope[name]});
   }
 });
+
 ipcMain.on('isrunning',(event,arg)=>{
-  usb.send({action:'ison',message:''});
+  usb.send({action:'is_on',message:''});
 });
+
 ipcMain.on('send-to-hardware',(event,arg)=>{
   if(usb_on){
     usb.send({action:'send_command',message:arg});
   }
 });
+
 ipcMain.on('ready',(event,arg)=>{
   event.returnValue={'config':config.config,'product':config.product};
 });
+
 ipcMain.on('get-device',(event,arg)=>{
   event.returnValue=path.normalize(path.join('.','devices',config.product.manufacturercode,config.product.model));
 });
+
 ipcMain.on('device-select',(event,arg)=>{
   config=jsyaml.safeLoad(fs.readFileSync(path.normalize(path.join(arg.device,'config.yaml'))));
   glob.session._name=config.product.model;
   createWindow();
 });
+
 ipcMain.on('export',(event,args)=>{
     args.to_export=['Vh','temp','Vr','I','R','B'];
-    args.file=dbfile;
+    args.file=dbfile.source;
     var exprt=fork(path.normalize(path.join(__dirname,'processes','exports.js')),[JSON.stringify(args)],{env: {'ATOM_SHELL_INTERNAL_RUN_AS_NODE':'0'},stdio: ['ipc', 'inherit', 'inherit','inherit']});
     exprt.on('message',(data)=>{
       switch (data.action) {
         case 'end':
-          mainWindow.webContents.send('exported');
+        exported=true;
+          mainWindow.webContents.send('exported',{path:data.message});
           exprt.kill();
           break;
+        case 'error':
+          mainWindow.webContents.send('scidavis-error');
+          exprt.kill();
       }
     });
 });

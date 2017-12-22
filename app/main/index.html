@@ -13,18 +13,17 @@
 	<link href='../../node_modules/codemirror/lib/codemirror.css' rel='stylesheet' type='text/css'>
 	<link href='../../node_modules/codemirror/theme/eclipse.css' rel='stylesheet' type='text/css'>
 	<link href='../../node_modules/pnotify/dist/pnotify.css' rel='stylesheet' type='text/css'>
-	<link href='../../node_modules/selectboxit/src/stylesheets/jquery.selectBoxIt.min.css' rel='stylesheet' type='text/css'>		
 	<link href='../assets/css/bootstrap-switch.min.css' rel='stylesheet' type='text/css'>
-	<script type="text/javascript" src="../assets/js/plugins/sliders/ion_rangeslider.min.js"></script>	
+	<script type="text/javascript" src="../assets/js/plugins/sliders/ion_rangeslider.min.js"></script>
 	<script type='text/javascript' src='../assets/js/plugins/forms/styling/switch.min.js'></script>
 	<script type="text/javascript" src="../assets/js/plugins/forms/selects/bootstrap_select.min.js"></script>
-	<script type="text/javascript" src="../../node_modules/bootbox/bootbox.min.js"></script>	
+	<script type="text/javascript" src="../../node_modules/bootbox/bootbox.min.js"></script>
 	<script type="text/javascript" src="../../node_modules/pnotify/dist/pnotify.js"></script>
 	<script type="text/javascript" src="../../node_modules/pnotify/dist/pnotify.buttons.js"></script>
 	<script type='text/javascript' src='../assets/js/core/app.js'></script>
 	<script type='text/javascript' src='../../node_modules/selectboxit/src/javascripts/jquery.selectBoxIt.min.js'></script>
 	<script type='text/javascript' src='../libs/wait.min.js'></script>
-	
+
 
 	<script>
 	var path = require('path');
@@ -62,22 +61,11 @@
 	<!-- Main navbar -->
 	<div class='navbar navbar-inverse '>
 		<div class='navbar-header main'>
-			<div class='navbar-brand'><img src='../assets/images/logo_light.png' alt=''></img></div>
+			<div class='navbar-brand'><img src='../assets/images/logo_light.svg' alt=''></img></div>
 		</div>
 
 		<div class='navbar-tools'>
 			<ul class='nav navbar-nav navbar-right off'>
-				<li  id='exportdd' class='dropdown'>
-					<a data-toggle='dropdown' class='sidebar-control sidebar-main-toggle'>
-						<i class='icon-table2' data-toggle='tooltip' data-placement='bottom' title='Export'></i>
-						<i class='caret'></i>
-					</a>
-					<ul class='dropdown-menu dropdown-menu-left no-collapse'>
-						<li data-export='{"extension": "csv","sep": ","}'><a href='#'>Export to CSV</a></li>
-						<li data-export='{"extension": "tsv","sep": "\t"}'><a href='#'>Export to TSV (SciDAVis standard)</a></li>
-						<li data-export='{"extension": "scidavis","sep": "\t"}'><a href='#'>Open current data in SciDAVis</a></li>
-					</ul>
-				</li>
 				<li>
 					<a data-action='editequation'><i class='icon-pencil' data-toggle='tooltip' data-placement='bottom' title='Edit math'></i></a>
 				</li>
@@ -134,7 +122,7 @@
     	event.preventDefault();
      	shell.openExternal(link);
    }
-		require('./renderer.ts');
+		require('./renderer');
   </script>
 </body>
 </html>

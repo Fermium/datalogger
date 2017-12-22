@@ -6,12 +6,13 @@
 /// <reference types='jquery.pnotify' />
 import * as path from 'path';
 let _ = require('lodash');
+const {shell} = require('electron')
 import * as math from 'mathjs';
 import * as mathjaxHelper from 'mathjax-electron';
 import * as easytimer from 'easytimer';
 import * as codemirror from 'codemirror';
 import * as fs from 'fs';
-let pjson = require(path.normalize(path.join('..','..','package.json'))); 
+let pjson = require(path.normalize(path.join('..','..','package.json')));
 require('codemirror/mode/javascript/javascript');
 require('codemirror/addon/edit/matchbrackets');
 let recording;
@@ -38,8 +39,9 @@ interface Obj {
   [k:string]:any
 }
 let channels : Obj;
+let calibration : Obj;
 let unit = {};
-let ison : boolean = false;
+let is_on : boolean = false;
 let modal;
 
 let pnotifyStack = {dir1: "up", dir2: "left"};
@@ -77,8 +79,16 @@ $(document).ready(function(){
 });
 
 /* Events */
-ipcRenderer.on('usb-fail',function(event,args){
+ipcRenderer.on('usb-error',function(event,args){
   $("[name='on-off']").bootstrapSwitch('state', false);
+  bootbox.alert({
+    size: 'small',
+    title : 'USB device disconnected',
+    message: 'USB device has been disconnected or powered off.',
+    callback : function(){
+    }
+  });
+
 });
 
 ipcRenderer.on('measure',function(event,args){
@@ -115,15 +125,12 @@ $('[data-unit]').change(function(){
 $('[data-action="handbook"]').click(function() {
   ipcRenderer.send('handbook');
 });
-$('[data-export]').click(function(){
-  ipcRenderer.send('export',{ex:$(this).data('export'),math:mathsheet});
-  waitingDialog.show("Exporting...",{dialogSize: 'sm'});
-  $.blockUI({message:null});  
-});
-ipcRenderer.on('exported',()=>{
+
+ipcRenderer.on('exported',(ev,args)=>{
   waitingDialog.hide();
+  shell.showItemInFolder(args.path);
   $.unblockUI();
-  
+
 });
 $('[data-action="save-file"]').click(function(){
   let p= path.join(require('os').homedir(),'.datalogger','sessions',session._name+"_"+session._date+'.json');
@@ -133,7 +140,7 @@ $('[data-action="save-file"]').click(function(){
   if(pp!==undefined){
     ipcRenderer.send('save-file',{'path' : pp});
     if($("[name='start-stop']").prop("disabled") && $("[name='on-off']").bootstrapSwitch('state')){
-      menu.items[1].submenu.items[1].enabled=true;
+      (<any>menu.items[1]).submenu.items[1].enabled=true;
       $("[name='start-stop']").bootstrapSwitch('toggleDisabled');
     }
   }
@@ -176,7 +183,7 @@ $('[data-action="plot"]').click(function(){
 //     let i;
 //     let $iContent = $('#inputs-content');
 //     $iContent.empty();
-    
+
 //     for(i=0;i<channels.length;i++){
 //       console.log(channels[i]);
 //       $iContent.append($('<div/>').addClass('row').append(
@@ -252,7 +259,7 @@ $('[data-action="inputs"]').click(_.debounce(function(){
                       <select class="gain">`
                      for(let j = 0; j <= channels[i].gainlabels; j++){
                        html += `<option value="${channels[i].gainvalues[j]}" >${channels[i].gainlabels[j]}</option>`;
-                     }   
+                     }
                 html +=`</select>
                     </td>
                     <td>
@@ -343,7 +350,7 @@ $('[data-action="editequation"]').click(_.debounce(function() {
           try{
             let result = editor.getValue();
             if(result !== null) mathsheet=result;
-            if(ison){
+            if(is_on){
               math.eval(mathsheet,scope);
               evaluate();
             }
@@ -359,7 +366,7 @@ $('[data-action="editequation"]').click(_.debounce(function() {
               .text(`Error in math: ${e.toString()}`)
               .show();
                 // dialog.showMessageBox({type: 'error',title: 'Error in math', message : err.toString()});
-            
+
           }
 
           $(".bootbox").animate({
@@ -467,6 +474,7 @@ function init(){
   mathjaxHelper.loadMathJax(document);
   var tmp=ipcRenderer.sendSync('ready');
   channels = tmp.config.channels;
+  calibration = tmp.config.calibration;
   if(mathsheet===''){
     mathsheet = tmp.config.mathsheet.trim();
   }
@@ -474,9 +482,6 @@ function init(){
   inputs.forEach(function(input){
     if(!input.sendtohardware){
       scope[input.name]=input.default;
-    }
-    else{
-      ipcRenderer.send('send-to-hardware',{name:input.name,value:input.default});
     }
   });
   ui.init(inputs);
@@ -489,7 +494,7 @@ function init(){
     Raven.showReportDialog();*/
   }
 }
-ipcRenderer.on('init',init);
+ipcRenderer.on('usb-init',init);
 
 
 
@@ -543,7 +548,7 @@ function initpopover(block){
         mathjaxHelper.typesetMath(document.getElementById(block.val + '_formula'));
         $(`#${block.val}_formula`).show();
       });
-      
+
     })
     .on('hide.bs.popover', function() {
       $(`#${block.val}_formula`).hide();
@@ -562,7 +567,7 @@ function updatePopover(block){
 
 
 ipcRenderer.on('on',(event,args)=>{
-  ison = args.st;
+  is_on = args.st;
   if(args.st){
     bootbox.prompt({
       size: 'small',
@@ -580,7 +585,7 @@ ipcRenderer.on('on',(event,args)=>{
         $('#date').text(' - ' + session._date);
         if(recording && $("[name='start-stop']").prop("disabled")){
           $("[name='start-stop']").bootstrapSwitch('toggleDisabled');
-          menu.items[1].submenu.items[1].enabled=true;
+          (<any>menu.items[1]).submenu.items[1].enabled=true;
         }
       }
     });
@@ -622,17 +627,17 @@ function off(){
   $("[name='start-stop']").bootstrapSwitch('disabled',true);
   $('#experiment').text('Unnamed Experiment');
   $('#date').text('');
-  menu.items[2].submenu.items.forEach((e)=>{
+  (<any>menu.items[2]).submenu.items.forEach((e)=>{
     e.enabled=false;
   });
   ui.init();
-  ison=false;
+  is_on=false;
   ipcRenderer.send('off');
 }
 
 function rec(){
   $.blockUI({message:null});
-  menu.items[2].submenu.items.forEach((e)=>{
+  (<any>menu.items[2]).submenu.items.forEach((e)=>{
     e.enabled=true;
   });
   ipcRenderer.send('start');
@@ -694,6 +699,18 @@ function check_temp(){
 ipcRenderer.on('rec',(event,data)=>{
   recording=data.rec;
 });
+ipcRenderer.on('scidavis-error',(event,data)=>{
+  console.log('error');
+  bootbox.alert({
+    size: 'small',
+    title : 'Unable to find SciDAVis',
+    message: 'SciDAVis is not installed or not in the default installation path.',
+    callback : function(){
+      waitingDialog.hide();
+      $.unblockUI();
+    }
+  });
+    });
 /**********************************/
 
 const Menu = app.Menu;
@@ -749,19 +766,25 @@ const template = [
       {
         label: 'Export to CSV',
         enabled: false,
-        click () {    ipcRenderer.send('export',{ex:{"extension": "csv","sep": ","},math:mathsheet});
+        click () {  $.blockUI({message:null});  ipcRenderer.send('export',{ex:{"extension": "csv","sep": ","},math:mathsheet}); 
+        waitingDialog.show("Exporting...",{dialogSize: 'sm'});
+        $.blockUI({message:null});
         }
       },
       {
         label: 'Export to TSV',
         enabled: false,
-        click () {    ipcRenderer.send('export',{ex:{"extension": "tsv","sep": "\t"},math:mathsheet});
+        click () {  $.blockUI({message:null});  ipcRenderer.send('export',{ex:{"extension": "tsv","sep": "\t"},math:mathsheet});
+        waitingDialog.show("Exporting...",{dialogSize: 'sm'});
+        $.blockUI({message:null});
         }
       },
       {
         label: 'Open in SciDAVis',
         enabled: false,
-        click () {   ipcRenderer.send('export',{ex:{"extension": "scidavis"},math:mathsheet});
+        click () {  $.blockUI({message:null});  ipcRenderer.send('export',{ex:{"extension": "scidavis"},math:mathsheet});
+        waitingDialog.show("Exporting...",{dialogSize: 'sm'});
+        $.blockUI({message:null});
         }
       }
     ]
@@ -808,5 +831,9 @@ const template = [
 
 
 const menu = Menu.buildFromTemplate(template);
-console.log(app.getCurrentWindow());
-app.getCurrentWindow().setMenu(menu);
+if(process.platform === 'darwin'){
+  Menu.setApplicationMenu(menu);
+}
+else{
+  app.getCurrentWindow().setMenu(menu);
+}

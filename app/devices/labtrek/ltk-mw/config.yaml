@@ -1,0 +1,10 @@
+---
+# File di configurazione
+product:
+  manufacturer: "LabTrek"
+  manufacturercode : "labtrek"
+  name: "Microwave Bench"
+  model: "ltk-mw"
+  description: "Realize hundreds of experiments in a single intregrated microware bench (upcoming !)"
+  image: "pic.png"
+  disabled: true

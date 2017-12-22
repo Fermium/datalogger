@@ -16,7 +16,7 @@
 	<script type='text/javascript' src='../assets/js/plugins/forms/styling/switch.min.js'></script>
 	<script type="text/javascript" src="../assets/js/plugins/forms/selects/bootstrap_select.min.js"></script>
 	<script type="text/javascript" src="../assets/js/plugins/notifications/bootbox.min.js"></script>
-	<script type="text/javascript" src="../assets/js/plugins/notifications/pnotify.min.js"></script>
+	<script type='text/javascript' src='../assets/js/plugins/forms/selects/selectboxit.min.js'></script>
 	<script type='text/javascript' src='../assets/js/plugins/forms/selects/selectboxit.min.js'></script>
 
 <style>
@@ -26,27 +26,32 @@ img {
 }
 #devices{
 	margin-top: 20px;
+	display: flex;
+	flex-wrap: wrap;
+}
+#devices>.enabled{
+	order:-1;
 }
 </style>
 	<!-- /global stylesheets -->
 </head>
 
 <body>
-	
+
 <!-- Page container -->
 <div class='col-lg-12'>
 	<div class="row">
 			<div class='navbar navbar-inverse '>
 					<div class='navbar-header'>
-						<div class='navbar-brand'><img src='../assets/images/logo_light.png' alt=''></img></div>
-						
+						<div class='navbar-brand'><img src='../assets/images/logo_light.svg' alt=''></img></div>
+
 					</div>
 					<div class='nav navbar-nav navbar-right' style='-webkit-app-region: drag'>
 							<form class="navbar-form" role="search">
 							<div class="input-group" style='-webkit-app-region: no-drag'>
 									<input type="text" class="form-control" placeholder="Search" id='search'>
 									<div class="input-group-btn">
-											<button class="btn btn-default" type="submit"><i class="glyphicon glyphicon-search"></i></button>
+											<button class="btn btn-default" type="submit"><i class="fa fa-search"></i></button>
 									</div>
 							</div>
 							</form>
@@ -55,12 +60,12 @@ img {
 	</div>
   <!-- Main content -->
 	<div id="devices" class='row' >
-		
+
 	</div>
   <!-- /main content -->
 </div>
   <script>
-		require('./selectdevice.ts');
+		require('./selectdevice');
   </script>
 </body>
 </html>
