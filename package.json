@@ -55,7 +55,7 @@
     "@types/jquery.blockui": "^0.0.28",
     "@types/jquery.pnotify": "^3.0.35",
     "bootbox": "^4.4.0",
-    "bootstrap": "^3.3.7",
+    "bootstrap": "^4.0.0",
     "bootstrap-slider": "^9.7.2",
     "chart.js": "^2.5.0",
     "codemirror": "^5.25.0",
