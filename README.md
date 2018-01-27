@@ -60,11 +60,23 @@ If you're developing on macOS, run `yarn patchlibpthread` after install, otherwi
 
 Developing on Windows is messy. As long as you get node-gyp to work correctly (following ALL steps), you'll be fine.
 
-Common errors:
+Common errors we had in the past:
 
 * "%1 is not a win32 application" you've built the app using wine and mono. You need to use a native Windows environment.
 * "Win32 [...] error 126" You're missing pthread, check data-chan docs or run `yarn patchlibpthread`
 * MSBUILD> error MSB4132> The tools version "2.0" is unrecognizes. run `npm config set msvs_version 2015`
+
+
+# Dev builds:
+
+This software is automatically built by: 
+
+* Travis CI: Linux and macOS
+* Appveyor: Windows
+
+
+Dev builds go to s3://fermiumlabs-software-builds/nng-logger/{{COMMIT HASH}}
+Dist builds go to s3://fermiumlabs-software/nng-logger/
 
 
 # Contributing
@@ -75,10 +87,18 @@ Please open pull requests against develop, not master.
 
 ## macOS
 
-With the latest fixes should work like a charm. Still work to do on scidavis
+With the latest fixes should work like a charm. Still some work to do on scidavis, but fixes are on their way.
 
 ## Linux
 
-### Centos, fedora, etc etc
+### Centos, Fedora, etc etc
 
 USB permission fixed
+
+### Ubuntu, Debian
+
+The USB permissions now works like a charm
+
+### Windows
+
+Should work like a charm. Ok, Windows suck. 
