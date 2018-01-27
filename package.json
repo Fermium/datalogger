@@ -38,10 +38,10 @@
     "babel-plugin-transform-async-to-generator": "^6.24.1",
     "babel-preset-env": "^1.6.0",
     "babel-preset-react": "^6.23.0",
-    "electron": "1.7.8",
-    "electron-builder": "19.19",
+    "electron": "^1.7.8",
+    "electron-builder": "^19.19",
     "electron-compilers": "^5.9.0",
-    "electron-publisher-s3": "19.19",
+    "electron-publisher-s3": "^19.19",
     "gulp": "^3.9.1",
     "gulp-concat": "^2.6.0",
     "gulp-typedoc": "^2.0.3",
@@ -70,9 +70,9 @@
     "electron-is-dev": "^0.3.0",
     "electron-log": "^2.2.7",
     "electron-pdf-window": "^1.0.10",
-    "electron-titlebar": "0.0.3",
-    "electron-updater": "^2.16.2",
-    "fs-path": "0.0.23",
+    "electron-titlebar": "^0.0.3",
+    "electron-updater": "^2.18.2",
+    "fs-path": "^0.0.23",
     "jquery": "^3.2.1",
     "js-yaml": "^3.8.2",
     "json2csv": "^3.7.3",
@@ -141,20 +141,22 @@
         "provider": "s3",
         "path": "nng-logger",
         "bucket": "fermiumlabs-software"
-      },
-      "afterInstall": "build/after-install.tpl",
-      "afterRemove": "build/after-remove.tpl"
+      }
     },
     "deb": {
       "depends": [
         "libusb-1.0-0-dev"
-      ]
+      ],
+      "afterInstall": "build/after-install.tpl",
+      "afterRemove": "build/after-remove.tpl"
         },
     "rpm": {
       "depends": [
         "libXScrnSaver",
         "libusb"
-      ]
+      ],
+      "afterInstall": "build/after-install.tpl",
+      "afterRemove": "build/after-remove.tpl"
     },
     "win": {
       "target": [
