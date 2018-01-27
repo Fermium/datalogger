@@ -74,7 +74,6 @@ This software is automatically built by:
 * Travis CI: Linux and macOS
 * Appveyor: Windows
 
-
 Dev builds go to s3://fermiumlabs-software-builds/nng-logger/{{COMMIT HASH}}
 Dist builds go to s3://fermiumlabs-software/nng-logger/
 
