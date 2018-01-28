@@ -54,6 +54,8 @@ function on(vid, pid) {
 }
 
 
+
+
 function off() {
   console.log("USB off");
   if (device.result === dc_search_results.success) {

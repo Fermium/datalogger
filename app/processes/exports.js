@@ -60,6 +60,7 @@ function init_math(mathsh,to_export){
               console.log(stderr);
               if (e) process.send({action:'error',message:'Scidavis error'});
               });
+              process.send({action:'end',message:name});
             }
         });
   	});

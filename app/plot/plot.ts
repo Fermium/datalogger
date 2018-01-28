@@ -6,7 +6,7 @@ var source = config.source;
 var scope = remote.getGlobal('scope');
 import {ipcRenderer} from 'electron';
 declare var Rickshaw : any;
-
+var play=true;
 
 // instantiate our graph!
 var tv : number = 1000;
@@ -32,7 +32,7 @@ var hoverDetail = new Rickshaw.Graph.HoverDetail( {
 	formatter: function(series, x, y) {
         var date = '<span class="date">' + new Date(x * 1000).toLocaleTimeString() + '</span>';
         var swatch = '<span class="detail_swatch" style="background-color: ' + series.color + '"></span>';
-        var content = swatch + series.name + ": " + parseInt(y) + '<br>' + date;
+        var content = swatch + series.name + ": " + y.toFixed(4) + '<br>' + date;
         return content;
     }
 } );
@@ -48,6 +48,7 @@ var xAxes = new Rickshaw.Graph.Axis.X( {
 xAxes.render();
 var yAxis = new Rickshaw.Graph.Axis.Y({
     graph: graph,
+		tickFormat: Rickshaw.Fixtures.Number.formatKMBT,
 });
 
 yAxis.render();
@@ -56,7 +57,9 @@ ipcRenderer.on('update',(event,data)=>{
   let dataplot : any = {};
   dataplot.val=data.val;
 	graph.series.addData(dataplot);
-	graph.update();
+	if(play){
+		graph.update();
+	}
 });
 
 $(window).on('resize', function(){
@@ -66,3 +69,6 @@ $(window).on('resize', function(){
   });
   graph.render();
 });
+$('#stopplay').click(()=>{
+	play=!play
+})

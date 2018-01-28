@@ -52,8 +52,10 @@ process.on('message',(data)=>{
     db.set('_manufacturer',manufacturer).write();
   }
   function write (data){
-    dd = _.clone(data);
-    db.get('_data').push(dd).write();
+    if(running){
+      dd = _.clone(data);
+      db.get('_data').push(dd).write();
+    }
   }
   function close (){
     db=null;
