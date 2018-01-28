@@ -1,6 +1,7 @@
 # datalogger
 
-[![Build Status](https://travis-ci.com/ddavidebor/datalogger.svg?token=wpMBDd4yw5jYZj2bMMU7&branch=v1.1.1)](https://travis-ci.com/ddavidebor/datalogger)
+[![Build Status](https://travis-ci.com/ddavidebor/datalogger.svg?token=wpMBDd4yw5jYZj2bMMU7&branch=v1.1.1)](https://travis-ci.com/ddavidebor/datalogger) [![Build status](https://ci.appveyor.com/api/projects/status/e8h36wiku6jmrto0?svg=true)](https://ci.appveyor.com/project/dfermiumlabs/datalogger)
+
 
 
 Datlogger (name needed!) is an application to control and acquire data from scientific instruments.
@@ -73,7 +74,6 @@ This software is automatically built by:
 
 * Travis CI: Linux and macOS
 * Appveyor: Windows
-
 
 Dev builds go to s3://fermiumlabs-software-builds/nng-logger/{{COMMIT HASH}}
 Dist builds go to s3://fermiumlabs-software/nng-logger/
