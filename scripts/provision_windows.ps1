@@ -27,7 +27,8 @@ $ChocoInstallPath = "$env:SystemDrive\ProgramData\Chocolatey\bin"
 ##################### INSTALL SW
 
 # nodejs
-cinst -y nodejs-lts
+#cinst -y nodejs-lts
+cinst -y nodejs --version 6.12.3
 refreshenv
 node -v
 cinst -y yarn --ignore-dependencies
