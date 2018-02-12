@@ -25,16 +25,13 @@ before_install:
 - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then sudo apt-get install -y -qq yarn; fi
 - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then sudo apt-get -y install icnsutils rpm graphicsmagick xz-utils; fi
 - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then sudo apt-get install --no-install-recommends -y gcc-multilib g++-multilib; fi
-
-
 - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then brew install --ignore-dependencies yarn; fi
   
 install:
-- if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then yarn install ; fi
+- yarn install
 
 script:
 - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then yarn dist:linux ; fi
-
 - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then yarn dist:mac; fi
 
 before_cache:
