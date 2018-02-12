@@ -6,7 +6,7 @@ image:
 # Install scripts. (runs after repo cloning)
 install:
   # Get the latest stable version of Node.js
-  - ps: Install-Product node $env:nodejs_version
+  - ps: Install-Product node $env:nodejs_version x64
   - nuget install secure-file -ExcludeVersion
   - secure-file\tools\secure-file -decrypt build/certs/windows.pfx.enc -secret %PFX_SECRET%
   - npm config set msvs_version 2015
