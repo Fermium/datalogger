@@ -1,14 +1,17 @@
 environment:
   nodejs_version: "6"
+image:
+- Visual Studio 2015
 
 # Install scripts. (runs after repo cloning)
 install:
   # Get the latest stable version of Node.js
-  - ps: Install-Product node $env:nodejs_version
+  - ps: Install-Product node $env:nodejs_version x64
   - nuget install secure-file -ExcludeVersion
   - secure-file\tools\secure-file -decrypt build/certs/windows.pfx.enc -secret %PFX_SECRET%
+  - npm config set msvs_version 2015
   # install modules
-  - yarn install
+  - yarn 
 
 test_script:
   # Output useful info for debugging.
@@ -17,13 +20,13 @@ test_script:
   - yarn --version
 
 build_script:
-  - yarn dist:win
+  - yarn dist
 
-notifications:
-  - provider: Slack
-    auth_token:
-      secure: tgfAywGzsu+zVWYFGXBDtf0op9TtFlP/u/oIc/kx9EkPZHhpF/u+GDsRUcPm305pRPNYC9WVpQsMGdx2wzJ/wuzLmuQ0NtTr/zE/s2x0pDo=
-    channel: '#project-hall-flux'
+#notifications:
+#  - provider: Slack
+#    auth_token:
+#      secure: tgfAywGzsu+zVWYFGXBDtf0op9TtFlP/u/oIc/kx9EkPZHhpF/u+GDsRUcPm305pRPNYC9WVpQsMGdx2wzJ/wuzLmuQ0NtTr/zE/s2x0pDo=
+#    channel: '#project-hall-flux'
 
 artifacts:
   - path: dist/**

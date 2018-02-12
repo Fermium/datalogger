@@ -65,7 +65,8 @@ Common errors we had in the past:
 
 * "%1 is not a win32 application" you've built the app using wine and mono. You need to use a native Windows environment.
 * "Win32 [...] error 126" You're missing pthread, check data-chan docs or run `yarn patchlibpthread`
-* MSBUILD> error MSB4132> The tools version "2.0" is unrecognizes. run `npm config set msvs_version 2015`
+* "Dynamic linking error, win32 error 193": you've built for windows ia32, while all the data-chan stuff is for x64. Check you're using 64bit nodejs and building with the "yarn dist:win" command
+* "MSBUILD error MSB4132 The tools version "2.0" is unrecognized: run `npm config set msvs_version 2015`
 
 
 # Dev builds:

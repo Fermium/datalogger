@@ -1,6 +1,6 @@
 {
   "name": "NNGLogger",
-  "version": "1.6.0",
+  "version": "1.7.0",
   "description": "A datalogger application",
   "homepage": "https://fermiumlabs.com",
   "main": "app/init.js",
@@ -15,7 +15,7 @@
     "dockerdist:linux": "docker run --rm -ti -v ${PWD}:/project -v ${PWD##*/}-node-modules:/project/node_modules -v ~/.electron:/root/.electron electronuserland/electron-builder:wine /bin/bash -c \"yarn && yarn dist:linux\"",
     "dist:mac": "build --macos",
     "dockerdist:mac": "docker run --rm -ti -v ${PWD}:/project -v ${PWD##*/}-node-modules:/project/node_modules -v ~/.electron:/root/.electron electronuserland/electron-builder:wine /bin/bash -c \"yarn && yarn dist:mac\"",
-    "dist:win": "build --win",
+    "dist:win": "build --win --x64",
     "dockerdist:win": "docker run --rm -ti -v ${PWD}:/project -v ${PWD##*/}-node-modules:/project/node_modules -v ~/.electron:/root/.electron electronuserland/electron-builder:wine /bin/bash -c \"yarn && yarn dist:win\"",
     "dist:all": "electron-builder --linux --win",
     "dockerdist:all": "docker run --rm -ti -v ${PWD}:/project -v ${PWD##*/}-node-modules:/project/node_modules -v ~/.electron:/root/.electron electronuserland/electron-builder:wine /bin/bash -c \"yarn && yarn dist:all\"",
