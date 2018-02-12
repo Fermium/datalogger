@@ -1,6 +1,6 @@
 {
   "name": "NNGLogger",
-  "version": "1.8.1",
+  "version": "1.9.0",
   "description": "A datalogger application",
   "homepage": "https://fermiumlabs.com",
   "main": "app/init.js",
