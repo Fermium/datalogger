@@ -1,6 +1,7 @@
 # datalogger
 
-[![Build Status](https://travis-ci.com/ddavidebor/datalogger.svg?token=wpMBDd4yw5jYZj2bMMU7&branch=v1.1.1)](https://travis-ci.com/ddavidebor/datalogger)
+[![Build Status](https://travis-ci.com/ddavidebor/datalogger.svg?token=wpMBDd4yw5jYZj2bMMU7&branch=v1.1.1)](https://travis-ci.com/ddavidebor/datalogger) [![Build status](https://ci.appveyor.com/api/projects/status/e8h36wiku6jmrto0?svg=true)](https://ci.appveyor.com/project/dfermiumlabs/datalogger)
+
 
 
 Datlogger (name needed!) is an application to control and acquire data from scientific instruments.
@@ -41,7 +42,7 @@ Please use included Vagrant images:
 * ubuntu 
 * ubuntu_desktop
 * windows
-* arch (still not working)
+* arch (still not working, misses a few dependencies to build)
 * fedora (test only)
 
 If you want to develop without the vagrant images, install the required dependencies described [here](https://github.com/nodejs/node-gyp)
@@ -55,37 +56,49 @@ logs can be found following this [instructions](https://www.npmjs.com/package/el
 If you're developing on macOS, run `yarn patchlibusb` after install, otherwise data-chan will not find libusb, since they're linked together for production and not for development
 
 ## Windows
+
 If you're developing on macOS, run `yarn patchlibpthread` after install, otherwise data-chan will not find libwinpthread-1, since it's not included inside windows by default.
 
 Developing on Windows is messy. As long as you get node-gyp to work correctly (following ALL steps), you'll be fine.
 
-Common errors:
+Common errors we had in the past:
 
 * "%1 is not a win32 application" you've built the app using wine and mono. You need to use a native Windows environment.
 * "Win32 [...] error 126" You're missing pthread, check data-chan docs or run `yarn patchlibpthread`
 * MSBUILD> error MSB4132> The tools version "2.0" is unrecognizes. run `npm config set msvs_version 2015`
 
 
+# Dev builds:
+
+This software is automatically built by: 
+
+* Travis CI: Linux and macOS
+* Appveyor: Windows
+
+Dev builds go to s3://fermiumlabs-software-builds/nng-logger/{{COMMIT HASH}}
+Dist builds go to s3://fermiumlabs-software/nng-logger/
+
+
 # Contributing
 
-Please open pull requests against develop, not master. 
+Please open pull requests against develop, not master.
 
 # OS status
 
 ## macOS
 
-With the latest fixes should work like a charm. Still work to do on scidavis
+With the latest fixes should work like a charm. Still some work to do on scidavis, but fixes are on their way.
 
 ## Linux
 
-### Ubuntu
+### Centos, Fedora, etc etc
 
-We build everything on ubuntu on travis so it should work quite well. Some script should be provided for usb permission.
+USB permission fixed
 
-### Centos, fedora, etc etc
+### Ubuntu, Debian
 
-There seems to be issues with finding libusb, needs to be checked.
+The USB permissions now works like a charm
 
-## Windows
+### Windows
 
-Still needs the dll
+Should work like a charm. Ok, Windows suck. 

@@ -141,13 +141,15 @@
         "provider": "s3",
         "path": "nng-logger",
         "bucket": "fermiumlabs-software"
-      }
+      },
+      "afterInstall": "build/after-install.tpl",
+      "afterRemove": "build/after-remove.tpl"
     },
     "deb": {
       "depends": [
         "libusb-1.0-0-dev"
       ]
-    },
+        },
     "rpm": {
       "depends": [
         "libXScrnSaver",
