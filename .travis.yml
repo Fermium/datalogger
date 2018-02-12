@@ -19,8 +19,8 @@ cache:
   directories:
   - "$HOME/.yarn-cache"
 before_install:
-- if [[ $TRAVIS_BRANCH != 'master' ]]; then CSC_LINK=""; fi
-- if [[ $TRAVIS_BRANCH == 'master' ]]; then openssl aes-256-cbc -K $encrypted_33866e2c6dd4_key -iv $encrypted_33866e2c6dd4_iv -in build/certs/apple.p12.enc -out build/certs/apple.p12  -d ; fi
+- if [[ $TRAVIS_BRANCH != 'releases' ]]; then CSC_LINK=""; fi
+- if [[ $TRAVIS_BRANCH == 'releases' ]]; then openssl aes-256-cbc -K $encrypted_33866e2c6dd4_key -iv $encrypted_33866e2c6dd4_iv -in build/certs/apple.p12.enc -out build/certs/apple.p12  -d ; fi
 - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then curl -sS https://dl.yarnpkg.com/debian/pubkey.gpg | sudo apt-key add -; fi
 - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then echo "deb https://dl.yarnpkg.com/debian/ stable main" | sudo tee /etc/apt/sources.list.d/yarn.list; fi
 - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then sudo apt-get update -qq; fi
