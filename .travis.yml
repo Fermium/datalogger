@@ -3,8 +3,6 @@ osx_image: xcode9.0
 dist: trusty
 
 sudo: required
-services:
-- docker
 language: node_js
 
 node_js: '6'
@@ -25,14 +23,17 @@ before_install:
 - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then echo "deb http://dl.yarnpkg.com/debian/ stable main" | sudo tee /etc/apt/sources.list.d/yarn.list; fi
 - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then sudo apt-get update -qq; fi
 - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then sudo apt-get install -y -qq yarn; fi
-- if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then docker pull electronuserland/electron-builder:wine; fi
+- if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then sudo apt-get -y install icnsutils rpm graphicsmagick xz-utils; fi
+- if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then sudo apt-get install --no-install-recommends -y gcc-multilib g++-multilib; fi
+
+
 - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then brew install --ignore-dependencies yarn; fi
   
 install:
-- if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then yarn install; fi
+- if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then yarn install ; fi
 
 script:
-- if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then docker run --rm -ti -e AWS_ACCESS_KEY_ID=$AWS_ACCESS_KEY_ID  -e AWS_SECRET_ACCESS_KEY=$AWS_SECRET_ACCESS_KEY --env-file <(env | grep TRAVIS) -v ${PWD}:/project -v ${PWD##*/}-node-modules:/project/node_modules -v ~/.electron:/root/.electron  electronuserland/electron-builder:6 /bin/bash -c "yarn && yarn dist:linux"; fi
+- if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then yarn dist:linux ; fi
 
 - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then yarn dist:mac; fi
 
