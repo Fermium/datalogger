@@ -130,8 +130,7 @@
     "linux": {
       "target": [
         "rpm",
-        "deb",
-        "AppImage"
+        "deb"
       ],
       "category": "Science",
       "publish": {
