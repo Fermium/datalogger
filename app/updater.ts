@@ -26,8 +26,8 @@ export default class AppUpdater {
       dialog.showMessageBox({
         type: 'info',
         title: 'Found Updates',
-        message: 'Found updates, do you want update now?',
-        buttons: ['Sure', 'No']
+        message: 'A new update is available. Do you want to update?',
+        buttons: ['Sure', 'Skip']
       }, (buttonIndex) => {
         if (buttonIndex === 0) {
           autoUpdater.downloadUpdate()

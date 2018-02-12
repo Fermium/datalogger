@@ -1,6 +1,6 @@
 {
   "name": "NNGLogger",
-  "version": "1.6.0",
+  "version": "1.8.1",
   "description": "A datalogger application",
   "homepage": "https://fermiumlabs.com",
   "main": "app/init.js",
@@ -11,13 +11,10 @@
     "postinstall": "electron-builder install-app-deps",
     "distpack": "build --dir",
     "dist": "build",
-    "dist:linux": "build --linux",
+    "dist:linux": "build --linux --x64",
     "dockerdist:linux": "docker run --rm -ti -v ${PWD}:/project -v ${PWD##*/}-node-modules:/project/node_modules -v ~/.electron:/root/.electron electronuserland/electron-builder:wine /bin/bash -c \"yarn && yarn dist:linux\"",
     "dist:mac": "build --macos",
-    "dockerdist:mac": "docker run --rm -ti -v ${PWD}:/project -v ${PWD##*/}-node-modules:/project/node_modules -v ~/.electron:/root/.electron electronuserland/electron-builder:wine /bin/bash -c \"yarn && yarn dist:mac\"",
-    "dist:win": "build --win",
-    "dockerdist:win": "docker run --rm -ti -v ${PWD}:/project -v ${PWD##*/}-node-modules:/project/node_modules -v ~/.electron:/root/.electron electronuserland/electron-builder:wine /bin/bash -c \"yarn && yarn dist:win\"",
-    "dist:all": "electron-builder --linux --win",
+    "dist:win": "build --win --x64",
     "dockerdist:all": "docker run --rm -ti -v ${PWD}:/project -v ${PWD##*/}-node-modules:/project/node_modules -v ~/.electron:/root/.electron electronuserland/electron-builder:wine /bin/bash -c \"yarn && yarn dist:all\"",
     "patchlibusb": "cp -rf build/lib/macos/ node_modules/electron/dist/Electron.app/Contents/Frameworks/",
     "patchlibpthread": "cp .\\build\\lib\\windows\\libwinpthread-1.dll .\\node_modules\\electron\\dist\\"
@@ -38,10 +35,10 @@
     "babel-plugin-transform-async-to-generator": "^6.24.1",
     "babel-preset-env": "^1.6.0",
     "babel-preset-react": "^6.23.0",
-    "electron": "1.7.8",
-    "electron-builder": "19.19",
+    "electron": "^1.7.8",
+    "electron-builder": "^19.19",
     "electron-compilers": "^5.9.0",
-    "electron-publisher-s3": "19.19",
+    "electron-publisher-s3": "^19.19",
     "gulp": "^3.9.1",
     "gulp-concat": "^2.6.0",
     "gulp-typedoc": "^2.0.3",
@@ -70,9 +67,9 @@
     "electron-is-dev": "^0.3.0",
     "electron-log": "^2.2.7",
     "electron-pdf-window": "^1.0.10",
-    "electron-titlebar": "0.0.3",
-    "electron-updater": "^2.16.2",
-    "fs-path": "0.0.23",
+    "electron-titlebar": "^0.0.3",
+    "electron-updater": "^2.18.2",
+    "fs-path": "^0.0.23",
     "jquery": "^3.2.1",
     "js-yaml": "^3.8.2",
     "json2csv": "^3.7.3",
@@ -133,28 +130,29 @@
     "linux": {
       "target": [
         "rpm",
-        "deb",
-        "AppImage"
+        "deb"
       ],
       "category": "Science",
       "publish": {
         "provider": "s3",
         "path": "nng-logger",
         "bucket": "fermiumlabs-software"
-      },
-      "afterInstall": "build/after-install.tpl",
-      "afterRemove": "build/after-remove.tpl"
+      }
     },
     "deb": {
       "depends": [
         "libusb-1.0-0-dev"
-      ]
+      ],
+      "afterInstall": "build/after-install.tpl",
+      "afterRemove": "build/after-remove.tpl"
         },
     "rpm": {
       "depends": [
         "libXScrnSaver",
         "libusb"
-      ]
+      ],
+      "afterInstall": "build/after-install.tpl",
+      "afterRemove": "build/after-remove.tpl"
     },
     "win": {
       "target": [
