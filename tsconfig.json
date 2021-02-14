@@ -1,0 +1,25 @@
+{
+  "compilerOptions": {
+    "module": "commonjs",
+    "target": "es6",
+    "noImplicitAny": false,
+    "removeComments": true,
+    "newLine": "LF",
+    "noResolve": true,
+    "noEmitOnError": true,
+    "inlineSources": true,
+    "sourceMap": true,
+    "noUnusedLocals": false,
+    "skipLibCheck": true
+  },
+  "include": [
+    "node_modules/@types/*/*.d.ts",
+    "node_modules/electron/electron.d.ts",
+    "node_modules/electron-updater/out/*.d.ts",
+    "app/*.ts",
+    "app/main/*.ts",
+    "app/selectdevice/*.ts",
+    "app/plot/*.ts",
+    "app/devices/*/*/src/*.ts"
+  ]
+}
